@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express';
 import cors from 'cors';
 import 'dotenv/config';
+import authRoutes from './routes/auth';
 
 const app = express();
 
@@ -12,6 +13,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // allows cross-origin requests
 app.use(cors());
+
+// set up the routes
+app.use('/api/auth', authRoutes);
 
 // test endpoint
 app.get('/api/test', async (req : Request, res : Response) => {
