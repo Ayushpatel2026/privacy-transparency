@@ -13,6 +13,14 @@ router.post("/login" , async (req : Request, res : Response) => {
 
   const {email, password} = req.body;
 
+  // Basic input validation
+  if (!email || !password) {
+    res.status(400).json({
+      message: "Email and password are required",
+    });
+    return;
+  }
+
   try{
     const user = await userRepository.getUserByEmail(email);
 
@@ -72,7 +80,7 @@ router.post("/register", async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const userData: User = {
-      userId: '', // Will be filled by FirestoreUserRepository
+      userId: '', // Will be filled by UserRepository
       firstName,
       lastName,
       email,
