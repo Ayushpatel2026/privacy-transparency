@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Keychain from 'react-native-keychain';
+import * as SecureStore from 'expo-secure-store'; 
 import { User } from '../constants/types/User';
 
 interface AuthState {
@@ -25,10 +25,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
 		try {
 			const user = await AsyncStorage.getItem('user');
-			const token = await Keychain.getGenericPassword();
+			const token = await SecureStore.getItemAsync('authToken');
 
 			if (user && token) {
-				set({ user: JSON.parse(user), token: token.password, isLoading: false });
+				set({ user: JSON.parse(user), token: token, isLoading: false });
 			} else {
 				set({ user: null, token: null, isLoading: false });
 			}
@@ -43,7 +43,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 		set({ isLoading: true });
 
 		try {
-			const response = await fetch('http://localhost:7000/api/auth/register', {
+			const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/auth/register`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -57,8 +57,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 			}
 			await AsyncStorage.setItem('user', JSON.stringify(data.user));
 			
-			// store token using Keychain for encrypted storage
-			await Keychain.setGenericPassword('authToken', data.token);
+			// Store sensitive token securely using expo-secure-store
+      await SecureStore.setItemAsync('authToken', data.token);
 
 			set({ user: data.user, token: data.token, isLoading: false });
 			return {
@@ -72,7 +72,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 	login: async (email: string, password: string) => {
 		set({ isLoading: true });
 		try{
-			const response = await fetch('http://localhost:7000/api/auth/login', {
+			console.log('Logging in with:', { email, password });
+			const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/auth/login`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -80,14 +81,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 				body: JSON.stringify({ email, password }),
 			})
 
+			console.log('Response status:', response.status);
+
 			const data = await response.json();
 			if (!response.ok) {
 				throw new Error(data.message || 'Login failed');
 			}
 			await AsyncStorage.setItem('user', JSON.stringify(data.user));
 
-			// store token using Keychain for encrypted storage
-			await Keychain.setGenericPassword('authToken', data.token);
+			// Store sensitive token securely using expo-secure-store
+      await SecureStore.setItemAsync('authToken', data.token);
 			set({ user: data.user, token: data.token, isLoading: false });
 			return {
 				success: true,
@@ -101,7 +104,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 	logout: async () => {
 		try {
 			await AsyncStorage.removeItem('user');
-			await Keychain.resetGenericPassword();
+			
+			// Delete token from SecureStore
+      await SecureStore.deleteItemAsync('authToken');
 			set({ user: null, token: null });
 		} catch (error) {
 			console.error('Failed to logout:', error);

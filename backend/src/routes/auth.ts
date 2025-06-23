@@ -10,7 +10,7 @@ const router: Router = express.Router();
 const userRepository: UserRepository = new FirestoreUserRepository();
 
 router.post("/login" , async (req : Request, res : Response) => {
-
+  console.log("Login request received");
   const {email, password} = req.body;
 
   // Basic input validation
