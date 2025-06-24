@@ -7,7 +7,7 @@ export const Colors = {
   inputFieldBackground: "#5B5775",
   inputFieldPlaceholder: "#AFA3BF",
   inputFieldSelected: "#F2D8A7",
-  hyperlinkBlue: "#0000EE",
+  hyperlinkBlue: "#4A90E2",
   generalBlue: "#39ACE7",
   lightBlack: "#181719",
   tooltipGreen: "#E0FFDF",

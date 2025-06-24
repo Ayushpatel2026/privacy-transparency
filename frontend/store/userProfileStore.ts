@@ -1,6 +1,7 @@
 /**
  * This store is used to manage the user's profile information in the application. 
  * This includes profile information, consent status and loading states related to profile management.
+ * This information is stored in AsyncStorage and persists at the device level, not the account level.
  */
 
 import { create } from 'zustand';
@@ -15,6 +16,7 @@ interface UserProfileState {
     loadProfileStatus: () => Promise<void>;
     setHasCompletedPrivacyOnboarding: (value: boolean) => Promise<void>;
     setHasCompletedAppOnboarding: (value: boolean) => Promise<void>;
+    setUserConsentPreferences: (preferences: UserConsentPreferences) => Promise<void>;
 }
 
 export const useProfileStore = create<UserProfileState>((set, get) => ({
@@ -63,4 +65,12 @@ export const useProfileStore = create<UserProfileState>((set, get) => ({
             console.error('Failed to save hasCompletedAppOnboarding', error);
         }
     },
+    setUserConsentPreferences: async (preferences: UserConsentPreferences) => {
+        set({ userConsentPreferences: preferences });
+        try {
+            await AsyncStorage.setItem('userConsentPreferences', JSON.stringify(preferences));
+        } catch (error) {
+            console.error('Failed to save user consent preferences', error);
+        }
+    }
 }));

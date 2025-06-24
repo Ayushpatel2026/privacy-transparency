@@ -27,7 +27,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     checkAuth()
-    loadProfileStatus();
+    //loadProfileStatus();
   }, []);
 
   // handle the navigation based on authentication state
