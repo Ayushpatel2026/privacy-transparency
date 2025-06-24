@@ -9,7 +9,7 @@ import { useRouter } from 'expo-router';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { isLoading, login } = useAuthStore();
+  const { isLoading, login, isCheckingAuth } = useAuthStore();
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -22,6 +22,10 @@ export default function Login() {
       // Show error message to user
     }
   };
+
+  if (isCheckingAuth) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.container}>

@@ -1,3 +1,8 @@
+/*
+	This authStore is used to manage the user authentication state in the application. 
+	This includes the auth token, registration information (email, name etc..) and loading states related to authentication.
+*/
+
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store'; 

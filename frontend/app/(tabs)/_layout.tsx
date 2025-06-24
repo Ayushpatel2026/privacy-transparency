@@ -1,39 +1,53 @@
 import { Tabs } from "expo-router";
 import { StyleSheet } from "react-native";
-
+import { Ionicons } from '@expo/vector-icons';
+import { Colors } from "@/constants/Colors";
 
 const TabLayout = () => {
   return (
     <Tabs
       screenOptions={{
-				headerShown: false, 
-        tabBarStyle: styles.tabBarStyle, 
-        tabBarItemStyle: { justifyContent: "center" },
-        animation: 'shift', // Set animation type
+        headerShown: false,
+        tabBarStyle: styles.tabBarStyle,
+        tabBarActiveTintColor: Colors.generalBlue, // Blue color for active tab
+        tabBarInactiveTintColor: Colors.grey, // Gray color for inactive tabs
+        animation: 'shift',
       }}
     >
       <Tabs.Screen
-        name="index" // Route for the sleep screen, which is the default tab
+        name="index" // Sleep screen as default
         options={{
-          title: "Sleep", 
+          title: "Sleep",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="moon-outline" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="journal" 
+        name="journal"
         options={{
-          title: "Journal", 
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
+          title: "Journal",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="document-text-outline" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="statistics"
         options={{
           title: "Statistics",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="bar-chart-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-outline" size={size} color={color} />
+          ),
         }}
       />
     </Tabs>
@@ -46,16 +60,10 @@ const TabLayout = () => {
 
 const styles = StyleSheet.create({
   tabBarStyle: {
-    position: "absolute",
-    bottom: "4%",
-    marginHorizontal: "10%", 
-    width: "80%", 
-    height: "6%", 
-    backgroundColor: 'grey',
-    borderRadius: 100, 
-    flexDirection: "row",
-    justifyContent: "space-between", 
-    alignItems: "center", 
+    backgroundColor: Colors.lightBlack, // this is slightly lighter than the black background
+    paddingVertical: 5,
+    borderTopWidth: 1,
+    borderTopColor: Colors.lightBlack
   },
 });
 

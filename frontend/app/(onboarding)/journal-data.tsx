@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import {useRouter} from "expo-router";
 import GeneralButton from "@/components/GeneralButton";
 
-export default function MicrophoneConsent() {
+export default function JournalData() {
 
     const router = useRouter();
 
@@ -14,8 +14,8 @@ export default function MicrophoneConsent() {
                 alignItems: "center",
             }}
         >
-            <Text>Microphone Consent Screen</Text>
-            <GeneralButton title='Continue' onPress={() => {router.push('/accelerometer-consent')}}/>
+            <Text>Journal Data Screen</Text>
+            <GeneralButton title='Continue' onPress={() => {router.push('/cloud-storage')}}/>
         </View>
     );
 }

@@ -2,6 +2,7 @@ import { useAuthStore } from "@/store/authStore";
 import { Stack, useRouter, useSegments, SplashScreen} from "expo-router";
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
+import { useProfileStore } from "@/store/userProfileStore";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -12,6 +13,7 @@ export default function RootLayout() {
   const segments = useSegments();
 
   const { checkAuth, user, token } = useAuthStore();
+  const { loadProfileStatus, hasCompletedAppOnboarding, hasCompletedPrivacyOnboarding } = useProfileStore();
   const [fontsLoaded] = useFonts({
     "SpaceMono-Regular": require("@/assets/fonts/SpaceMono-Regular.ttf"),
   })
@@ -25,21 +27,24 @@ export default function RootLayout() {
 
   useEffect(() => {
     checkAuth()
+    loadProfileStatus();
   }, []);
 
   // handle the navigation based on authentication state
   useEffect(() => {
     const inAuthStack = segments[0] === "(auth)";
-    // TODO - figure out how to handle the routing of the onboarding stack
-    const inOnboardingStack = segments[0] === "(onboarding)";
 
     const isAuthenticated = user && token;
 
     if (!isAuthenticated && !inAuthStack) {
       router.replace("/(auth)");
     }
-    else if (isAuthenticated && inAuthStack) {
-      router.replace("/(tabs)");
+    else if (isAuthenticated && inAuthStack && !hasCompletedPrivacyOnboarding) {
+      router.replace("/(onboarding)");
+    } else if (isAuthenticated && inAuthStack && hasCompletedPrivacyOnboarding && !hasCompletedAppOnboarding){
+      router.replace("/(onboarding)/questions")
+    } else if (isAuthenticated && inAuthStack && hasCompletedPrivacyOnboarding && hasCompletedAppOnboarding){
+      router.replace("/(tabs)")
     }
   }, [user, token, segments]);
 
