@@ -9,11 +9,23 @@ interface HeaderProps {
 
 const OnboardingHeader = ({ title, onBackPress }: HeaderProps) => {
   return (
-    <View style={styles.header}>
-      {onBackPress && <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
-        <Ionicons name="chevron-back" size={24} color={Colors.generalBlue} />
-      </TouchableOpacity>}
-      <Text style={styles.headerTitle}>{title}</Text>
+    <View style={styles.headerContainer}>
+      <View style={[
+        styles.headerContent,
+        onBackPress ? styles.headerContentWithBackButton : styles.headerContentWithoutBackButton
+      ]}>
+        {onBackPress && (
+          <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
+            <Ionicons name="chevron-back" size={24} color={Colors.generalBlue} />
+          </TouchableOpacity>
+        )}
+        <Text style={[
+          styles.headerTitle,
+          onBackPress ? styles.headerTitleWithBackButton : styles.headerTitleWithoutBackButton
+        ]}>
+          {title}
+        </Text>
+      </View>
     </View>
   );
 };
@@ -23,33 +35,44 @@ const OnboardingHeader = ({ title, onBackPress }: HeaderProps) => {
 // =============================================================
 
 const styles = StyleSheet.create({
-  header: {
+  headerContainer: {
     width: '100%',
     paddingTop: 60,
-    paddingBottom: 20, 
-    position: 'relative',
+    paddingBottom: 20,
     minHeight: 120,
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center', 
+    paddingHorizontal: 20,
+  },
+  headerContentWithBackButton: {
+    justifyContent: 'flex-start',
+  },
+  headerContentWithoutBackButton: {
+    justifyContent: 'center',
   },
   backButton: {
-    position: 'absolute',
-    top: 60, 
-    left: 20,
-    width: 40, 
-    height: 40, 
+    width: 40,
+    height: 40,
     justifyContent: 'center', 
-    alignItems: 'center',
-    zIndex: 1, 
+    alignItems: 'center', 
+    marginRight: 10,
   },
   headerTitle: {
-    position: 'absolute',
-    left: 0, 
-    right: 0,
-    top: 75,
     color: 'white',
     fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center', 
-  }
+  },
+  headerTitleWithBackButton: {
+    flex: 1, 
+    textAlign: 'left', 
+  },
+  headerTitleWithoutBackButton: {
+    textAlign: 'center',
+  },
 });
 
 export default OnboardingHeader;
