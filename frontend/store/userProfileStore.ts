@@ -17,6 +17,8 @@ interface UserProfileState {
     setHasCompletedPrivacyOnboarding: (value: boolean) => Promise<void>;
     setHasCompletedAppOnboarding: (value: boolean) => Promise<void>;
     setUserConsentPreferences: (preferences: UserConsentPreferences) => Promise<void>;
+    isSleepModeActive: boolean; // this variable is used to track if the user is on the "sleep mode" screen
+    setIsSleepModeActive: (isSleepModeActive: boolean) => void;
 }
 
 export const useProfileStore = create<UserProfileState>((set, get) => ({
@@ -24,6 +26,13 @@ export const useProfileStore = create<UserProfileState>((set, get) => ({
     isLoading: false,
     hasCompletedPrivacyOnboarding: false,
     hasCompletedAppOnboarding: false,
+
+    /* this variable is used to track if the user is on the "sleep mode" screen 
+     * When this is true, the light sensor and accelerometer will be active to detect sleep patterns.
+     * This can be deactivated if the user presses the "wake up" button on the sleep mode screen.
+     * This variable is technically not part of the user profile, but I am not sure where else to put it.
+    */
+    isSleepModeActive: false,
 
     loadProfileStatus: async () => {
         set({ isLoading: true });
@@ -72,5 +81,9 @@ export const useProfileStore = create<UserProfileState>((set, get) => ({
         } catch (error) {
             console.error('Failed to save user consent preferences', error);
         }
+    },
+    setIsSleepModeActive: (isSleepModeActive: boolean) => {
+        set({ isSleepModeActive });
+        // Note: No AsyncStorage save here, as this is a temporary state variable
     }
 }));
