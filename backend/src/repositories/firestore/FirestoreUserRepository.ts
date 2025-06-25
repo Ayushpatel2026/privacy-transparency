@@ -1,6 +1,6 @@
-import { User } from '../constants/types';
-import { UserRepository } from './userRepository';
-import { db } from '../config/firebaseConfig'; 
+import { User } from '../../constants/types';
+import { UserRepository } from '../UserRepository';
+import { db } from '../../config/firebaseConfig'; 
 import { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
 export class FirestoreUserRepository implements UserRepository {

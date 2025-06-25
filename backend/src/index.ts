@@ -2,6 +2,8 @@ import express, {Request, Response} from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import authRoutes from './routes/auth';
+import journalRoutes from './routes/phi/journal';
+import generalHealthRoutes from './routes/phi/generalHealth';
 
 const app = express();
 
@@ -16,6 +18,8 @@ app.use(cors());
 
 // set up the routes
 app.use('/api/auth', authRoutes);
+app.use('/api/phi/journal', journalRoutes);
+app.use('/api/phi/generalHealth', generalHealthRoutes);
 
 // test endpoint
 app.get('/api/test', async (req : Request, res : Response) => {

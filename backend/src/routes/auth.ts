@@ -1,8 +1,8 @@
 import express, { Request, Response, Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { UserRepository } from '../repositories/userRepository';
-import { FirestoreUserRepository } from '../repositories/FirestoreUserRepository';
+import { UserRepository } from '../repositories/UserRepository';
+import { FirestoreUserRepository } from '../repositories/firestore/FirestoreUserRepository';
 import { User } from '../constants/types';
 
 const router: Router = express.Router();
