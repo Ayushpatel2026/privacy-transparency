@@ -41,7 +41,12 @@ router.post('/', verifyToken as RequestHandler, async (req: Request, res: Respon
 
 router.get('/', verifyToken as RequestHandler, async (req: Request, res: Response) => {
     try {
-        const userID = req.body.userId
+        const userID = req.userId;
+
+        if (!userID) {
+            res.status(401).json({ message: 'User not authenticated.' });
+            return;
+        }
 
         const journals = await journalRepository.getJournalsByUserId(userID);
         res.status(200).json({ journals });
@@ -53,7 +58,7 @@ router.get('/', verifyToken as RequestHandler, async (req: Request, res: Respons
 
 router.get('/:journalId', verifyToken as RequestHandler, async (req: Request, res: Response) => {
     try {
-        const userID = req.body.userId;
+        const userID = req.userId;
         const { journalId } = req.params;
         if (!userID) {
             res.status(401).json({ message: 'User not authenticated.' });
@@ -75,7 +80,7 @@ router.get('/:journalId', verifyToken as RequestHandler, async (req: Request, re
 
 router.put('/:journalId', verifyToken as RequestHandler, async (req: Request, res: Response) => {
     try {
-        const userID = req.body.userId;
+        const userID = req.userId;
         const { journalId } = req.params;
         const updatedData: Partial<Omit<JournalData, 'journalId' | 'userId'>> = req.body;
 
@@ -106,7 +111,7 @@ router.put('/:journalId', verifyToken as RequestHandler, async (req: Request, re
 
 router.delete('/:journalId', verifyToken as RequestHandler, async (req: Request, res: Response) => {
     try {
-        const userID = req.body.userId;
+        const userID = req.userId;
         const { journalId } = req.params;
         if (!userID) {
             res.status(401).json({ message: 'User not authenticated.' });
@@ -119,7 +124,7 @@ router.delete('/:journalId', verifyToken as RequestHandler, async (req: Request,
             res.status(404).json({ message: 'Journal entry not found or unauthorized to delete.' });
             return;
         }
-        res.status(200).json({ message: 'Journal entry deleted successfully.' });
+        res.status(204).json({ message: 'Journal entry deleted successfully.' });
 
     } catch (error: any) {
         console.error(`Error deleting journal entry ${req.params.journalId}:`, error);

@@ -1,5 +1,5 @@
-import { EncryptionService } from "./encryptionService";
-import { StorageService, StoredData } from "./storageService";
+import { EncryptionService } from "./EncryptionService";
+import { StorageService, StoredData } from "./StorageService";
 
 /**
  * TODO - Implement LocalStorageService to store data in local storage.

@@ -7,6 +7,7 @@ import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store'; 
 import { User } from '../constants/types/User';
+import { httpClient } from '@/services';
 
 interface AuthState {
 	user: User | null;
@@ -48,22 +49,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 		set({ isLoading: true });
 
 		try {
-			const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/auth/register`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ firstName, lastName, email, password }),
-			});
-
-			const data = await response.json();
-			if (!response.ok) {
-				throw new Error(data.message || 'Registration failed');
-			}
+			const data : any = await httpClient.post('/auth/register', { firstName, lastName, email, password })
 			await AsyncStorage.setItem('user', JSON.stringify(data.user));
 			
 			// Store sensitive token securely using expo-secure-store
-      await SecureStore.setItemAsync('authToken', data.token);
+      		await SecureStore.setItemAsync('authToken', data.token);
 
 			set({ user: data.user, token: data.token, isLoading: false });
 			return {
@@ -78,24 +68,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 		set({ isLoading: true });
 		try{
 			console.log('Logging in with:', { email, password });
-			const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/auth/login`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ email, password }),
-			})
-
-			console.log('Response status:', response.status);
-
-			const data = await response.json();
-			if (!response.ok) {
-				throw new Error(data.message || 'Login failed');
-			}
+			const data : any = await httpClient.post('/auth/login', { email, password });
+			console.log('Login response:', data);
+			console.log('Storing user data:', data.user);
 			await AsyncStorage.setItem('user', JSON.stringify(data.user));
 
 			// Store sensitive token securely using expo-secure-store
-      await SecureStore.setItemAsync('authToken', data.token);
+      		await SecureStore.setItemAsync('authToken', data.token);
 			set({ user: data.user, token: data.token, isLoading: false });
 			return {
 				success: true,

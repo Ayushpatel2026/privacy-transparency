@@ -5,11 +5,15 @@ import { useProfileStore } from "@/store/userProfileStore";
 import OnboardingHeader from "@/components/OnboardingHeader";
 import { useState } from "react";
 import OnboardingQuestionOption from "@/components/OnboardingQuestionOption";
+import { generalHealthDataRepository } from "@/services/index";
+import { GeneralHealthData } from "@/constants/types/GeneralHealthData";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Questions() {
 
 	const router = useRouter();
 	const { setHasCompletedAppOnboarding } = useProfileStore();
+  const { user } = useAuthStore();
 
 	const [selectedOption, setSelectedOption] = useState<string>();
 
@@ -21,9 +25,28 @@ export default function Questions() {
   };
 
 	// TODO - this data would be saved in the cloud or local storage
-	const saveSelectedOption = () => {
-		console.log("Selected sleep option:", selectedOption);
-	}
+	const saveSelectedOption = async () => {
+    // it is not neccessary for the user to select an option before continuing, but if they do not select one, we will not save anything
+		if (!selectedOption){
+      return;
+    }
+
+    const healthData = {
+      userId: user?.userId,
+      currentSleepDuration: selectedOption,
+      snoring: '',
+      tirednessFrequency: '',
+      daytimeSleepiness: '',
+    }
+    console.log('Saving health data:', healthData);
+    try{
+      const response = await generalHealthDataRepository.createHealthData(healthData as GeneralHealthData)
+      console.log('Health data saved successfully:', response);
+    } catch (error) {
+      console.error('Error saving health data:', error);
+      return;
+    }
+  }
 
 	return (
 		<View

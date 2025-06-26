@@ -10,8 +10,8 @@ const healthDataRepository : HealthDataRepository = new FirestoreHealthDataRepos
 
 router.post('/', verifyToken as RequestHandler, async (req: Request, res: Response) => {
     try {
-
-        if (!req.body.userId) {
+        console.log("Creating health data in the backend with data:", req.body);
+        if (!req.userId) {
             res.status(401).json({ message: 'User not authenticated.' });
             return;
         }
@@ -26,9 +26,20 @@ router.post('/', verifyToken as RequestHandler, async (req: Request, res: Respon
 
         const newHealthData: GeneralHealthData = req.body;
 
-        const createdHealthData = await healthDataRepository.createHealthData(newHealthData);
-        res.status(201).json({ message: 'General health data created successfully', healthData: createdHealthData });
-
+        const existingHealthData = await healthDataRepository.getHealthDataById(req.userId);
+        if (existingHealthData) {
+            // update existing health data instead of creating new one
+            const { userId, ...rest } = newHealthData; // Exclude userId from update
+            const updatedHealthData = await healthDataRepository.updateHealthData(req.userId, rest);
+            if (!updatedHealthData) {
+                res.status(404).json({ message: 'General health data not found or failed to update.' });
+                return;
+            }
+            res.status(200).json({ message: 'General health data updated successfully', healthData: updatedHealthData });
+        } else {
+            const createdHealthData = await healthDataRepository.createHealthData(newHealthData);
+            res.status(201).json({ message: 'General health data created successfully', healthData: createdHealthData });
+        }
     } catch (error: any) {
         // Specifically check for the 'already exists' error from the repository
         if (error.message.includes('Health data already exists for user')) {
@@ -43,7 +54,7 @@ router.post('/', verifyToken as RequestHandler, async (req: Request, res: Respon
 
 router.get('/', verifyToken as RequestHandler, async (req: Request, res: Response) => {
     try {
-        const userId = req.body.userId;
+        const userId = req.userId;
         if (!userId) {
             res.status(401).json({ message: 'User not authenticated.' });
             return;
@@ -57,45 +68,14 @@ router.get('/', verifyToken as RequestHandler, async (req: Request, res: Respons
         }
         res.status(200).json({ healthData });
     } catch (error: any) {
-        console.error(`Error fetching general health data for user ${req.body.userId}:`, error);
+        console.error(`Error fetching general health data for user ${req.userId}:`, error);
         res.status(500).json({ message: 'Failed to retrieve general health data.', error: error.message });
     }
 });
 
-
-router.put('/', verifyToken as RequestHandler, async (req: Request, res: Response) => {
-    try {
-        const userId = req.body.userId;
-        const updatedData: GeneralHealthData = req.body;
-
-        if (!userId) {
-            res.status(401).json({ message: 'User not authenticated.' });
-            return;
-        }
-
-        if (Object.keys(updatedData).length === 0) {
-            res.status(400).json({ message: 'No data provided for update.' });
-            return;
-        }
-
-        const updatedHealthData = await healthDataRepository.updateHealthData(userId, updatedData);
-
-        if (!updatedHealthData) {
-            res.status(404).json({ message: 'General health data not found or failed to update.' });
-            return;
-        }
-        res.status(200).json({ message: 'General health data updated successfully', healthData: updatedHealthData });
-
-    } catch (error: any) {
-        console.error(`Error updating general health data for user ${req.body.userId}:`, error);
-        res.status(500).json({ message: 'Failed to update general health data.', error: error.message });
-    }
-});
-
-
 router.delete('/', verifyToken as RequestHandler, async (req: Request, res: Response) => {
     try {
-        const userId = req.body.userId;
+        const userId = req.userId;
         if (!userId) {
             res.status(401).json({ message: 'User not authenticated.' });
             return;
@@ -107,7 +87,7 @@ router.delete('/', verifyToken as RequestHandler, async (req: Request, res: Resp
             res.status(404).json({ message: 'General health data not found or failed to delete.' });
             return;
         }
-        res.status(200).json({ message: 'General health data deleted successfully.' });
+        res.status(204).json({ message: 'General health data deleted successfully.' });
 
     } catch (error: any) {
         console.error(`Error deleting general health data for user ${req.userId}:`, error);

@@ -1,29 +1,58 @@
-import { EncryptionService } from "./encryptionService";
-import { StorageService, StoredData } from "./storageService";
+import { HttpClient } from "./HttpClient";
 
 /**
- * TODO - The service will handle cloud storage of PHI data. 
- * It will call the REST API endpoint of the backend to store and retrieve data.
+ * A simple HTTP client implementation for interacting with a cloud storage API.
+ * This client supports GET, POST, PUT, and DELETE methods with optional authentication.
  */
-export class CloudStorageService implements StorageService {
-  private baseUrl: string;
-  private encryptionService: EncryptionService;
+export class CloudStorageService implements HttpClient {
+    private baseUrl: string;
 
-  constructor(encryptionService: EncryptionService, backendUrl: string) {
-    this.encryptionService = encryptionService;
-    this.baseUrl = backendUrl;
-  }
+    constructor(baseUrl: string) {
+        this.baseUrl = baseUrl;
+    }
 
-  async store(key: string, data: any): Promise<void> {
-    console.log(`[CloudStorage] Attempting to store in cloud: ${key}`);
-  }
+    private async request<T>(method: string, path: string, body?: any, token?: string): Promise<T> {
+        const headers: HeadersInit = {
+            'Content-Type': 'application/json',
+        };
 
-  async retrieve(key: string): Promise<any | null> {
-    console.log(`[CloudStorage] Attempting to retrieve from cloud: ${key}`);
-  }
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
 
-  async getAllStoredData(): Promise<StoredData[]> {
-    console.log('[CloudStorage] Attempting to retrieve all stored data from cloud...');
-    return [];
-  }
+        const config: RequestInit = {
+            method,
+            headers,
+            body: body ? JSON.stringify(body) : undefined,
+        };
+
+        const response = await fetch(`${this.baseUrl}${path}`, config);
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ message: 'Unknown API error.' }));
+            throw new Error(errorData.message || 'API request failed');
+        }
+
+        if (response.status === 204) { // No Content for DELETE
+            return {} as T;
+        }
+
+        return response.json() as Promise<T>;
+    }
+
+    get<T>(path: string, token?: string): Promise<T> {
+        return this.request<T>('GET', path, undefined, token);
+    }
+
+    post<T>(path: string, body: any, token?: string): Promise<T> {
+        return this.request<T>('POST', path, body, token);
+    }
+
+    put<T>(path: string, body: any, token?: string): Promise<T> {
+        return this.request<T>('PUT', path, body, token);
+    }
+
+    delete<T>(path: string, token?: string): Promise<T> {
+        return this.request<T>('DELETE', path, undefined, token);
+    }
 }
