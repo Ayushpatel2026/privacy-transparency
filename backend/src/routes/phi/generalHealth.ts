@@ -29,8 +29,15 @@ router.post('/', verifyToken as RequestHandler, async (req: Request, res: Respon
         const existingHealthData = await healthDataRepository.getHealthDataById(req.userId);
         if (existingHealthData) {
             // update existing health data instead of creating new one
-            const { userId, ...rest } = newHealthData; // Exclude userId from update
-            const updatedHealthData = await healthDataRepository.updateHealthData(req.userId, rest);
+            // use the userId from the existing data
+            const dataToUpdate: GeneralHealthData = {
+                userId: existingHealthData.userId,
+                currentSleepDuration: newHealthData.currentSleepDuration === '' ? existingHealthData.currentSleepDuration : newHealthData.currentSleepDuration,
+                snoring: newHealthData.snoring === '' ? existingHealthData.snoring : newHealthData.snoring,
+                tirednessFrequency: newHealthData.tirednessFrequency === '' ? existingHealthData.tirednessFrequency : newHealthData.tirednessFrequency,
+                daytimeSleepiness: newHealthData.daytimeSleepiness === '' ? existingHealthData.daytimeSleepiness : newHealthData.daytimeSleepiness,
+            }
+            const updatedHealthData = await healthDataRepository.updateHealthData(req.userId, dataToUpdate);
             if (!updatedHealthData) {
                 res.status(404).json({ message: 'General health data not found or failed to update.' });
                 return;

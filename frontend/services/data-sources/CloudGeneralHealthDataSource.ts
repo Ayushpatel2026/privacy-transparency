@@ -36,7 +36,7 @@ export class CloudGeneralHealthDataSource implements GeneralHealthDataSource {
         }
     }
 
-    async createHealthData(healthData: Omit<GeneralHealthData, 'healthDataId'>): Promise<GeneralHealthData> {
+    async createHealthData(healthData: GeneralHealthData): Promise<GeneralHealthData> {
         console.log("Creating health data in cloud with data:", healthData);
         const token = this.getAuthToken();
         try {
