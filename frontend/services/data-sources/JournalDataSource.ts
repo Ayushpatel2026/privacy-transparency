@@ -10,7 +10,7 @@ import { JournalData } from '../../constants/types/JournalData';
 export interface JournalDataSource {
     getJournalsByUserId(userId: string): Promise<JournalData[]>;
     getJournalById(journalId: string): Promise<JournalData | null>;
-    createJournal(journalData: Omit<JournalData, 'journalId'>, userId: string): Promise<JournalData>;
-    updateJournal(journalId: string, updatedData: Partial<Omit<JournalData, 'journalId' | 'userId'>>, userId: string): Promise<JournalData | null>;
+    editJournal(date: string, updatedData: Partial<Omit<JournalData, 'journalId' | 'userId'>>, userId: string): Promise<JournalData | null>;
     deleteJournal(journalId: string, userId: string): Promise<void>;
+    getJournalByDate(userId: string, date: string): Promise<JournalData | null>; 
 }
