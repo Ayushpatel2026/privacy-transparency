@@ -1,6 +1,6 @@
 import { JournalData } from '@/constants/types/JournalData';
-import { useAuthStore } from '../store/authStore';
-import { useProfileStore } from '../store/userProfileStore';
+import { useAuthStore } from '../../store/authStore';
+import { useProfileStore } from '../../store/userProfileStore';
 import { JournalDataSource } from './data-sources/JournalDataSource';
 
 /**

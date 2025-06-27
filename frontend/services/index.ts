@@ -3,15 +3,15 @@
  */
 
 import { HttpClient } from './HttpClient';
-import { CloudStorageService } from './CloudStorageService';
+import { CloudStorageService } from './data/CloudStorageService';
 import { useAuthStore } from '@/store/authStore';
-import { GeneralHealthDataRepository } from './GeneralHealthDataRepository';
-import { CloudGeneralHealthDataSource } from './data-sources/CloudGeneralHealthDataSource';
-import { LocalGeneralHealthDataSource } from './data-sources/LocalGeneralHealthDataSource';
-import { LocalDatabaseManager } from './LocalDatabaseManager';
-import { LocalJournalDataSource } from './data-sources/LocalJournalDataSource';
-import { JournalDataRepository } from './JournalDataRepository';
-import { CloudJournalDataSource } from './data-sources/CloudJournalDataSource';
+import { GeneralHealthDataRepository } from './data/GeneralHealthDataRepository';
+import { CloudGeneralHealthDataSource } from './data/data-sources/CloudGeneralHealthDataSource';
+import { LocalGeneralHealthDataSource } from './data/data-sources/LocalGeneralHealthDataSource';
+import { LocalDatabaseManager } from './data/LocalDatabaseManager';
+import { LocalJournalDataSource } from './data/data-sources/LocalJournalDataSource';
+import { JournalDataRepository } from './data/JournalDataRepository';
+import { CloudJournalDataSource } from './data/data-sources/CloudJournalDataSource';
 
 // Instantiate the base HTTP client
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_URL as string;
