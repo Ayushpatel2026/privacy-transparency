@@ -12,7 +12,7 @@ export class ExpoSensorService extends SensorService {
   private audioRecording: Audio.Recording | null = null;
   private lightSubscription: any = null;
   private accelerometerSubscription: any = null;
-  private audioAnalysisInterval: NodeJS.Timeout | null = null;
+  private audioAnalysisInterval: ReturnType<typeof setInterval> | null = null;
   
   async isAudioAvailable(): Promise<boolean> {
     try {

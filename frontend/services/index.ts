@@ -26,7 +26,6 @@ const getAuthToken = (): string | null => {
     return useAuthStore.getState().token;
 };
 
-export const cloudStorageService = new CloudStorageService(apiBaseUrl);
 export const cloudHealthDataSource = new CloudGeneralHealthDataSource(httpClient, getAuthToken);
 export const localHealthDataSource = new LocalGeneralHealthDataSource();
 export const generalHealthDataRepository = new GeneralHealthDataRepository(cloudHealthDataSource, localHealthDataSource);

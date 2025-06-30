@@ -6,7 +6,7 @@ import { SensorService } from "./SensorService";
  * It is always available (does not need OS permissions) and can be used for testing and simulations. 
  */
 export class SimulationSensorService extends SensorService {
-  private intervals: NodeJS.Timeout[] = [];
+  private intervals: ReturnType<typeof setInterval>[] = []; 
   
   async isAudioAvailable(): Promise<boolean> {
     return true;
@@ -44,10 +44,22 @@ export class SimulationSensorService extends SensorService {
     this.intervals.push(interval);
   }
   
-  // Empty implementations (intervals handle the work)
-  async stopAudioMonitoring(): Promise<void> {}
-  async stopLightMonitoring(): Promise<void> {}
-  async stopAccelerometerMonitoring(): Promise<void> {}
+  private clearAllIntervals(): void {
+    this.intervals.forEach(interval => clearInterval(interval));
+    this.intervals = [];
+  }
+  
+  async stopAudioMonitoring(): Promise<void> {
+    this.clearAllIntervals();
+  }
+  
+  async stopLightMonitoring(): Promise<void> {
+    this.clearAllIntervals();
+  }
+  
+  async stopAccelerometerMonitoring(): Promise<void> {
+    this.clearAllIntervals();
+  }
   
   // ===== MOCK DATA GENERATORS =====
   
@@ -72,7 +84,7 @@ export class SimulationSensorService extends SensorService {
         high: Math.random() * 30,
       },
       snoreDetected: Math.random() > 0.85,
-      noiseLevel: this.categorizeNoiseLevel(mockDecibels),
+      ambientNoiseLevel: this.categorizeNoiseLevel(mockDecibels),
     };
     
     this.onAudioData(audioData);
