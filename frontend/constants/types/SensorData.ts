@@ -2,7 +2,6 @@ export interface BaseSensorReading {
   id: string;
   userId: string;
   timestamp: number; // Unix timestamp in milliseconds
-  sessionId: string; // Groups readings from the same sleep session
   date: string; // YYYY-MM-DD format for the sleep date
   sensorType: string; 
 }
