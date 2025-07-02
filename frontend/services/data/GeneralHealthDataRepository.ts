@@ -1,7 +1,7 @@
 import { GeneralHealthDataSource } from './data-sources/GeneralHealthDataSource';
-import { GeneralHealthData } from '../constants/types/GeneralHealthData';
-import { useAuthStore } from '../store/authStore';
-import { useProfileStore } from '../store/userProfileStore';
+import { GeneralHealthData } from '../../constants/types/GeneralHealthData';
+import { useAuthStore } from '../../store/authStore';
+import { useProfileStore } from '../../store/userProfileStore';
 
 /**
  * Repository for managing general health data.

@@ -9,18 +9,24 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.mcscert.sleeptracker",
       "supportsTablet": true,
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "Your microphone will listen for sounds like snoring or sleep talking only while you are sleeping to help detect sleep disruptions."
+        "NSMicrophoneUsageDescription": "Your microphone will listen for sounds like snoring or sleep talking only while you are sleeping to help detect sleep disruptions.",
+        "NSMotionUsageDescription": "This app collects accelerometer data to detect movement during sleep.",
+        "NSLightUsageDescription": "This app collects light sensor data to monitor ambient light conditions during sleep.",
+        "UIBackgroundModes": ["audio", "fetch"]
       }
     },
     "android": {
+      "package": "com.mcscert.sleeptracker",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "android.permission.RECORD_AUDIO"
+        "FOREGROUND_SERVICE",
+        "RECORD_AUDIO"
       ],
       "edgeToEdgeEnabled": true
     },

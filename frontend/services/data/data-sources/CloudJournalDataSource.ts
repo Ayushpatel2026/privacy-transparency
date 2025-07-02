@@ -1,5 +1,5 @@
 import { JournalData } from '@/constants/types/JournalData';
-import { HttpClient } from '../HttpClient'; 
+import { HttpClient } from '@/services/HttpClient'; 
 import { JournalDataSource } from './JournalDataSource';
 
 /**

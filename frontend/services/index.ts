@@ -3,15 +3,23 @@
  */
 
 import { HttpClient } from './HttpClient';
-import { CloudStorageService } from './CloudStorageService';
+import { CloudStorageService } from './data/CloudStorageService';
 import { useAuthStore } from '@/store/authStore';
-import { GeneralHealthDataRepository } from './GeneralHealthDataRepository';
-import { CloudGeneralHealthDataSource } from './data-sources/CloudGeneralHealthDataSource';
-import { LocalGeneralHealthDataSource } from './data-sources/LocalGeneralHealthDataSource';
-import { LocalDatabaseManager } from './LocalDatabaseManager';
-import { LocalJournalDataSource } from './data-sources/LocalJournalDataSource';
-import { JournalDataRepository } from './JournalDataRepository';
-import { CloudJournalDataSource } from './data-sources/CloudJournalDataSource';
+import { GeneralHealthDataRepository } from './data/GeneralHealthDataRepository';
+import { CloudGeneralHealthDataSource } from './data/data-sources/CloudGeneralHealthDataSource';
+import { LocalGeneralHealthDataSource } from './data/data-sources/LocalGeneralHealthDataSource';
+import { LocalDatabaseManager } from './data/LocalDatabaseManager';
+import { LocalJournalDataSource } from './data/data-sources/LocalJournalDataSource';
+import { JournalDataRepository } from './data/JournalDataRepository';
+import { CloudJournalDataSource } from './data/data-sources/CloudJournalDataSource';
+import { SensorBackgroundTaskManager } from './BackgroundTaskManager';
+import { CloudSensorDataSource } from './data/data-sources/CloudSensorDataSource';
+import { SensorStorageRepository } from './data/SensorStorageRepository';
+import { LocalSensorDataSource } from './data/data-sources/LocalSensorDataSource';
+import { ExpoSensorService } from './sensors/ExpoSensorService';
+import { DEFAULT_SENSOR_SERVICE_CONFIG } from './sensors/sensorConfig';
+import { SimulationSensorService } from './sensors/SimulationSensorService';
+import { SensorRepository } from './sensors/SensorRepository';
 
 // Instantiate the base HTTP client
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_URL as string;
@@ -26,7 +34,6 @@ const getAuthToken = (): string | null => {
     return useAuthStore.getState().token;
 };
 
-export const cloudStorageService = new CloudStorageService(apiBaseUrl);
 export const cloudHealthDataSource = new CloudGeneralHealthDataSource(httpClient, getAuthToken);
 export const localHealthDataSource = new LocalGeneralHealthDataSource();
 export const generalHealthDataRepository = new GeneralHealthDataRepository(cloudHealthDataSource, localHealthDataSource);
@@ -34,3 +41,12 @@ export const generalHealthDataRepository = new GeneralHealthDataRepository(cloud
 export const cloudJournalDataSource = new CloudJournalDataSource(httpClient, getAuthToken);
 export const localJournalDataSource = new LocalJournalDataSource(dbManager);
 export const journalDataRepository = new JournalDataRepository(cloudJournalDataSource, localJournalDataSource);
+
+export const cloudSensorDataSource = new CloudSensorDataSource(httpClient, getAuthToken);
+export const localSensorDataSource = new LocalSensorDataSource(dbManager);
+export const sensorStorageRepository = new SensorStorageRepository(cloudSensorDataSource, localSensorDataSource);
+
+export const expoSensorService = new ExpoSensorService(DEFAULT_SENSOR_SERVICE_CONFIG);
+export const simulationSensorService = new SimulationSensorService(DEFAULT_SENSOR_SERVICE_CONFIG);
+export const sensorRepository = new SensorRepository(expoSensorService, simulationSensorService, sensorStorageRepository);
+export const sensorBackgroundTaskManager = new SensorBackgroundTaskManager(sensorRepository);

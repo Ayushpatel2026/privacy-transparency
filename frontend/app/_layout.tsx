@@ -3,6 +3,7 @@ import { Stack, useRouter, useSegments, SplashScreen} from "expo-router";
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import { useProfileStore } from "@/store/userProfileStore";
+import { sensorBackgroundTaskManager } from "@/services";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,6 +29,10 @@ export default function RootLayout() {
   useEffect(() => {
     checkAuth()
     //loadProfileStatus();
+    console.log("Checking auth and loading profile status");
+    sensorBackgroundTaskManager.registerAccelerometer();
+    sensorBackgroundTaskManager.registerLightSensor();
+    sensorBackgroundTaskManager.registerAudioSensor();
   }, []);
 
   // handle the navigation based on authentication state

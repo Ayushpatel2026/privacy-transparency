@@ -9,6 +9,9 @@ interface QueryResult {
 /**
  * LocalDatabaseManager is a singleton class that manages the SQLite database connection
  * and provides methods to execute SQL queries.
+ * 
+ * TODO - encryption needs to be added. useSQLCipher is set to true in the app.json file, but
+ * it is not currently implemented in this class.
  */
 export class LocalDatabaseManager {
     private db: SQLite.SQLiteDatabase | null = null;
@@ -26,6 +29,39 @@ export class LocalDatabaseManager {
             diaryEntry TEXT NOT NULL,
             sleepNotes TEXT,              -- Stored as JSON string
             createdAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'NOW')) -- Add a creation timestamp
+        );
+    `;
+
+    // ALl sensor data is stored in a single table, with nullable fields for each sensor type
+    // This allows us to store different sensor data types in the same table without needing multiple tables (for simplicity)
+    private CREATE_SENSOR_DATA_TABLE_SQL = `
+        CREATE TABLE IF NOT EXISTS sensor_data (
+            id TEXT PRIMARY KEY NOT NULL,
+            userId TEXT NOT NULL,
+            timestamp INTEGER NOT NULL,  -- Unix timestamp in milliseconds
+            date TEXT NOT NULL,          -- YYYY-MM-DD format
+            sensorType TEXT NOT NULL,    -- 'audio', 'light', 'accelerometer'
+            
+            -- Audio Sensor Data specific fields (nullable)
+            averageDecibels REAL,
+            peakDecibels REAL,
+            frequencyBands TEXT,         -- Stored as JSON string (e.g., '{ "low": 0.5, "mid": 0.3, "high": 0.2 }')
+            audioClipUri TEXT,
+            snoreDetected INTEGER,       -- Boolean (0 for false, 1 for true)
+            ambientNoiseLevel TEXT,      -- 'quiet', 'moderate', 'loud', 'very_loud'
+
+            -- Light Sensor Data specific fields (nullable)
+            illuminance REAL,            -- Lux value
+            lightLevel TEXT,             -- 'dark', 'dim', 'moderate', 'bright'
+
+            -- Accelerometer Sensor Data specific fields (nullable)
+            x REAL,
+            y REAL,
+            z REAL,
+            magnitude REAL,
+            movementIntensity TEXT,      -- 'still', 'light', 'moderate', 'active'
+            
+            createdAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'NOW')) -- Record creation timestamp
         );
     `;
 
@@ -64,6 +100,7 @@ export class LocalDatabaseManager {
         }
         try {
             await this.db.execAsync(this.CREATE_JOURNAL_TABLE_SQL);
+            await this.db.execAsync(this.CREATE_SENSOR_DATA_TABLE_SQL);
             console.log("All tables created or already exist.");
         } catch (error) {
             console.error("Error creating tables:", error);
