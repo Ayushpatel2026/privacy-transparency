@@ -1,4 +1,4 @@
-import { JournalData } from '../../constants/types/JournalData';
+import { JournalData } from '@/constants/types/JournalData';
 
 /**
  * Provides an interface to interact with journal data.

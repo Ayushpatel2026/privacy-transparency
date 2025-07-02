@@ -13,6 +13,7 @@ import { LocalJournalDataSource } from './data/data-sources/LocalJournalDataSour
 import { JournalDataRepository } from './data/JournalDataRepository';
 import { CloudJournalDataSource } from './data/data-sources/CloudJournalDataSource';
 import { SensorBackgroundTaskManager } from './BackgroundTaskManager';
+import { CloudSensorDataSource } from './data/data-sources/CloudSensorDataSource';
 
 // Instantiate the base HTTP client
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_URL as string;
@@ -35,4 +36,6 @@ export const cloudJournalDataSource = new CloudJournalDataSource(httpClient, get
 export const localJournalDataSource = new LocalJournalDataSource(dbManager);
 export const journalDataRepository = new JournalDataRepository(cloudJournalDataSource, localJournalDataSource);
 
+export const cloudSensorDataSource = new CloudSensorDataSource(httpClient, getAuthToken);
+export const localSensorDataSource = new LocalJournalDataSource(dbManager);
 export const sensorBackgroundTaskManager = new SensorBackgroundTaskManager();
