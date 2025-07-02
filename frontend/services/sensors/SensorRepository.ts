@@ -1,43 +1,58 @@
 import { DEFAULT_SENSOR_SERVICE_CONFIG, SensorServiceConfig } from "./sensorConfig";
 import { SensorService } from "./SensorService";
-import { SensorStorageRepository } from "./SensorStorageRepository";
-import { AccelerometerSensorData, AudioSensorData, LightSensorData } from "./sensor-data-types";
+import { SensorStorageRepository } from "../data/SensorStorageRepository";
+import { AccelerometerSensorData, AudioSensorData, LightSensorData } from "../../constants/types/SensorData";
 import { ExpoSensorService } from "./ExpoSensorService";
 import { SimulationSensorService } from "./SimulationSensorService";
 import { useProfileStore } from "@/store/userProfileStore";
+import { Platform } from "react-native";
 
 export class SensorRepository {
-    private ExpoSensorService: ExpoSensorService;
-    private SimulationSensorService: SimulationSensorService;
+    private expoSensorService: ExpoSensorService;
+    private simulationSensorService: SimulationSensorService;
     private SensorStorageRepository: SensorStorageRepository;
     private sensorConfig: SensorServiceConfig = DEFAULT_SENSOR_SERVICE_CONFIG;
-    private currentSensorService: SensorService;
+    private currentSensorService: SensorService = new ExpoSensorService(DEFAULT_SENSOR_SERVICE_CONFIG); // Default to Expo service
 
-    constructor(
+    private constructor(
         ExpoSensorService: ExpoSensorService,
         SimulationSensorService: SimulationSensorService,
         SensorStorageRepository: SensorStorageRepository,
-        useSimulation: boolean = false
     ) {
-        this.ExpoSensorService = ExpoSensorService;
-        this.SimulationSensorService = SimulationSensorService;
+        this.expoSensorService = ExpoSensorService;
+        this.simulationSensorService = SimulationSensorService;
         this.SensorStorageRepository = SensorStorageRepository;
-        this.currentSensorService = this.ExpoSensorService;
+        this.setSimulationMode(DEFAULT_SENSOR_SERVICE_CONFIG.useSimulation)
 
         const userConsentPreferences = useProfileStore.getState().userConsentPreferences;
 
         // Initialize sensor configuration based on user consent preferences
         this.sensorConfig = {
             ...this.sensorConfig,
-            useSimulation: useSimulation,
             audioEnabled: userConsentPreferences?.microphoneEnabled ?? false,
             lightEnabled: userConsentPreferences?.lightSensorEnabled ?? false,
             accelerometerEnabled: userConsentPreferences?.accelerometerEnabled ?? false,
         };
 
         // Set up data callbacks for both services
-        this.setupDataCallbacks(this.ExpoSensorService);
-        this.setupDataCallbacks(this.SimulationSensorService);
+        this.setupDataCallbacks(this.expoSensorService);
+        this.setupDataCallbacks(this.simulationSensorService);
+    }
+
+    /**
+     * Singleton instance of SensorRepository
+     */
+    private static instance: SensorRepository | null = null;
+
+    public static getInstance(): SensorRepository {
+        if (!SensorRepository.instance) {
+            SensorRepository.instance = new SensorRepository(
+                new ExpoSensorService(DEFAULT_SENSOR_SERVICE_CONFIG),
+                new SimulationSensorService(DEFAULT_SENSOR_SERVICE_CONFIG),
+                new SensorStorageRepository()
+            );
+        }
+        return SensorRepository.instance;
     }
 
     // ===== SERVICE SWITCHING =====
@@ -47,11 +62,12 @@ export class SensorRepository {
      */
     setSimulationMode(useSimulation: boolean): void {
         if (this.isRecordingActive()) {
+            console.log("Is recording active, cannot switch sensor mode");
             throw new Error("Cannot switch sensor mode while recording is active. Stop recording first.");
         }
-        
+        console.log(`Switching sensor mode to ${useSimulation ? 'simulation' : 'real sensors'}`);
         this.sensorConfig.useSimulation = useSimulation;
-        this.currentSensorService = useSimulation ? this.SimulationSensorService : this.ExpoSensorService;
+        this.currentSensorService = useSimulation ? this.simulationSensorService : this.expoSensorService;
     }
 
     isSimulationMode(): boolean {
@@ -129,9 +145,10 @@ export class SensorRepository {
 
     // Individual sensor controls
     async startAudioMonitoring(): Promise<void> {
-        if (!this.sensorConfig.audioEnabled) {
-            throw new Error("Audio monitoring is disabled in configuration");
-        }
+        // if (!this.sensorConfig.audioEnabled) {
+        //     console.log("Audio monitoring is disabled in configuration");
+        //     throw new Error("Audio monitoring is disabled in configuration");
+        // }
         await this.currentSensorService.startAudioMonitoring();
     }
 
@@ -140,10 +157,16 @@ export class SensorRepository {
     }
 
     async startLightMonitoring(): Promise<void> {
-        if (!this.sensorConfig.lightEnabled) {
-            throw new Error("Light monitoring is disabled in configuration");
+        // if (!this.sensorConfig.lightEnabled) {
+        //     console.log("Light monitoring is disabled in configuration");
+        //     throw new Error("Light monitoring is disabled in configuration");
+        // }
+        // This if statement if because real light sensor will not work on IOS without a native module
+        if (Platform.OS === 'ios') {
+            await this.simulationSensorService.startLightMonitoring();
+        } else {
+            await this.currentSensorService.startLightMonitoring();
         }
-        await this.currentSensorService.startLightMonitoring();
     }
 
     async stopLightMonitoring(): Promise<void> {
@@ -151,9 +174,10 @@ export class SensorRepository {
     }
 
     async startAccelerometerMonitoring(): Promise<void> {
-        if (!this.sensorConfig.accelerometerEnabled) {
-            throw new Error("Accelerometer monitoring is disabled in configuration");
-        }
+        // if (!this.sensorConfig.accelerometerEnabled) {
+        //     console.log("Accelerometer monitoring is disabled in configuration");
+        //     throw new Error("Accelerometer monitoring is disabled in configuration");
+        // }
         await this.currentSensorService.startAccelerometerMonitoring();
     }
 
@@ -213,7 +237,8 @@ export class SensorRepository {
      */
     private async handleAudioData(data: Omit<AudioSensorData, 'id' | 'userId'>): Promise<void> {
         try {
-            await this.SensorStorageRepository.saveAudioData(data);
+            console.log('Saving audio data:', data);
+            // await this.SensorStorageRepository.saveAudioData(data);
         } catch (error) {
             console.error('Failed to save audio data:', error);
             this.currentSensorService.onError(error as Error, 'audio');
@@ -225,7 +250,8 @@ export class SensorRepository {
      */
     private async handleLightData(data: Omit<LightSensorData, 'id' | 'userId'>): Promise<void> {
         try {
-            await this.SensorStorageRepository.saveLightData(data);
+            console.log('Saving light data:', data);
+            // await this.SensorStorageRepository.saveLightData(data);
         } catch (error) {
             console.error('Failed to save light data:', error);
             this.currentSensorService.onError(error as Error, 'light');
@@ -237,7 +263,8 @@ export class SensorRepository {
      */
     private async handleAccelerometerData(data: Omit<AccelerometerSensorData, 'id' | 'userId'>): Promise<void> {
         try {
-            await this.SensorStorageRepository.saveAccelerometerData(data);
+            console.log('Saving accelerometer data:', data);
+            // await this.SensorStorageRepository.saveAccelerometerData(data);
         } catch (error) {
             console.error('Failed to save accelerometer data:', error);
             this.currentSensorService.onError(error as Error, 'accelerometer');

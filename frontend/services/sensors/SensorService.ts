@@ -1,4 +1,4 @@
-import { AccelerometerSensorData, AudioSensorData, LightSensorData } from "./sensor-data-types";
+import { AccelerometerSensorData, AudioSensorData, LightSensorData } from "../../constants/types/SensorData";
 import { SensorServiceConfig } from "./sensorConfig";
 
 /**

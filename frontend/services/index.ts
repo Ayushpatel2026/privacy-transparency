@@ -12,6 +12,7 @@ import { LocalDatabaseManager } from './data/LocalDatabaseManager';
 import { LocalJournalDataSource } from './data/data-sources/LocalJournalDataSource';
 import { JournalDataRepository } from './data/JournalDataRepository';
 import { CloudJournalDataSource } from './data/data-sources/CloudJournalDataSource';
+import { SensorBackgroundTaskManager } from './BackgroundTaskManager';
 
 // Instantiate the base HTTP client
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_URL as string;
@@ -33,3 +34,5 @@ export const generalHealthDataRepository = new GeneralHealthDataRepository(cloud
 export const cloudJournalDataSource = new CloudJournalDataSource(httpClient, getAuthToken);
 export const localJournalDataSource = new LocalJournalDataSource(dbManager);
 export const journalDataRepository = new JournalDataRepository(cloudJournalDataSource, localJournalDataSource);
+
+export const sensorBackgroundTaskManager = new SensorBackgroundTaskManager();

@@ -2,7 +2,7 @@ import { Audio } from 'expo-av';
 import { LightSensor } from 'expo-sensors';
 import { Accelerometer } from 'expo-sensors';
 import { SensorService } from './SensorService';
-import { AccelerometerSensorData, AudioSensorData, LightSensorData } from './sensor-data-types';
+import { AccelerometerSensorData, AudioSensorData, LightSensorData } from '../../constants/types/SensorData';
 
 /**
  * This class implements the SensorService interface using Expo's sensor APIs.
@@ -77,6 +77,10 @@ export class ExpoSensorService extends SensorService {
     }
   }
   
+  /**
+   * The ambient light sensor will not work through Expo Sensors on IOS devices. It would require a native module.
+   * The code below will only work on Android devices. 
+   */
   async startLightMonitoring(): Promise<void> {
     try {
       LightSensor.setUpdateInterval(this.config.samplingRates.light * 1000);
@@ -109,12 +113,12 @@ export class ExpoSensorService extends SensorService {
   
   async startAccelerometerMonitoring(): Promise<void> {
     try {
+      console.log("Starting accelerometer monitoring with sampling rate:", this.config.samplingRates.accelerometer);
       Accelerometer.setUpdateInterval(this.config.samplingRates.accelerometer * 1000);
       
       this.accelerometerSubscription = Accelerometer.addListener(({ x, y, z }) => {
         const magnitude = Math.sqrt(x * x + y * y + z * z);
-        const movementIntensity = this.categorizeMovement(magnitude);
-        
+        const movementIntensity = this.categorizeMovement(magnitude);        
         const accelData: Omit<AccelerometerSensorData, 'id' | 'userId'> = {
           sensorType: 'accelerometer',
           timestamp: Date.now(),

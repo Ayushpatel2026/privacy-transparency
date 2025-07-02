@@ -1,4 +1,4 @@
-import { AccelerometerSensorData, AudioSensorData, LightSensorData } from "./sensor-data-types";
+import { AccelerometerSensorData, AudioSensorData, LightSensorData } from "../../constants/types/SensorData";
 import { SensorService } from "./SensorService";
 
 /**
@@ -37,6 +37,7 @@ export class SimulationSensorService extends SensorService {
   }
   
   async startAccelerometerMonitoring(): Promise<void> {
+    console.log("Starting simulated accelerometer monitoring with sampling rate:", this.config.samplingRates.accelerometer);
     const interval = setInterval(() => {
       this.generateMockAccelerometerData();
     }, this.config.samplingRates.accelerometer * 1000);
@@ -48,7 +49,7 @@ export class SimulationSensorService extends SensorService {
     this.intervals.forEach(interval => clearInterval(interval));
     this.intervals = [];
   }
-  
+
   async stopAudioMonitoring(): Promise<void> {
     this.clearAllIntervals();
   }
