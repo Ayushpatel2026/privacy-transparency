@@ -4,7 +4,7 @@ import 'dotenv/config';
 import authRoutes from './routes/auth';
 import journalRoutes from './routes/phi/journal';
 import generalHealthRoutes from './routes/phi/generalHealth';
-import sensorRoutes from './routes/phi/sensor';
+import sensorRoutes from './routes/phi/sensor-data';
 
 const app = express();
 
@@ -21,7 +21,7 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api/phi/journal', journalRoutes);
 app.use('/api/phi/generalHealth', generalHealthRoutes);
-app.use('/api/phi/sensor', sensorRoutes);
+app.use('/api/phi/sensor-data', sensorRoutes);
 
 // test endpoint
 app.get('/api/test', async (req : Request, res : Response) => {

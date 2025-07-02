@@ -1,6 +1,8 @@
 /**
  * This is a sample configuration interface for the SensorService:
  * This allows the Sensor Service to be configured with various options
+ * Many of these options will not be used in the initial prototype, but are included 
+ * for completeness of a sleep tracking application and for potential future features.
  * 
  * This is subject to change as more implementation details are worked out. 
  */
@@ -27,9 +29,9 @@ export const DEFAULT_SENSOR_SERVICE_CONFIG: SensorServiceConfig = {
   lightEnabled: false,
   accelerometerEnabled: false,
   samplingRates: {
-    audio: 5, // every 5 seconds
-    light: 10, // every 10 seconds
-    accelerometer: 10, // every 10 seconds
+    audio: 30, // every 30 seconds
+    light: 30, 
+    accelerometer: 30, 
   },
   audioProcessing: {
     enableSnoreDetection: true,

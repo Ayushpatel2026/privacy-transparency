@@ -11,6 +11,7 @@ const sensorDataRepository: SensorDataRepository = new FirestoreSensorDataReposi
 
 router.post('/', verifyToken as RequestHandler, async (req: Request, res: Response) => {
     try {
+        console.log('Creating sensor reading with body:', req.body);
         const userId = req.userId; 
         const { timestamp, date, sensorType, ...sensorSpecificData } = req.body;
 
@@ -80,6 +81,7 @@ router.post('/', verifyToken as RequestHandler, async (req: Request, res: Respon
         // }
 
         const createdSensorReading = await sensorDataRepository.createSensorReading(newSensorData);
+        console.log('Sensor reading created:', createdSensorReading);
         res.status(201).json({ message: 'Sensor reading created successfully', sensorReading: createdSensorReading });
 
     } catch (error: any) {

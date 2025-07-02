@@ -43,12 +43,16 @@ export class SensorStorageRepository {
         }
     }
 
-    async createSensorReading(sensorData: Omit<SensorData, 'id'>): Promise<SensorData> {
+    async createSensorReading(sensorData: Omit<SensorData, 'id' | 'userId'>): Promise<SensorData> {
         const { userId } = this.getAuthenticatedUserData();
         const activeDataSource = this.getActiveDataSource();
+        const sensorDataWithUserId: Omit<SensorData, 'id'> = {
+            userId: userId,
+            ...sensorData
+        };
         console.log("Creating sensor reading with userId:", userId, "and sensorData:", sensorData);
         try {
-            return await activeDataSource.createSensorReading(sensorData, userId);
+            return await activeDataSource.createSensorReading(sensorDataWithUserId, userId);
         } catch (error: any) {
             console.error(`Error creating sensor reading in ${useProfileStore.getState().userConsentPreferences.cloudStorageEnabled ? 'cloud' : 'local'} storage:`, error);
             throw new Error(`Failed to create sensor reading: ${error.message}`);

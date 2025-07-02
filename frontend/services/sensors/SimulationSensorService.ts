@@ -37,7 +37,6 @@ export class SimulationSensorService extends SensorService {
   }
   
   async startAccelerometerMonitoring(): Promise<void> {
-    console.log("Starting simulated accelerometer monitoring with sampling rate:", this.config.samplingRates.accelerometer);
     const interval = setInterval(() => {
       this.generateMockAccelerometerData();
     }, this.config.samplingRates.accelerometer * 1000);
@@ -63,6 +62,11 @@ export class SimulationSensorService extends SensorService {
   }
   
   // ===== MOCK DATA GENERATORS =====
+
+  /**
+   * The values below for data generation and categorization are arbitrary.
+   * They can be changed to make the app more realistic, but this is not the main focus of this prototype. 
+   */
   
   private generateMockAudioData(): void {
     const hour = new Date().getHours();
@@ -75,7 +79,6 @@ export class SimulationSensorService extends SensorService {
     const audioData: Omit<AudioSensorData, 'id' | 'userId'> = {
       sensorType: 'audio',
       timestamp: Date.now(),
-      sessionId: this.currentSessionId!,
       date: new Date().toISOString().split('T')[0],
       averageDecibels: mockDecibels,
       peakDecibels: mockDecibels + Math.random() * 15,
@@ -107,7 +110,6 @@ export class SimulationSensorService extends SensorService {
     const lightData: Omit<LightSensorData, 'id' | 'userId'> = {
       sensorType: 'light',
       timestamp: Date.now(),
-      sessionId: this.currentSessionId!,
       date: new Date().toISOString().split('T')[0],
       illuminance: mockLux,
       lightLevel: this.categorizeLightLevel(mockLux),
@@ -129,7 +131,6 @@ export class SimulationSensorService extends SensorService {
     const accelData: Omit<AccelerometerSensorData, 'id' | 'userId'> = {
       sensorType: 'accelerometer',
       timestamp: Date.now(),
-      sessionId: this.currentSessionId!,
       date: new Date().toISOString().split('T')[0],
       x, y, z, magnitude,
       movementIntensity: this.categorizeMovement(magnitude),

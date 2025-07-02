@@ -27,7 +27,7 @@ export class CloudSensorDataSource implements SensorDataSource {
         console.log("Creating sensor reading in cloud with data:", sensorData);
         const token = this.getAuthToken();
         try {
-            const response = await this.httpClient.post<{ sensorReading: SensorData }>('/api/sensor-data', sensorData, token);
+            const response = await this.httpClient.post<{ sensorReading: SensorData }>('/phi/sensor-data/', sensorData, token);
             return response.sensorReading;
         } catch (error: any) {
             console.error("Error creating sensor reading in cloud:", error);
@@ -38,7 +38,7 @@ export class CloudSensorDataSource implements SensorDataSource {
     async getSensorReadingById(userId: string, id: string): Promise<SensorData | null> {
         const token = this.getAuthToken();
         try {
-            const response = await this.httpClient.get<{ sensorReading: SensorData }>(`/api/sensor-data/${id}`, token);
+            const response = await this.httpClient.get<{ sensorReading: SensorData }>(`/phi/sensor-data/${id}`, token);
             return response.sensorReading;
         } catch (error: any) {
             if (error.message.includes('404') || error.message.toLowerCase().includes('not found')) {
@@ -52,7 +52,7 @@ export class CloudSensorDataSource implements SensorDataSource {
     async getSensorReadingsByUserId(userId: string): Promise<SensorData[]> {
         const token = this.getAuthToken();
         try {
-            const response = await this.httpClient.get<{ sensorReadings: SensorData[] }>('/api/sensor-data', token);
+            const response = await this.httpClient.get<{ sensorReadings: SensorData[] }>('/phi/sensor-data', token);
             return response.sensorReadings;
         } catch (error: any) {
             console.error(`Error fetching sensor readings from cloud for user ${userId}:`, error);
@@ -63,7 +63,7 @@ export class CloudSensorDataSource implements SensorDataSource {
     async getSensorReadingsByDate(userId: string, date: string): Promise<SensorData[]> {
         const token = this.getAuthToken();
         try {
-            const response = await this.httpClient.get<{ sensorReadings: SensorData[] }>(`/api/sensor-data/by-date/${date}`, token);
+            const response = await this.httpClient.get<{ sensorReadings: SensorData[] }>(`/phi/sensor-data/by-date/${date}`, token);
             return response.sensorReadings;
         } catch (error: any) {
             if (error.message.includes('404') || error.message.toLowerCase().includes('not found')) {
@@ -78,7 +78,7 @@ export class CloudSensorDataSource implements SensorDataSource {
         console.log(`Deleting sensor reading ${id} from cloud for user ${userId}.`);
         const token = this.getAuthToken();
         try {
-            await this.httpClient.delete<{}>(`/api/sensor-data/${id}`, token);
+            await this.httpClient.delete<{}>(`/phi/sensor-data/${id}`, token);
             return true;
         } catch (error: any) {
             console.error(`Error deleting sensor reading ${id} from cloud:`, error);

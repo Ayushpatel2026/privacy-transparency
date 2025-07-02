@@ -4,8 +4,6 @@ import { SensorServiceConfig } from "./sensorConfig";
 /**
  * This abstract class defines the core interface for sensor services.
  * It provides methods for starting/stopping recording, checking availability, etc. 
- * 
- * This is a work in progress and is subject to change as more implementation details are worked out.
  */
 
 export abstract class SensorService {

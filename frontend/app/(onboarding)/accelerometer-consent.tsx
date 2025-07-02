@@ -5,6 +5,7 @@ import OnboardingHeader from "@/components/OnboardingHeader";
 import { useProfileStore } from "@/store/userProfileStore";
 import PermissionsToggle from "@/components/PermissionsToggle";
 import { Colors } from "@/constants/Colors";
+import { sensorBackgroundTaskManager } from "@/services";
 
 export default function AccelerometerConsent() {
 
@@ -16,6 +17,10 @@ export default function AccelerometerConsent() {
       ...userConsentPreferences,
       accelerometerEnabled: value,
     });
+
+    await sensorBackgroundTaskManager.updateConfig({
+      accelerometerEnabled: value,
+    })
 	}
 
   return (

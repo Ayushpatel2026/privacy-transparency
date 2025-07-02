@@ -1,6 +1,6 @@
 import { GeneralHealthDataSource } from './GeneralHealthDataSource';
-import { GeneralHealthData } from '../../constants/types/GeneralHealthData'; 
-import { HttpClient } from '../HttpClient'; 
+import { GeneralHealthData } from '@/constants/types/GeneralHealthData'; 
+import { HttpClient } from '@/services/HttpClient'; 
 
 /**
  * This is the cloud implementation of the GeneralHealthDataSource

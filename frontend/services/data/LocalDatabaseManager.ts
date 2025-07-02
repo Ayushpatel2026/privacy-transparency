@@ -9,6 +9,9 @@ interface QueryResult {
 /**
  * LocalDatabaseManager is a singleton class that manages the SQLite database connection
  * and provides methods to execute SQL queries.
+ * 
+ * TODO - encryption needs to be added. useSQLCipher is set to true in the app.json file, but
+ * it is not currently implemented in this class.
  */
 export class LocalDatabaseManager {
     private db: SQLite.SQLiteDatabase | null = null;

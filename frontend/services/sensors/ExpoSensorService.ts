@@ -2,7 +2,7 @@ import { Audio } from 'expo-av';
 import { LightSensor } from 'expo-sensors';
 import { Accelerometer } from 'expo-sensors';
 import { SensorService } from './SensorService';
-import { AccelerometerSensorData, AudioSensorData, LightSensorData } from '../../constants/types/SensorData';
+import { AccelerometerSensorData, AudioSensorData, LightSensorData } from '@/constants/types/SensorData';
 
 /**
  * This class implements the SensorService interface using Expo's sensor APIs.
@@ -91,7 +91,6 @@ export class ExpoSensorService extends SensorService {
         const lightData: Omit<LightSensorData, 'id' | 'userId'> = {
           sensorType: 'light',
           timestamp: Date.now(),
-          sessionId: this.currentSessionId!,
           date: new Date().toISOString().split('T')[0],
           illuminance,
           lightLevel,
@@ -122,7 +121,6 @@ export class ExpoSensorService extends SensorService {
         const accelData: Omit<AccelerometerSensorData, 'id' | 'userId'> = {
           sensorType: 'accelerometer',
           timestamp: Date.now(),
-          sessionId: this.currentSessionId!,
           date: new Date().toISOString().split('T')[0],
           x, y, z, magnitude,
           movementIntensity,
@@ -143,6 +141,11 @@ export class ExpoSensorService extends SensorService {
   }
   
   // ===== HELPER METHODS =====
+
+  /**
+   * The values below for analysis and categorization are arbitrary.
+   * They can be changed to make the app more realistic, but sensor data analysis is not the main focus of this prototype. 
+   */
   
   private async analyzeAudioData(): Promise<void> {
     // This would need actual audio processing library
@@ -153,7 +156,6 @@ export class ExpoSensorService extends SensorService {
     const audioData: Omit<AudioSensorData, 'id' | 'userId'> = {
       sensorType: 'audio',
       timestamp: Date.now(),
-      sessionId: this.currentSessionId!,
       date: new Date().toISOString().split('T')[0],
       averageDecibels: mockDecibels,
       peakDecibels: mockPeak,
