@@ -2,13 +2,22 @@ import { Tabs } from "expo-router";
 import { StyleSheet } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from "@/constants/Colors";
+import { useSegments } from "expo-router";
 
 const TabLayout = () => {
+  const segment = useSegments();
+
+  const page = segment[segment.length - 1];
+  
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: styles.tabBarStyle,
+        tabBarStyle: {
+          ...styles.tabBarStyle,
+          // check if the current page is in the list then hide the tab bar
+          display: page === 'sleep-mode' ? 'none' : 'flex',
+        },
         tabBarActiveTintColor: Colors.generalBlue, // Blue color for active tab
         tabBarInactiveTintColor: Colors.grey, // Gray color for inactive tabs
         animation: 'shift',

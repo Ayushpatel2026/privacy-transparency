@@ -106,7 +106,7 @@ export default function Sleep() {
             audioEnabled: userConsentPreferences.microphoneEnabled,
             lightEnabled: userConsentPreferences.lightSensorEnabled,
         });
-        router.push('/sleep-mode'); // Navigate to sleep-mode.tsx
+        router.push('/(tabs)/sleep/sleep-mode'); // Navigate to sleep-mode.tsx
     };
 
     // Bedtime Modal Handlers
@@ -206,7 +206,11 @@ export default function Sleep() {
             </SafeAreaView>
         </View>
     );
-}
+};
+
+// ========================================================================
+// Styles
+// ========================================================================
 
 const styles = StyleSheet.create({
     container: {
