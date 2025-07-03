@@ -9,7 +9,7 @@ import * as Crypto from 'expo-crypto';
  */
 export class LocalJournalDataSource implements JournalDataSource {
     private dbManager: LocalDatabaseManager;
-    
+
     constructor(dbManager: LocalDatabaseManager) {
         this.dbManager = dbManager;
     }
@@ -17,15 +17,15 @@ export class LocalJournalDataSource implements JournalDataSource {
     async getJournalsByUserId(userId: string): Promise<JournalData[]> {
         try {
             const sql = `
-                SELECT journalId, userId, date, bedtime, alarmTime, sleepDuration, 
-                       diaryEntry, sleepNotes
-                FROM journals 
-                WHERE userId = ? 
+                SELECT journalId, userId, date, bedtime, alarmTime, sleepDuration,
+                        diaryEntry, sleepNotes
+                FROM journals
+                WHERE userId = ?
                 ORDER BY date DESC
             `;
-            
+
             const rows = await this.dbManager.getAll<any>(sql, [userId]);
-            
+
             return rows.map(row => this.mapRowToJournalData(row));
         } catch (error) {
             console.error('Error getting journals by user ID:', error);
@@ -33,17 +33,17 @@ export class LocalJournalDataSource implements JournalDataSource {
         }
     }
 
-     async getJournalById(journalId: string): Promise<JournalData | null> {
+      async getJournalById(journalId: string): Promise<JournalData | null> {
         try {
             const sql = `
-                SELECT journalId, userId, date, bedtime, alarmTime, sleepDuration, 
-                       diaryEntry, sleepNotes
-                FROM journals 
+                SELECT journalId, userId, date, bedtime, alarmTime, sleepDuration,
+                        diaryEntry, sleepNotes
+                FROM journals
                 WHERE journalId = ?
             `;
-            
+
             const row = await this.dbManager.getOne<any>(sql, [journalId]);
-            
+
             return row ? this.mapRowToJournalData(row) : null;
         } catch (error) {
             console.error('Error getting journal by ID:', error);
@@ -52,8 +52,8 @@ export class LocalJournalDataSource implements JournalDataSource {
     }
 
     async editJournal(
-        date: string, 
-        journalData: Partial<Omit<JournalData, 'journalId' | 'userId'>>, 
+        date: string,
+        journalData: Partial<Omit<JournalData, 'journalId' | 'userId'>>,
         userId: string
     ): Promise<JournalData | null> {
         try {
@@ -64,15 +64,15 @@ export class LocalJournalDataSource implements JournalDataSource {
                 console.log(`Journal for date ${date} does not exist. Creating a new journal.`);
                 const journalId = Crypto.randomUUID();
                 const createdAt = new Date().toISOString();
-                
+
                 const sql = `
-                    INSERT INTO journals 
-                    (journalId, userId, date, bedtime, alarmTime, sleepDuration, diaryEntry, sleepNotes, createdAt) 
+                    INSERT INTO journals
+                    (journalId, userId, date, bedtime, alarmTime, sleepDuration, diaryEntry, sleepNotes, createdAt)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 `;
-                
+
                 const sleepNotesJson = journalData.sleepNotes ? JSON.stringify(journalData.sleepNotes) : null;
-                
+
                 const params = [
                     journalId,
                     userId,
@@ -84,9 +84,9 @@ export class LocalJournalDataSource implements JournalDataSource {
                     sleepNotesJson,
                     createdAt
                 ];
-                
+
                 await this.dbManager.executeSql(sql, params);
-                
+
                 // Return the created journal
                 const createdJournal: JournalData = {
                     journalId,
@@ -96,16 +96,16 @@ export class LocalJournalDataSource implements JournalDataSource {
                     alarmTime: journalData.alarmTime ?? "",
                     sleepDuration: journalData.sleepDuration ?? "",
                     diaryEntry: journalData.diaryEntry ?? "",
-                    sleepNotes: journalData.sleepNotes ? JSON.parse(sleepNotesJson!) : null,
+                    sleepNotes: journalData.sleepNotes ? (JSON.parse(sleepNotesJson!) || []) : [],
                 };
-                
+
                 return createdJournal;
             }
-            
+
             // Build dynamic UPDATE query based on provided fields
             const updateFields: string[] = [];
             const params: any[] = [];
-            
+
             if (journalData.date !== undefined) {
                 updateFields.push('date = ?');
                 params.push(journalData.date);
@@ -130,27 +130,27 @@ export class LocalJournalDataSource implements JournalDataSource {
                 updateFields.push('sleepNotes = ?');
                 params.push(journalData.sleepNotes ? JSON.stringify(journalData.sleepNotes) : null);
             }
-            
+
             // If no fields to update, return the existing journal
             if (updateFields.length === 0) {
                 return existingJournal;
             }
-            
+
             const sql = `
-                UPDATE journals 
-                SET ${updateFields.join(', ')} 
+                UPDATE journals
+                SET ${updateFields.join(', ')}
                 WHERE date = ? AND userId = ?
             `;
-            
+
             params.push(date, userId);
-            
+
             const result = await this.dbManager.executeSql(sql, params);
             console.log(`Updated journal for date ${date} with result:`, result);
             // Check if any rows were affected
             if (result.rowsAffected === 0) {
                 return null;
             }
-            
+
             // Return the updated journal
             return await this.getJournalByDate(userId, date);
         } catch (error) {
@@ -162,9 +162,9 @@ export class LocalJournalDataSource implements JournalDataSource {
     async deleteJournal(journalId: string, userId: string): Promise<void> {
         try {
             const sql = `DELETE FROM journals WHERE journalId = ? AND userId = ?`;
-            
+
             const result = await this.dbManager.executeSql(sql, [journalId, userId]);
-            
+
             if (result.rowsAffected === 0) {
                 throw new Error(`Journal ${journalId} not found or does not belong to user ${userId}`);
             }
@@ -177,14 +177,14 @@ export class LocalJournalDataSource implements JournalDataSource {
     async getJournalByDate(userId: string, date: string): Promise<JournalData | null> {
         try {
             const sql = `
-                SELECT journalId, userId, date, bedtime, alarmTime, sleepDuration, 
-                       diaryEntry, sleepNotes, createdAt 
-                FROM journals 
+                SELECT journalId, userId, date, bedtime, alarmTime, sleepDuration,
+                        diaryEntry, sleepNotes, createdAt
+                FROM journals
                 WHERE userId = ? AND date == ?
             `;
-            
+
             const row = await this.dbManager.getOne<any>(sql, [userId, date]);
-            
+
             return row ? this.mapRowToJournalData(row) : null;
         } catch (error) {
             console.error('Error getting journals by date range:', error);
@@ -197,8 +197,12 @@ export class LocalJournalDataSource implements JournalDataSource {
      */
     private mapRowToJournalData(row: any): JournalData {
         return {
-            sleepNotes: row.sleepNotes ? JSON.parse(row.sleepNotes) : null,
-            ...row
+            ...row,
+            sleepNotes: row.sleepNotes ? (JSON.parse(row.sleepNotes) || []) : [],
+            diaryEntry: row.diaryEntry ?? "", 
+            bedtime: row.bedtime ?? "",
+            alarmTime: row.alarmTime ?? "",
+            sleepDuration: row.sleepDuration ?? "",
         };
     }
 }

@@ -23,10 +23,10 @@ export class LocalDatabaseManager {
             journalId TEXT PRIMARY KEY NOT NULL,
             userId TEXT NOT NULL,
             date TEXT NOT NULL,           -- ISO date string
-            bedtime TEXT NOT NULL,
-            alarmTime TEXT NOT NULL,
-            sleepDuration TEXT NOT NULL,
-            diaryEntry TEXT NOT NULL,
+            bedtime TEXT,
+            alarmTime TEXT,
+            sleepDuration TEXT,
+            diaryEntry TEXT,
             sleepNotes TEXT,              -- Stored as JSON string
             createdAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'NOW')) -- Add a creation timestamp
         );
@@ -166,6 +166,26 @@ export class LocalDatabaseManager {
             return row ? (row as T) : null;
         } catch (error) {
             console.error(`Error getting one row for SQL: ${sql} with params: ${JSON.stringify(params)}`, error);
+            throw error;
+        }
+    }
+
+    /**
+     * This is an internal helper function to delete all tables when changes are made to the schemas
+     * Use it in the openDatabase function to delete tables when needed. 
+     */
+    private async deleteAllTables(): Promise<void>{
+        const DELETE_SENSOR_DATA_TABLE = `DROP TABLE IF EXISTS sensor_data;`;
+        const DELETE_JOURNAL_TABLE = `DROP TABLE IF EXISTS journals;`;
+        if (!this.db) {
+            throw new Error("Database not open. Call openDatabase() first.");
+        }
+        try {
+            await this.db.execAsync(DELETE_JOURNAL_TABLE);
+            await this.db.execAsync(DELETE_SENSOR_DATA_TABLE);
+            console.log("All tables created or already exist.");
+        } catch (error) {
+            console.error("Error creating tables:", error);
             throw error;
         }
     }
