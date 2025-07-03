@@ -73,7 +73,7 @@ export default function Questions() {
         title='Continue'
         onPress={() => {
           saveSelectedOption(); 
-          router.replace('/(tabs)'); 
+          router.replace('/(tabs)/sleep/'); 
           setHasCompletedAppOnboarding(true); 
         }}
       />

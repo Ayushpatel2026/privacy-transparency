@@ -49,7 +49,7 @@ export default function RootLayout() {
     } else if (isAuthenticated && inAuthStack && hasCompletedPrivacyOnboarding && !hasCompletedAppOnboarding){
       router.replace("/(onboarding)/questions")
     } else if (isAuthenticated && inAuthStack && hasCompletedPrivacyOnboarding && hasCompletedAppOnboarding){
-      router.replace("/(tabs)")
+      router.replace("/(tabs)/sleep/")
     }
   }, [user, token, segments]);
 

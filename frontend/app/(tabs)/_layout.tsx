@@ -15,7 +15,7 @@ const TabLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="index" // Sleep screen as default
+        name="sleep" // Sleep screen as default
         options={{
           title: "Sleep",
           tabBarIcon: ({ color, size }) => (
