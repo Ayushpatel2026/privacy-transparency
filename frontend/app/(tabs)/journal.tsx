@@ -50,7 +50,7 @@ export default function Journal() {
             setIsLoading(true);
             const dateToLoad = selectedDate.toISOString().split('T')[0];
             const existingJournal = await journalDataRepository.getJournalByDate(dateToLoad);
-
+            
             if (existingJournal) {
                 setJournalExists(true);
                 setDiaryEntry(existingJournal.diaryEntry || "");

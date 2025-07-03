@@ -25,35 +25,6 @@ export class FirestoreJournalRepository implements JournalRepository {
         };
     }
 
-    async createJournal(journalData: Omit<JournalData, 'journalId'>): Promise<JournalData> {
-        try {
-            // Basic validation - need at least one field to create a journal entry
-            const userId = journalData.userId;
-            if (!userId) {
-                throw new Error('User ID is required to create a journal entry.');
-            }
-            if (!journalData.bedtime && !journalData.alarmTime && !journalData.sleepDuration && !journalData.diaryEntry && !journalData.sleepNotes) {
-                throw new Error('Missing required journal data fields.');
-            }
-
-            const docRef = await db.collection(this.collectionName).add({
-                ...journalData,
-                createdAt: new Date(), // Add a timestamp for creation
-            });
-
-            const newJournal: JournalData = {
-                journalId: docRef.id,
-                ...journalData,
-            };
-
-            console.log(`Journal entry created with ID: ${newJournal.journalId} for user: ${userId}`);
-            return newJournal;
-        } catch (error: any) {
-            console.error('Error creating journal entry:', error);
-            throw new Error(`Failed to create journal entry in Firestore: ${error.message}`);
-        }
-    }
-
     async getJournalById(userId: string, journalId: string): Promise<JournalData | null> {
         try {
             const docSnapshot = await db.collection(this.collectionName).doc(journalId).get();
@@ -99,35 +70,40 @@ export class FirestoreJournalRepository implements JournalRepository {
         }
     }
 
-    async updateJournal(userId: string, journalId: string, updatedData: Partial<Omit<JournalData, 'journalId' | 'userId'>>): Promise<JournalData | null> {
+    async editJournal(userId: string, date: string, updatedData: Partial<Omit<JournalData, 'journalId' | 'userId'>>): Promise<JournalData | null> {
         try {
-            const docRef = db.collection(this.collectionName).doc(journalId);
-            const docSnapshot = await docRef.get();
+            // First, try to fetch the journal by userId and date
+            const existingJournal = await this.getJournalByDate(userId, date);
 
-            if (!docSnapshot.exists) {
-                return null; // Journal not found
+            if (existingJournal) {
+                // If found, update the existing journal entry
+                const journalRef = db.collection(this.collectionName).doc(existingJournal.journalId);
+                await journalRef.update(updatedData);
+                console.log(`Journal entry with ID ${existingJournal.journalId} updated successfully for user ${userId} on date ${date}.`);
+                // Fetch and return the updated journal data
+                const updatedDoc = await journalRef.get();
+                return this.mapDocToJournalData(updatedDoc);
+            } else {
+                // If not found, create a new journal entry
+                const newJournal: Omit<JournalData, 'journalId'> = {
+                    userId,
+                    date,
+                    ...updatedData,
+                    // Provide default values for fields that might be missing in updatedData if necessary
+                    bedtime: updatedData.bedtime || "",
+                    alarmTime: updatedData.alarmTime || "",
+                    sleepDuration: updatedData.sleepDuration || "",
+                    diaryEntry: updatedData.diaryEntry || '',
+                    sleepNotes: updatedData.sleepNotes || [],
+                };
+                const docRef = await db.collection(this.collectionName).add(newJournal);
+                const newDoc = await docRef.get();
+                console.log(`New journal entry created with ID ${newDoc.id} for user ${userId} on date ${date}.`);
+                return this.mapDocToJournalData(newDoc);
             }
-
-            const existingJournal = this.mapDocToJournalData(docSnapshot);
-
-            // Ensure the journal belongs to the requesting user before updating
-            if (existingJournal.userId !== userId) {
-                console.warn(`Unauthorized attempt to update journal ${journalId} by user ${userId}.`);
-                throw new Error(`Unauthorized access to journal entry ${journalId}.`);
-            }
-
-            await docRef.update({
-                ...updatedData,
-                updatedAt: new Date(), // Add an update timestamp
-            });
-
-            // Fetch the updated document to return the complete, current state
-            const updatedDocSnapshot = await docRef.get();
-            return this.mapDocToJournalData(updatedDocSnapshot);
-
         } catch (error: any) {
-            console.error(`Error updating journal entry ${journalId} for user ${userId}:`, error);
-            throw new Error(`Failed to update journal entry in Firestore: ${error.message}`);
+            console.error(`Error editing/creating journal entry for user ${userId} on date ${date}:`, error);
+            throw new Error(`Failed to edit/create journal entry in Firestore: ${error.message}`);
         }
     }
 

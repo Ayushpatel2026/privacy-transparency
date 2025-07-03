@@ -25,7 +25,7 @@ export class CloudJournalDataSource implements JournalDataSource {
     async getJournalsByUserId(userId: string): Promise<JournalData[]> {
         const token = this.getAuthToken();
         try {
-            const response = await this.httpClient.get<{ journals: JournalData[] }>(`/phi/journals/${userId}`, token);
+            const response = await this.httpClient.get<{ journals: JournalData[] }>(`/phi/journal/`, token);
             return response.journals;
         } catch (error: any) {
             console.error(`Error fetching journals from cloud for user ${userId}:`, error);
@@ -36,7 +36,7 @@ export class CloudJournalDataSource implements JournalDataSource {
     async getJournalById(journalId: string): Promise<JournalData | null> {
         const token = this.getAuthToken();
         try {
-            const response = await this.httpClient.get<{ journal: JournalData }>(`/phi/journals/${journalId}`, token);
+            const response = await this.httpClient.get<{ journal: JournalData }>(`/phi/journal/${journalId}`, token);
             return response.journal || null;
         } catch (error: any) {
             if (error.message.includes('404') || error.message.toLowerCase().includes('not found')) {
@@ -50,7 +50,7 @@ export class CloudJournalDataSource implements JournalDataSource {
     async getJournalByDate(userId: string, date: string): Promise<JournalData | null> {
         const token = this.getAuthToken();
         try {
-            const response = await this.httpClient.get<{ journal: JournalData }>(`/phi/journals/${userId}/${date}`, token);
+            const response = await this.httpClient.get<{ journal: JournalData }>(`/phi/journal/by-date/${date}`, token);
             return response.journal || null;
         } catch (error: any) {
             if (error.message.includes('404') || error.message.toLowerCase().includes('not found')) {
@@ -65,7 +65,7 @@ export class CloudJournalDataSource implements JournalDataSource {
         const token = this.getAuthToken();
         try {
             // Backend's POST /phi/journals expects the full object in the body
-            const response = await this.httpClient.post<{ journal: JournalData }>(`/phi/journals/${userId}/${date}`, { ...journalData, date }, token);
+            const response = await this.httpClient.put<{ journal: JournalData }>(`/phi/journal/${date}`, { ...journalData, date }, token);
             return response.journal;
         } catch (error: any) {
             console.error(`Error creating or updating journal in cloud for user ${userId} on date ${date}:`, error);
@@ -76,7 +76,7 @@ export class CloudJournalDataSource implements JournalDataSource {
     async deleteJournal(journalId: string, userId: string): Promise<void> {
         const token = this.getAuthToken();
         try {
-            await this.httpClient.delete<{}>(`/phi/journals/${userId}/${journalId}`, token);
+            await this.httpClient.delete<{}>(`/phi/journal/${journalId}`, token);
         } catch (error: any) {
             console.error(`Error deleting journal from cloud for user ${userId} with journalId ${journalId}:`, error);
             throw new Error(`Failed to delete journal: ${error.message}`);

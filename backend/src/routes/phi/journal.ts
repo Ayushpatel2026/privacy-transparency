@@ -8,37 +8,9 @@ import { JournalRepository } from '../../repositories/JournalRepository';
 const router = Router();
 const journalRepository : JournalRepository = new FirestoreJournalRepository();
 
-router.post('/', verifyToken as RequestHandler, async (req: Request, res: Response) => {
-    try {
-
-        const { date, bedtime, alarmTime, sleepDuration, diaryEntry, sleepNotes, userId } = req.body;
-
-        // Basic validation for required fields
-        if (!bedtime && !alarmTime && !sleepDuration && !diaryEntry && !sleepNotes) {
-            res.status(400).json({ message: 'Missing required journal fields.' });
-            return;
-        }
-
-        const newJournalData: Omit<JournalData, 'journalId'> = {
-            date,
-            userId,
-            bedtime,
-            alarmTime,
-            sleepDuration,
-            diaryEntry,
-            sleepNotes: sleepNotes || [],
-        };
-
-        const createdJournal = await journalRepository.createJournal(newJournalData);
-        res.status(201).json({ message: 'Journal entry created successfully', journal: createdJournal });
-
-    } catch (error: any) {
-        console.error('Error creating journal entry:', error);
-        res.status(500).json({ message: 'Failed to create journal entry.', error: error.message });
-    }
-});
-
-
+/**
+ * Get by userId
+ */
 router.get('/', verifyToken as RequestHandler, async (req: Request, res: Response) => {
     try {
         const userID = req.userId;
@@ -78,33 +50,55 @@ router.get('/:journalId', verifyToken as RequestHandler, async (req: Request, re
     }
 });
 
-router.put('/:journalId', verifyToken as RequestHandler, async (req: Request, res: Response) => {
+/**
+ * Edit or create a journal entry by date
+ */
+router.put('/:date', verifyToken as RequestHandler, async (req: Request, res: Response) => {
     try {
         const userID = req.userId;
-        const { journalId } = req.params;
+        const { date } = req.params; // Get date from URL parameters
         const updatedData: Partial<Omit<JournalData, 'journalId' | 'userId'>> = req.body;
 
         if (!userID) {
             res.status(401).json({ message: 'User not authenticated.' });
             return;
         }
-        
-        if (Object.keys(updatedData).length === 0) {
-            res.status(400).json({ message: 'No data provided for update.' });
+
+        if (!date) {
+            res.status(400).json({ message: 'Date parameter is required.' });
             return;
         }
 
-        const updatedJournal = await journalRepository.updateJournal(userID, journalId, updatedData);
+        const journal = await journalRepository.editJournal(userID, date, updatedData);
 
-        if (!updatedJournal) {
-            res.status(404).json({ message: 'Journal entry not found or unauthorized to update.' });
+        if (!journal) {
+            res.status(500).json({ message: 'Failed to process journal entry (create/update).' });
             return;
         }
-        res.status(200).json({ message: 'Journal entry updated successfully', journal: updatedJournal });
+        res.status(200).json({ journal });
 
     } catch (error: any) {
-        console.error(`Error updating journal entry ${req.params.journalId}:`, error);
-        res.status(500).json({ message: 'Failed to update journal entry.', error: error.message });
+        console.error(`Error editing journal entry for date ${req.params.date}:`, error);
+        res.status(500).json({ message: 'Failed to edit journal entry.', error: error.message });
+    }
+});
+
+router.get('/by-date/:date', verifyToken as RequestHandler, async (req: Request, res: Response) => {
+    try {
+        const userID = req.userId;
+        const { date } = req.params; // Date in YYYY-MM-DD format
+
+        if (!userID) {
+            res.status(401).json({ message: 'User not authenticated.' });
+            return;
+        }
+
+        const journal = await journalRepository.getJournalByDate(userID, date);
+
+        res.status(200).json({ journal });
+    } catch (error: any) {
+        console.error(`Error fetching journal for user ${req.userId} on date ${req.params.date}:`, error);
+        res.status(500).json({ message: 'Failed to retrieve journal by date.', error: error.message });
     }
 });
 
