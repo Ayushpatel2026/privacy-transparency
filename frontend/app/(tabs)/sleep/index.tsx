@@ -232,6 +232,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
         textAlign: 'center',
+        paddingTop: 30,
     },
     sleepTrackerContainer: {
         width: '100%',
@@ -244,6 +245,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         resizeMode: 'contain', 
+        borderRadius: 100,
     },
     inputCard: {
         backgroundColor: Colors.lightBlack,

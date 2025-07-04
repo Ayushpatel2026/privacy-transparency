@@ -13,5 +13,6 @@ export const Colors = {
   tooltipGreen: "#E0FFDF",
   tooltipRed: "#C90909",
   tooltipYellow: "#FFFD86",
-  grey: "#EBEBF580"
+  grey: "#EBEBF580",
+  lightGrey: "#888888",
 };
