@@ -10,19 +10,16 @@ import {
     Image,
     SafeAreaView
 } from "react-native";
-import { sensorBackgroundTaskManager } from "@/services";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from "@/constants/Colors";
 import { useRouter } from 'expo-router';
 import { journalDataRepository } from "@/services";
 import Loader from "@/components/Loader";
-import { useProfileStore } from "@/store/userProfileStore";
 import { TimeModal } from "@/components/TimeModal";
 
 export default function Sleep() {
     const [loading, setIsLoading] = useState(true);
     const router = useRouter();
-    const { isSleepModeActive, setIsSleepModeActive, userConsentPreferences } = useProfileStore();
 
     const [bedtime, setBedtime] = useState<string>('');
     const [alarm, setAlarm] = useState<string>('');
@@ -100,12 +97,6 @@ export default function Sleep() {
             Alert.alert("Missing Information", "Please set your Bedtime and Alarm before starting sleep mode.");
             return;
         }
-
-        setIsSleepModeActive(true);
-        await sensorBackgroundTaskManager.updateConfig({
-            audioEnabled: userConsentPreferences.microphoneEnabled,
-            lightEnabled: userConsentPreferences.lightSensorEnabled,
-        });
         router.push('/(tabs)/sleep/sleep-mode'); // Navigate to sleep-mode.tsx
     };
 

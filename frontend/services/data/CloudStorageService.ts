@@ -1,4 +1,4 @@
-import { HttpClient } from "./HttpClient";
+import { HttpClient } from "@/services/HttpClient";
 
 /**
  * A simple HTTP client implementation for interacting with a cloud storage API.

@@ -16,7 +16,7 @@ import { Colors } from '@/constants/Colors';
 
 export default function SleepMode() {
     const router = useRouter();
-    const { isSleepModeActive, setIsSleepModeActive } = useProfileStore();
+    const { isSleepModeActive, setIsSleepModeActive, userConsentPreferences } = useProfileStore();
 
     const [currentTime, setCurrentTime] = useState<string>('');
     const [alarmTime, setAlarmTime] = useState<string>('');
@@ -45,6 +45,14 @@ export default function SleepMode() {
             }
         };
         fetchAlarm();
+        const enterSleepMode = async () => {
+            setIsSleepModeActive(true);
+            await sensorBackgroundTaskManager.updateConfig({
+                audioEnabled: userConsentPreferences.microphoneEnabled,
+                lightEnabled: userConsentPreferences.lightSensorEnabled,
+            });
+        }
+        enterSleepMode();
     }, []);
 
     const handlePressIn = () => {

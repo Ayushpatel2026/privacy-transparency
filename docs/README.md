@@ -51,7 +51,7 @@
 ## Limitations of the Prototype
 
 - **Device-Level Consent**: Consent preferences are stored at the device level rather than account level, ensuring privacy settings persist across user sessions but are device-specific
-- **Data Migration Policy**: When users switch consent preferences between cloud and local storage, the application fetches data from the user's chosen location. However, existing data is not automatically migrated between storage locations to prevent unintended data exposure
+- **Data Migration Policy**: When users switch consent preferences between cloud and local storage, the application fetches data from the user's chosen location. However, existing data is not automatically migrated between storage locations.
 - **Persistent Consent Storage**: Consent preferences are stored in AsyncStorage to persist across app sessions but will be reset if the user deletes the application
 
 **Platform-Specific Considerations**
