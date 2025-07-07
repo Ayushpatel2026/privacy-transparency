@@ -38,7 +38,7 @@ export default function CloudStorage() {
 					We are committed to strict limitations on data sharing. We do not give your personal information to any third parties for marketing, advertising, or any other commercial purposes.  
 				</Text>
 
-				<TouchableOpacity onPress={() => console.log("Privacy policy link pressed")}>
+				<TouchableOpacity onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: "cloudVsLocalStorage"}})}>
 					<Text style={styles.linkText}>
 							More about data storage and data access
 					</Text>

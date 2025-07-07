@@ -25,7 +25,7 @@ export default function JournalData() {
 					<Text style={styles.sectionText}>
 						Information about your mood, habits, symptoms can help us correlate your personal experiences with your sleep patterns. You can voluntarily provide us with this data by making diary entries and sleep notes in the app's Journal section. 
 					</Text>
-					<TouchableOpacity onPress={() => console.log("Privacy policy link pressed")}>
+					<TouchableOpacity onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: "journalData"}})}>
 						<Text style={styles.linkText}>
 								More about collecting journal data
 						</Text>
@@ -36,7 +36,7 @@ export default function JournalData() {
 						The app will derive data about you such as sleep quality, correlations, insights and recommendations. This will be treated as sensitive personal health information. 
 					</Text>
 
-					<TouchableOpacity onPress={() => console.log("Privacy policy link pressed")}>
+					<TouchableOpacity onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: "derivedData"}})}>
 						<Text style={styles.linkText}>
 								More about derived data
 						</Text>

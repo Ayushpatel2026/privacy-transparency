@@ -36,7 +36,7 @@ export default function LightSensorConsent() {
 						The ambient light sensor on your device will be used to monitor the light conditions in your sleep environment only while you are sleeping, helping us to understand how light exposure affects your sleep quality. 
 					</Text>
 		
-					<TouchableOpacity onPress={() => console.log("Privacy policy link pressed")}>
+					<TouchableOpacity onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: "lightSensor"}})}>
 						<Text style={styles.linkText}>
 								More about collecting ambient light data
 						</Text>

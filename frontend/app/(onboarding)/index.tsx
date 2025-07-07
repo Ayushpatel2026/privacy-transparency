@@ -69,7 +69,7 @@ export default function MicrophoneConsent() {
 						Your microphone will listen for sounds like snoring or sleep talking only while you are sleeping. Analyzing these sounds will help you detect potential sleep disruptions and get a clearer picture of your sleep environment.
 					</Text>
 		
-					<TouchableOpacity onPress={() => console.log("Privacy policy link pressed")}>
+					<TouchableOpacity onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: "microphone"}})}>
 						<Text style={styles.linkText}>
 								Read more about sound data and snoring detection
 						</Text>

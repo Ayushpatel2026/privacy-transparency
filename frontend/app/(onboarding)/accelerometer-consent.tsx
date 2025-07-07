@@ -41,7 +41,7 @@ export default function AccelerometerConsent() {
 						The accelerometer on your device will be used to track your body movements during sleep and throughout the day continuously in the background. This will help us to correlate activity levels with sleep quality. 
 					</Text>
 		
-					<TouchableOpacity onPress={() => console.log("Privacy policy link pressed")}>
+					<TouchableOpacity onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: "accelerometer"}})}>
 						<Text style={styles.linkText}>
 								More about collecting activity data
 						</Text>
