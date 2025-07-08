@@ -25,7 +25,7 @@ export type SleepNote = "Pain" | "Stress" | "Anxiety" | "Medication" | "Caffeine
 // ===================================================================
 // ===================================================================
 
-export type GeneralHealthData = {
+export type GeneralSleepData = {
 	userId: string;
 	currentSleepDuration: string; 
 	snoring: string;  

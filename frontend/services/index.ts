@@ -5,9 +5,9 @@
 import { HttpClient } from './HttpClient';
 import { CloudStorageService } from './data/CloudStorageService';
 import { useAuthStore } from '@/store/authStore';
-import { GeneralHealthDataRepository } from './data/GeneralHealthDataRepository';
-import { CloudGeneralHealthDataSource } from './data/data-sources/CloudGeneralHealthDataSource';
-import { LocalGeneralHealthDataSource } from './data/data-sources/LocalGeneralHealthDataSource';
+import { GeneralSleepDataRepository } from './data/GeneralSleepDataRepository';
+import { CloudGeneralSleepDataSource } from './data/data-sources/CloudGeneralSleepDataSource';
+import { LocalGeneralSleepDataSource } from './data/data-sources/LocalGeneralSleepDataSource';
 import { LocalDatabaseManager } from './data/LocalDatabaseManager';
 import { LocalJournalDataSource } from './data/data-sources/LocalJournalDataSource';
 import { JournalDataRepository } from './data/JournalDataRepository';
@@ -34,9 +34,9 @@ const getAuthToken = (): string | null => {
     return useAuthStore.getState().token;
 };
 
-export const cloudHealthDataSource = new CloudGeneralHealthDataSource(httpClient, getAuthToken);
-export const localHealthDataSource = new LocalGeneralHealthDataSource();
-export const generalHealthDataRepository = new GeneralHealthDataRepository(cloudHealthDataSource, localHealthDataSource);
+export const cloudHealthDataSource = new CloudGeneralSleepDataSource(httpClient, getAuthToken);
+export const localHealthDataSource = new LocalGeneralSleepDataSource();
+export const generalSleepDataRepository = new GeneralSleepDataRepository(cloudHealthDataSource, localHealthDataSource);
 
 export const cloudJournalDataSource = new CloudJournalDataSource(httpClient, getAuthToken);
 export const localJournalDataSource = new LocalJournalDataSource(dbManager);

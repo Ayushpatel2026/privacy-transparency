@@ -28,7 +28,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     checkAuth()
-    loadProfileStatus();
+    //loadProfileStatus();
     console.log("Checking auth and loading profile status");
     sensorBackgroundTaskManager.registerAccelerometer();
     sensorBackgroundTaskManager.registerLightSensor();
