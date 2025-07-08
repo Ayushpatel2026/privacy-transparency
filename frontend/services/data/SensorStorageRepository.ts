@@ -4,6 +4,7 @@ import { useProfileStore } from '../../store/userProfileStore';
 import { CloudSensorDataSource } from './data-sources/CloudSensorDataSource';
 import { LocalSensorDataSource } from './data-sources/LocalSensorDataSource';
 import { SensorDataSource } from './data-sources/SensorDataSource';
+import { EncryptionService } from '../EncryptionService';
 
 /**
  * Repository for managing sensor data
@@ -13,17 +14,16 @@ import { SensorDataSource } from './data-sources/SensorDataSource';
  * It uses the active data source based on user consent preferences.
  * 
  * It does not handle the case where user preference changes and data needs to be migrated.
- * 
- * TODO - incorporate with the encryption service
  */
-
 export class SensorStorageRepository {
     private cloudDataSource: CloudSensorDataSource;
     private localDataSource: LocalSensorDataSource;
+    private encryptionService: EncryptionService;
 
-    constructor(cloudDataSource: CloudSensorDataSource, localDataSource: LocalSensorDataSource) {
+    constructor(cloudDataSource: CloudSensorDataSource, localDataSource: LocalSensorDataSource, encryptionService: EncryptionService) {
         this.cloudDataSource = cloudDataSource;
         this.localDataSource = localDataSource;
+        this.encryptionService = encryptionService;
     }
 
     private getAuthenticatedUserData() {
@@ -52,7 +52,12 @@ export class SensorStorageRepository {
         };
         console.log("Creating sensor reading with userId:", userId, "and sensorData:", sensorData);
         try {
-            return await activeDataSource.createSensorReading(sensorDataWithUserId, userId);
+            const encryptedData = await this.encryptionService.encryptSensorData(sensorDataWithUserId);
+            const response =  await activeDataSource.createSensorReading(encryptedData, userId);
+            if (!response) {
+                throw new Error('Failed to create sensor reading. No response from data source.');
+            }
+            return this.encryptionService.decryptSensorData(response);
         } catch (error: any) {
             console.error(`Error creating sensor reading in ${useProfileStore.getState().userConsentPreferences.cloudStorageEnabled ? 'cloud' : 'local'} storage:`, error);
             throw new Error(`Failed to create sensor reading: ${error.message}`);
@@ -63,7 +68,11 @@ export class SensorStorageRepository {
         const { userId } = this.getAuthenticatedUserData();
         const activeDataSource = this.getActiveDataSource();
         try {
-            return await activeDataSource.getSensorReadingById(userId, id);
+            const response = await activeDataSource.getSensorReadingById(userId, id);
+            if (!response) {
+                return null; // No sensor reading found for the given ID
+            }
+            return await this.encryptionService.decryptSensorData(response);
         } catch (error: any) {
             console.error(`Error fetching sensor reading by ID ${id} from ${useProfileStore.getState().userConsentPreferences.cloudStorageEnabled ? 'cloud' : 'local'} storage:`, error);
             throw new Error(`Failed to retrieve sensor reading by ID: ${error.message}`);
@@ -74,7 +83,12 @@ export class SensorStorageRepository {
         const { userId } = this.getAuthenticatedUserData();
         const activeDataSource = this.getActiveDataSource();
         try {
-            return await activeDataSource.getSensorReadingsByUserId(userId);
+            const response = await activeDataSource.getSensorReadingsByUserId(userId);
+            if (response.length === 0) {
+                return []; // No sensor readings found
+            }
+            const decryptedReadings = await Promise.all(response.map((reading: SensorData) => this.encryptionService.decryptSensorData(reading)));
+            return decryptedReadings;
         } catch (error: any) {
             console.error(`Error fetching all sensor readings from ${useProfileStore.getState().userConsentPreferences.cloudStorageEnabled ? 'cloud' : 'local'} storage:`, error);
             throw new Error(`Failed to retrieve all sensor readings: ${error.message}`);
@@ -85,7 +99,12 @@ export class SensorStorageRepository {
         const { userId } = this.getAuthenticatedUserData();
         const activeDataSource = this.getActiveDataSource();
         try {
-            return await activeDataSource.getSensorReadingsByDate(userId, date);
+            const response = await activeDataSource.getSensorReadingsByDate(userId, date);
+            if (response.length === 0) {
+                return []; 
+            }
+            const decryptedReadings = await Promise.all(response.map((reading: SensorData) => this.encryptionService.decryptSensorData(reading)));
+            return decryptedReadings;
         } catch (error: any) {
             console.error(`Error fetching sensor reading by date ${date} from ${useProfileStore.getState().userConsentPreferences.cloudStorageEnabled ? 'cloud' : 'local'} storage:`, error);
             throw new Error(`Failed to retrieve sensor reading by date: ${error.message}`);

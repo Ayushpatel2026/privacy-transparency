@@ -78,14 +78,14 @@ export class SimulationSensorService extends SensorService {
     
     const audioData: Omit<AudioSensorData, 'id' | 'userId'> = {
       sensorType: 'audio',
-      timestamp: Date.now(),
+      timestamp: Date.now().toString(),
       date: new Date().toISOString().split('T')[0],
-      averageDecibels: mockDecibels,
-      peakDecibels: mockDecibels + Math.random() * 15,
+      averageDecibels: mockDecibels.toString(),
+      peakDecibels: (mockDecibels + Math.random() * 20).toString(),
       frequencyBands: {
-        low: Math.random() * 40,
-        mid: Math.random() * 50,
-        high: Math.random() * 30,
+        low: (Math.random() * 40).toString(),
+        mid: (Math.random() * 50).toString(),
+        high: (Math.random() * 30).toString(), 
       },
       snoreDetected: Math.random() > 0.85,
       ambientNoiseLevel: this.categorizeNoiseLevel(mockDecibels),
@@ -109,9 +109,9 @@ export class SimulationSensorService extends SensorService {
     
     const lightData: Omit<LightSensorData, 'id' | 'userId'> = {
       sensorType: 'light',
-      timestamp: Date.now(),
+      timestamp: Date.now().toString(),
       date: new Date().toISOString().split('T')[0],
-      illuminance: mockLux,
+      illuminance: mockLux.toString(),
       lightLevel: this.categorizeLightLevel(mockLux),
     };
     
@@ -130,9 +130,12 @@ export class SimulationSensorService extends SensorService {
     
     const accelData: Omit<AccelerometerSensorData, 'id' | 'userId'> = {
       sensorType: 'accelerometer',
-      timestamp: Date.now(),
+      timestamp: Date.now().toString(),
       date: new Date().toISOString().split('T')[0],
-      x, y, z, magnitude,
+      x: x.toString(),
+      y: y.toString(),
+      z: z.toString(),
+      magnitude: magnitude.toString(),
       movementIntensity: this.categorizeMovement(magnitude),
     };
     

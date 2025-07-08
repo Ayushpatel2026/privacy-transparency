@@ -20,6 +20,7 @@ import { ExpoSensorService } from './sensors/ExpoSensorService';
 import { DEFAULT_SENSOR_SERVICE_CONFIG } from './sensors/sensorConfig';
 import { SimulationSensorService } from './sensors/SimulationSensorService';
 import { SensorRepository } from './sensors/SensorRepository';
+import { EncryptionService } from './EncryptionService';
 
 // Instantiate the base HTTP client
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_URL as string;
@@ -28,6 +29,7 @@ if (!apiBaseUrl) {
 }
 export const httpClient : HttpClient = new CloudStorageService(apiBaseUrl);
 const dbManager = LocalDatabaseManager.getInstance();
+const encryptionService = EncryptionService.getInstance();
 
 // Helper function to get the current auth token for data sources
 const getAuthToken = (): string | null => {
@@ -36,15 +38,15 @@ const getAuthToken = (): string | null => {
 
 export const cloudHealthDataSource = new CloudGeneralSleepDataSource(httpClient, getAuthToken);
 export const localHealthDataSource = new LocalGeneralSleepDataSource();
-export const generalSleepDataRepository = new GeneralSleepDataRepository(cloudHealthDataSource, localHealthDataSource);
+export const generalSleepDataRepository = new GeneralSleepDataRepository(cloudHealthDataSource, localHealthDataSource, encryptionService);
 
 export const cloudJournalDataSource = new CloudJournalDataSource(httpClient, getAuthToken);
 export const localJournalDataSource = new LocalJournalDataSource(dbManager);
-export const journalDataRepository = new JournalDataRepository(cloudJournalDataSource, localJournalDataSource);
+export const journalDataRepository = new JournalDataRepository(cloudJournalDataSource, localJournalDataSource, encryptionService);
 
 export const cloudSensorDataSource = new CloudSensorDataSource(httpClient, getAuthToken);
 export const localSensorDataSource = new LocalSensorDataSource(dbManager);
-export const sensorStorageRepository = new SensorStorageRepository(cloudSensorDataSource, localSensorDataSource);
+export const sensorStorageRepository = new SensorStorageRepository(cloudSensorDataSource, localSensorDataSource, encryptionService);
 
 export const expoSensorService = new ExpoSensorService(DEFAULT_SENSOR_SERVICE_CONFIG);
 export const simulationSensorService = new SimulationSensorService(DEFAULT_SENSOR_SERVICE_CONFIG);

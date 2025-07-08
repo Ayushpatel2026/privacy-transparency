@@ -90,9 +90,9 @@ export class ExpoSensorService extends SensorService {
         
         const lightData: Omit<LightSensorData, 'id' | 'userId'> = {
           sensorType: 'light',
-          timestamp: Date.now(),
+          timestamp: Date.now().toString(),
           date: new Date().toISOString().split('T')[0],
-          illuminance,
+          illuminance: illuminance.toString(),
           lightLevel,
         };
         
@@ -120,9 +120,12 @@ export class ExpoSensorService extends SensorService {
         const movementIntensity = this.categorizeMovement(magnitude);        
         const accelData: Omit<AccelerometerSensorData, 'id' | 'userId'> = {
           sensorType: 'accelerometer',
-          timestamp: Date.now(),
+          timestamp: Date.now().toString(),
           date: new Date().toISOString().split('T')[0],
-          x, y, z, magnitude,
+          x: x.toString(),
+          y: y.toString(),
+          z: z.toString(),
+          magnitude: magnitude.toString(),
           movementIntensity,
         };
         
@@ -155,14 +158,14 @@ export class ExpoSensorService extends SensorService {
     
     const audioData: Omit<AudioSensorData, 'id' | 'userId'> = {
       sensorType: 'audio',
-      timestamp: Date.now(),
+      timestamp: Date.now().toString(),
       date: new Date().toISOString().split('T')[0],
-      averageDecibels: mockDecibels,
-      peakDecibels: mockPeak,
+      averageDecibels: mockDecibels.toString(),
+      peakDecibels: mockPeak.toString(),
       frequencyBands: {
-        low: Math.random() * 40,
-        mid: Math.random() * 50,
-        high: Math.random() * 30,
+        low: (Math.random() * 40).toString(), 
+        mid: (Math.random() * 50).toString(),
+        high: (Math.random() * 30).toString(),
       },
       snoreDetected: Math.random() > 0.9, // 10% chance
       ambientNoiseLevel: this.categorizeNoiseLevel(mockDecibels),

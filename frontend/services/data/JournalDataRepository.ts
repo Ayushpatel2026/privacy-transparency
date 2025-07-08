@@ -2,6 +2,7 @@ import { JournalData } from '@/constants/types/JournalData';
 import { useAuthStore } from '../../store/authStore';
 import { useProfileStore } from '../../store/userProfileStore';
 import { JournalDataSource } from './data-sources/JournalDataSource';
+import { EncryptionService } from '../EncryptionService';
 
 /**
  * Repository for managing journal data.
@@ -9,17 +10,16 @@ import { JournalDataSource } from './data-sources/JournalDataSource';
  * It abstracts the data source layer and provides a unified interface.
  * 
  * It does not handle the case where user preference changes and data needs to be migrated.
- * 
- * TODO - incorporate with the encryption service
  */
-
 export class JournalDataRepository {
     private cloudDataSource: JournalDataSource;
     private localDataSource: JournalDataSource;
+    private encryptionService: EncryptionService;
 
-    constructor(cloudDataSource: JournalDataSource, localDataSource: JournalDataSource) {
+    constructor(cloudDataSource: JournalDataSource, localDataSource: JournalDataSource, encryptionService: EncryptionService) {
         this.cloudDataSource = cloudDataSource;
         this.localDataSource = localDataSource;
+        this.encryptionService = encryptionService;
     }
 
     private getAuthenticatedUserData() {
@@ -43,7 +43,11 @@ export class JournalDataRepository {
         const { userId } = this.getAuthenticatedUserData();
         const activeDataSource = this.getActiveDataSource();
         try {
-            return await activeDataSource.getJournalByDate(userId, date);
+            const response = await activeDataSource.getJournalByDate(userId, date);
+            if (!response) {
+                return null; // No journal found for the given date
+            }
+            return await this.encryptionService.decryptJournalData(response);
         } catch (error: any) {
             console.error(`Error fetching journal from ${useProfileStore.getState().userConsentPreferences.cloudStorageEnabled ? 'cloud' : 'local'} storage:`, error);
             throw new Error(`Failed to retrieve journal: ${error.message}`);
@@ -59,7 +63,12 @@ export class JournalDataRepository {
                 date: date, // Ensure date is set correctly
             };
             console.log("Editing journal with data:", dataToCreate);
-            return await activeDataSource.editJournal(date, dataToCreate, userId);
+            const encryptedData = await this.encryptionService.encryptJournalData(dataToCreate);
+            const response = await activeDataSource.editJournal(date, encryptedData, userId);
+            if (!response) {
+                return null; // No journal found for the given date
+            }
+            return await this.encryptionService.decryptJournalData(response);
         } catch (error: any) {
             console.error(`Error creating journal in ${useProfileStore.getState().userConsentPreferences.cloudStorageEnabled ? 'cloud' : 'local'} storage:`, error);
             throw new Error(`Failed to create journal: ${error.message}`);

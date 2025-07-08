@@ -39,7 +39,7 @@ export type GeneralSleepData = {
 export interface BaseSensorReading {
   id: string;
   userId: string;
-  timestamp: number; // Unix timestamp in milliseconds
+  timestamp: string; // Unix timestamp in milliseconds
   date: string; // YYYY-MM-DD format for the sleep date
   sensorType: string; 
 }
@@ -48,12 +48,12 @@ export interface AudioSensorData extends BaseSensorReading {
   sensorType: 'audio';
   // Processed audio metrics (to avoid storing massive audio files)
   // For the prototype, we dont actually have to process these metrics
-  averageDecibels: number;
-  peakDecibels: number;
+  averageDecibels: string;
+  peakDecibels: string;
   frequencyBands: {
-    low: number;    // 0-250 Hz
-    mid: number;    // 250-4000 Hz  
-    high: number;   // 4000+ Hz
+    low: string;    // 0-250 Hz
+    mid: string;    // 250-4000 Hz  
+    high: string;   // 4000+ Hz
   };
   // Optional: Store short snippets for snoring detection, I am not sure how we would store these
   audioClipUri?: string; // Reference to file if we store clips
@@ -63,16 +63,16 @@ export interface AudioSensorData extends BaseSensorReading {
 
 export interface LightSensorData extends BaseSensorReading {
   sensorType: 'light';
-  illuminance: number; // Lux value
+  illuminance: string; // Lux value
   lightLevel: 'dark' | 'dim' | 'moderate' | 'bright';
 }
 
 export interface AccelerometerSensorData extends BaseSensorReading {
   sensorType: 'accelerometer';
-  x: number;
-  y: number;
-  z: number;
-  magnitude: number; // root(x² + y² + z²)
+  x: string;
+  y: string;
+  z: string;
+  magnitude: string; // root(x² + y² + z²)
   movementIntensity: 'still' | 'light' | 'moderate' | 'active';
 }
 

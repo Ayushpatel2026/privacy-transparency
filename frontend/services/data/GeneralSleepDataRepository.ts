@@ -2,6 +2,7 @@ import { GeneralSleepDataSource } from './data-sources/GeneralSleepDataSource';
 import { GeneralSleepData } from '../../constants/types/GeneralSleepData';
 import { useAuthStore } from '../../store/authStore';
 import { useProfileStore } from '../../store/userProfileStore';
+import { EncryptionService } from '../EncryptionService';
 
 /**
  * Repository for managing general sleep data.
@@ -10,17 +11,17 @@ import { useProfileStore } from '../../store/userProfileStore';
  * It uses the active data source based on user consent preferences.
  * 
  * It does not handle the case where user preference changes and data needs to be migrated.
- * 
- * TODO - incorporate with the encryption service
  */
-
 export class GeneralSleepDataRepository {
     private cloudDataSource: GeneralSleepDataSource;
     private localDataSource: GeneralSleepDataSource;
 
-    constructor(cloudDataSource: GeneralSleepDataSource, localDataSource: GeneralSleepDataSource) {
+    private encryptionService: EncryptionService;
+
+    constructor(cloudDataSource: GeneralSleepDataSource, localDataSource: GeneralSleepDataSource, encryptionService: EncryptionService) {
         this.cloudDataSource = cloudDataSource;
         this.localDataSource = localDataSource;
+        this.encryptionService = encryptionService;
     }
 
     private getAuthenticatedUserData() {
@@ -44,7 +45,11 @@ export class GeneralSleepDataRepository {
         const { userId } = this.getAuthenticatedUserData();
         const activeDataSource = this.getActiveDataSource();
         try {
-            return await activeDataSource.getSleepDataByUserId(userId);
+            const response = await activeDataSource.getSleepDataByUserId(userId);
+            if (!response) {
+                return null; // No sleep data found
+            }
+            return await this.encryptionService.decryptGeneralSleepData(response);
         } catch (error: any) {
             console.error(`Error fetching sleep data from ${useProfileStore.getState().userConsentPreferences.cloudStorageEnabled ? 'cloud' : 'local'} storage:`, error);
             throw new Error(`Failed to retrieve sleep data: ${error.message}`);
@@ -61,7 +66,9 @@ export class GeneralSleepDataRepository {
                 ...sleepData,
                 userId: userId,
             };
-            return await activeDataSource.createSleepData(dataToCreate);
+            const encryptedData = await this.encryptionService.encryptGeneralSleepData(dataToCreate);
+            const response = await activeDataSource.createSleepData(encryptedData);
+            return await this.encryptionService.decryptGeneralSleepData(response);
         } catch (error: any) {
             console.error(`Error creating sleep data in ${useProfileStore.getState().userConsentPreferences.cloudStorageEnabled ? 'cloud' : 'local'} storage:`, error);
             throw new Error(`Failed to create sleep data: ${error.message}`);

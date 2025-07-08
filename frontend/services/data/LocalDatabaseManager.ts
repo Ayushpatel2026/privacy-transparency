@@ -9,9 +9,6 @@ interface QueryResult {
 /**
  * LocalDatabaseManager is a singleton class that manages the SQLite database connection
  * and provides methods to execute SQL queries.
- * 
- * TODO - encryption needs to be added. useSQLCipher is set to true in the app.json file, but
- * it is not currently implemented in this class.
  */
 export class LocalDatabaseManager {
     private db: SQLite.SQLiteDatabase | null = null;
@@ -43,22 +40,22 @@ export class LocalDatabaseManager {
             sensorType TEXT NOT NULL,    -- 'audio', 'light', 'accelerometer'
             
             -- Audio Sensor Data specific fields (nullable)
-            averageDecibels REAL,
-            peakDecibels REAL,
+            averageDecibels TEXT,
+            peakDecibels TEXT,
             frequencyBands TEXT,         -- Stored as JSON string (e.g., '{ "low": 0.5, "mid": 0.3, "high": 0.2 }')
             audioClipUri TEXT,
             snoreDetected INTEGER,       -- Boolean (0 for false, 1 for true)
             ambientNoiseLevel TEXT,      -- 'quiet', 'moderate', 'loud', 'very_loud'
 
             -- Light Sensor Data specific fields (nullable)
-            illuminance REAL,            -- Lux value
+            illuminance TEXT,            -- Lux value
             lightLevel TEXT,             -- 'dark', 'dim', 'moderate', 'bright'
 
             -- Accelerometer Sensor Data specific fields (nullable)
-            x REAL,
-            y REAL,
-            z REAL,
-            magnitude REAL,
+            x TEXT,
+            y TEXT,
+            z TEXT,
+            magnitude TEXT,
             movementIntensity TEXT,      -- 'still', 'light', 'moderate', 'active'
             
             createdAt TEXT NOT NULL DEFAULT (STRFTIME('%Y-%m-%dT%H:%M:%fZ', 'NOW')) -- Record creation timestamp
