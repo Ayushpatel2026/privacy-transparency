@@ -3,6 +3,9 @@ import { useAuthStore } from '../../store/authStore';
 import { useProfileStore } from '../../store/userProfileStore';
 import { JournalDataSource } from './data-sources/JournalDataSource';
 import { EncryptionService } from '../EncryptionService';
+import { CloudJournalDataSource } from './data-sources/CloudJournalDataSource';
+import { useTransparencyStore } from '@/store/transparencyStore';
+import { DataDestination, TransparencyEvent } from '@/constants/types/Transparency';
 
 /**
  * Repository for managing journal data.
@@ -39,6 +42,15 @@ export class JournalDataRepository {
         }
     }
 
+    private getTransparencyEvent() : TransparencyEvent {
+        const journalTransparencyEvent = useTransparencyStore.getState().journalTransparency;
+        return journalTransparencyEvent
+    }
+
+    private setTransparencyEvent(event: TransparencyEvent) {
+        useTransparencyStore.getState().setJournalTransparency(event);
+    }
+
     async getJournalByDate(date: string): Promise<JournalData | null> {
         const { userId } = this.getAuthenticatedUserData();
         const activeDataSource = this.getActiveDataSource();
@@ -57,6 +69,13 @@ export class JournalDataRepository {
     async editJournal(journal: Partial<JournalData>, date: string): Promise<JournalData | null> {
         const { userId } = this.getAuthenticatedUserData();
         const activeDataSource = this.getActiveDataSource();
+        const transparencyEvent = this.getTransparencyEvent();
+        if (activeDataSource instanceof CloudJournalDataSource) {
+            this.setTransparencyEvent({
+                ...transparencyEvent,
+                storageLocation: DataDestination.GOOGLE_CLOUD,
+            })
+        }
         try {
             const dataToCreate: Partial<Omit<JournalData, 'journalId' | 'userId'>> = {
                 ...journal,

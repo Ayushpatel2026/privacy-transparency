@@ -21,6 +21,7 @@ import { DEFAULT_SENSOR_SERVICE_CONFIG } from './sensors/sensorConfig';
 import { SimulationSensorService } from './sensors/SimulationSensorService';
 import { SensorRepository } from './sensors/SensorRepository';
 import { EncryptionService } from './EncryptionService';
+import { TransparencyService } from './TransparencyService';
 
 // Instantiate the base HTTP client
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_URL as string;
@@ -52,3 +53,5 @@ export const expoSensorService = new ExpoSensorService(DEFAULT_SENSOR_SERVICE_CO
 export const simulationSensorService = new SimulationSensorService(DEFAULT_SENSOR_SERVICE_CONFIG);
 export const sensorRepository = new SensorRepository(expoSensorService, simulationSensorService, sensorStorageRepository);
 export const sensorBackgroundTaskManager = new SensorBackgroundTaskManager(sensorRepository);
+
+export const transparencyService = TransparencyService.getInstance();

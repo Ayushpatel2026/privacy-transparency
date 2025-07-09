@@ -19,6 +19,10 @@ import Loader from "@/components/Loader";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from "@/constants/Colors";
 import { Calendar } from "@/components/Calendar";
+import { useTransparencyStore } from "@/store/transparencyStore";
+import { useProfileStore } from "@/store/userProfileStore";
+import { DataSource, DataType, DEFAULT_JOURNAL_TRANSPARENCY_EVENT, TransparencyEvent, TransparencyEventType } from "@/constants/types/Transparency";
+import { transparencyService } from "@/services";
 
 export default function Journal() {
     const [diaryEntry, setDiaryEntry] = useState("");
@@ -41,6 +45,9 @@ export default function Journal() {
     const [isSleepNotesModalVisible, setIsSleepNotesModalVisible] = useState(false);
     const [tempSleepNotes, setTempSleepNotes] = useState<SleepNote[]>([]); // Temporary state for modal's sleep notes
 
+    // Transparency State
+    const { journalTransparency, setJournalTransparency } = useTransparencyStore();
+    
     useEffect(() => {
         loadJournalData();
     }, [selectedDate]);
@@ -82,8 +89,23 @@ export default function Journal() {
                 diaryEntry: updatedDiaryEntry,
                 sleepNotes: updatedSleepNotes
             };
+            
+            // set up a new transparency event
+            const transparencyEvent : TransparencyEvent = {
+                dataType: DataType.USER_JOURNAL,
+                timestamp: new Date(),
+                source: DataSource.USER_INPUT,
+                dataSteps: [TransparencyEventType.DATA_COLLECTION],
+                userConsent: true, // User consent is always true for manual input
+                backgroundMode: false, 
+                purpose: DEFAULT_JOURNAL_TRANSPARENCY_EVENT.purpose
+            }
+            setJournalTransparency(transparencyEvent);
 
             const result = await journalDataRepository.editJournal(journalData, selectedDate.toISOString().split('T')[0]);
+
+            await transparencyService.analyzePrivacyRisks(transparencyEvent);
+
             if (result) {
                 setJournalExists(true);
                 setDiaryEntry(result.diaryEntry || "");

@@ -4,6 +4,8 @@ import { AccelerometerSensorData, AudioSensorData, LightSensorData, SensorData }
 import { GeneralSleepData } from '@/constants/types/GeneralSleepData';
 import { User } from '@/constants/types/User';
 import { JournalData, SleepNote } from '@/constants/types/JournalData';
+import { useTransparencyStore } from '@/store/transparencyStore';
+import { EncryptionMethod, TransparencyEventType } from '@/constants/types/Transparency';
 
 /**
  * The EncryptionService handles encryption and decryption of sensitive data using AES.
@@ -139,6 +141,7 @@ export class EncryptionService {
    */
   public async encryptJournalData(journalData: Partial<Omit<JournalData, 'userId' | 'journalId'>>): Promise<Partial<Omit<JournalData, 'journalId' | 'userId'>>> {
     const encryptedData: Partial<Omit<JournalData, 'journalId' | 'userId'>> = { ...journalData };
+    const journalTransparencyEvent = useTransparencyStore.getState().journalTransparency;
     try {
       journalData.bedtime && (encryptedData.bedtime = await this.encrypt(journalData.bedtime));
       journalData.alarmTime && (encryptedData.alarmTime = await this.encrypt(journalData.alarmTime));
@@ -147,6 +150,11 @@ export class EncryptionService {
       journalData.sleepNotes && (encryptedData.sleepNotes = await Promise.all(
         journalData.sleepNotes.map(note => this.encrypt(note))
       ) as SleepNote[]);
+      useTransparencyStore.getState().setJournalTransparency({
+        ...journalTransparencyEvent,
+        dataSteps: [...journalTransparencyEvent.dataSteps, TransparencyEventType.DATA_ENCRYPTION],
+        encryptionMethod: EncryptionMethod.AES_256
+      });
     } catch (error) {
       console.error('Failed to encrypt JournalData:', error);
       throw error; 
