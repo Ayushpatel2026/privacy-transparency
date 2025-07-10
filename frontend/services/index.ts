@@ -54,4 +54,4 @@ export const simulationSensorService = new SimulationSensorService(DEFAULT_SENSO
 export const sensorRepository = new SensorRepository(expoSensorService, simulationSensorService, sensorStorageRepository);
 export const sensorBackgroundTaskManager = new SensorBackgroundTaskManager(sensorRepository);
 
-export const transparencyService = TransparencyService.getInstance();
+export const transparencyService = new TransparencyService(httpClient, getAuthToken);

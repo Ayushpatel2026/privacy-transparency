@@ -1,4 +1,4 @@
-import { JournalData } from '../constants/types';
+import { JournalData } from '../constants/types/Journal';
 
 /**
  * Interface for interacting with journal data storage.

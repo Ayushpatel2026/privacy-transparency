@@ -1,4 +1,4 @@
-import { SensorData } from '../constants/types';
+import { SensorData } from '../constants/types/SensorData';
 
 /**
  * Interface for interacting with sensor data

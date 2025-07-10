@@ -1,5 +1,5 @@
 import { SleepDataRepository } from '../SleepDataRepository';
-import { GeneralSleepData } from '../../constants/types';
+import { GeneralSleepData } from '../../constants/types/GeneralSleepData';
 import { db } from '../../config/firebaseConfig';
 import { DocumentData, DocumentSnapshot } from 'firebase-admin/firestore';
 

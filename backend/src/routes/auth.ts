@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { UserRepository } from '../repositories/UserRepository';
 import { FirestoreUserRepository } from '../repositories/firestore/FirestoreUserRepository';
-import { User } from '../constants/types';
+import { User } from '../constants/types/User';
 
 const router: Router = express.Router();
 

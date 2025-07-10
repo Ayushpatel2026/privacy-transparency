@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { JournalData } from '../../constants/types';
+import { JournalData } from '../../constants/types/Journal';
 import verifyToken from '../../middleware/auth';
 import { RequestHandler } from 'express';
 import { FirestoreJournalRepository } from '../../repositories/firestore/FirestoreJournalRepository';

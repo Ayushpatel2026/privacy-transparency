@@ -1,4 +1,4 @@
-import { GeneralSleepData } from '../constants/types';
+import { GeneralSleepData } from '../constants/types/GeneralSleepData';
 
 /**
  * This interface is for general sleep data repository operations. 

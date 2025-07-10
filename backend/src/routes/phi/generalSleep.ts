@@ -1,5 +1,5 @@
 import { Router, Request, Response, RequestHandler } from 'express';
-import { GeneralSleepData } from '../../constants/types'; 
+import { GeneralSleepData } from '../../constants/types/GeneralSleepData'; 
 import verifyToken from '../../middleware/auth'; 
 import { FirestoreSleepDataRepository } from '../../repositories/firestore/FirestoreSleepDataRepository';
 import { SleepDataRepository } from '../../repositories/SleepDataRepository';

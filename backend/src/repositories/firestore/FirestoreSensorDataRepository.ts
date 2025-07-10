@@ -1,4 +1,4 @@
-import { SensorData, BaseSensorReading, AudioSensorData, LightSensorData, AccelerometerSensorData } from '../../constants/types';
+import { SensorData, BaseSensorReading, AudioSensorData, LightSensorData, AccelerometerSensorData } from '../../constants/types/SensorData';
 import { db } from '../../config/firebaseConfig';
 import { DocumentData, DocumentSnapshot } from 'firebase-admin/firestore';
 import { SensorDataRepository } from '../SensorDataRepository';

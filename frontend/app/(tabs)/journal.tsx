@@ -104,7 +104,12 @@ export default function Journal() {
 
             const result = await journalDataRepository.editJournal(journalData, selectedDate.toISOString().split('T')[0]);
 
-            await transparencyService.analyzePrivacyRisks(transparencyEvent);
+            const updatedJournalTransparency = await transparencyService.analyzePrivacyRisks(transparencyEvent);
+
+            setJournalTransparency(updatedJournalTransparency);
+
+            console.log("Updated journal transparency", updatedJournalTransparency)
+            console.log("Updated Transparency Event state", journalTransparency);
 
             if (result) {
                 setJournalExists(true);
