@@ -176,7 +176,8 @@ export const DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT: TransparencyEvent = {
   dataType: DataType.SENSOR_LIGHT,
   source: DataSource.LIGHT_SENSOR,
   purpose: 'To understand how the light conditions in your sleep environment may affect your sleep quality ',
-  
+  sensorType: 'light_sensor',
+
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
     framework: RegulatoryFramework.PIPEDA,
@@ -200,7 +201,8 @@ export const DEFAULT_MICROPHONE_TRANSPARENCY_EVENT: TransparencyEvent = {
   dataType: DataType.SENSOR_AUDIO,
   source: DataSource.MICROPHONE,
   purpose: 'To analyze sleep disturbances such as snoring and talking, as well as understanding the noise level in your sleep environment',
-
+  sensorType: 'microphone',
+ 
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
     framework: RegulatoryFramework.PIPEDA,
@@ -224,6 +226,7 @@ export const DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT: TransparencyEvent = {
   dataType: DataType.SENSOR_MOTION,
   source: DataSource.ACCELEROMETER,
   purpose: 'To analyze how your movements during sleep and throughout the day impact sleep quality',
+  sensorType: 'accelerometer',
 
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {

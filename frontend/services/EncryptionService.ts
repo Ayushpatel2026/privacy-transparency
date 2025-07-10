@@ -230,6 +230,7 @@ export class EncryptionService {
    */
   public async encryptGeneralSleepData(generalSleepData: GeneralSleepData): Promise<GeneralSleepData> {
     const encryptedData: GeneralSleepData = { ...generalSleepData };
+    const generalSleepTransparencyEvent = useTransparencyStore.getState().generalSleepTransparency;
     try {
       if (generalSleepData.currentSleepDuration !== ''){
         encryptedData.currentSleepDuration = await this.encrypt(generalSleepData.currentSleepDuration);
@@ -243,6 +244,11 @@ export class EncryptionService {
       if (generalSleepData.daytimeSleepiness !== ''){
         encryptedData.daytimeSleepiness = await this.encrypt(generalSleepData.daytimeSleepiness);
       }
+      useTransparencyStore.getState().setGeneralSleepTransparency({
+        ...generalSleepTransparencyEvent,
+        dataSteps: [...generalSleepTransparencyEvent.dataSteps, TransparencyEventType.DATA_ENCRYPTION],
+        encryptionMethod: EncryptionMethod.AES_256
+      });
     } catch (error) {
       console.error('Failed to encrypt GeneralSleepData:', error);
       throw error;
@@ -285,6 +291,7 @@ export class EncryptionService {
     try {
       if (sensorData.sensorType === 'audio') {
         const audioData = sensorData as AudioSensorData;
+        const microphoneTransparencyEvent = useTransparencyStore.getState().microphoneTransparency;
         encryptedData = {
           ...audioData,
           averageDecibels: await this.encrypt(audioData.averageDecibels.toString()),
@@ -295,14 +302,26 @@ export class EncryptionService {
             high: await this.encrypt(audioData.frequencyBands.high.toString()),
           }
         } as AudioSensorData;
+        useTransparencyStore.getState().setMicrophoneTransparency({
+          ...microphoneTransparencyEvent,
+          dataSteps: [...microphoneTransparencyEvent.dataSteps, TransparencyEventType.DATA_ENCRYPTION],
+          encryptionMethod: EncryptionMethod.AES_256
+        });
       } else if (sensorData.sensorType === 'light') {
         const lightData = sensorData as LightSensorData;
+        const lightTransparencyEvent = useTransparencyStore.getState().lightSensorTransparency;
         encryptedData = {
           ...lightData,
           illuminance: await this.encrypt(lightData.illuminance.toString()),
         } as LightSensorData;
+        useTransparencyStore.getState().setLightSensorTransparency({
+          ...lightTransparencyEvent,
+          dataSteps: [...lightTransparencyEvent.dataSteps, TransparencyEventType.DATA_ENCRYPTION],
+          encryptionMethod: EncryptionMethod.AES_256
+        });
       } else if (sensorData.sensorType === 'accelerometer') {
         const accelData = sensorData as AccelerometerSensorData;
+        const accelerometerTransparencyEvent = useTransparencyStore.getState().accelerometerTransparency;
         encryptedData = {
           ...accelData,
           x: await this.encrypt(accelData.x.toString()),
@@ -310,6 +329,11 @@ export class EncryptionService {
           z: await this.encrypt(accelData.z.toString()),
           magnitude: await this.encrypt(accelData.magnitude.toString()),
         } as AccelerometerSensorData;
+        useTransparencyStore.getState().setAccelerometerTransparency({
+          ...accelerometerTransparencyEvent,
+          dataSteps: [...accelerometerTransparencyEvent.dataSteps, TransparencyEventType.DATA_ENCRYPTION],
+          encryptionMethod: EncryptionMethod.AES_256
+        });
       } else {
         // If sensorType is not recognized or doesn't require encryption, return original
         encryptedData = sensorData;

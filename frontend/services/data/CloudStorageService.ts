@@ -67,7 +67,7 @@ export class CloudStorageService implements HttpClient {
                 const journalTransparencyEvent = useTransparencyStore.getState().journalTransparency;
                 useTransparencyStore.getState().setJournalTransparency({
                     ...journalTransparencyEvent,
-                    dataSteps: [...journalTransparencyEvent.dataSteps, TransparencyEventType.DATA_TRANSMISSION],
+                    dataSteps: [...journalTransparencyEvent.dataSteps, TransparencyEventType.DATA_TRANSMISSION, TransparencyEventType.DATA_STORAGE],
                     endpoint: path,
                     protocol: this.baseUrl.includes('https') ? 'HTTPS' : 'HTTP'
                 });
@@ -76,7 +76,7 @@ export class CloudStorageService implements HttpClient {
                     const microphoneTransparencyEvent = useTransparencyStore.getState().microphoneTransparency;
                     useTransparencyStore.getState().setMicrophoneTransparency({
                         ...microphoneTransparencyEvent,
-                        dataSteps: [...microphoneTransparencyEvent.dataSteps, TransparencyEventType.DATA_TRANSMISSION],
+                        dataSteps: [...microphoneTransparencyEvent.dataSteps, TransparencyEventType.DATA_TRANSMISSION, TransparencyEventType.DATA_STORAGE],
                         endpoint: path,
                         protocol: this.baseUrl.includes('https') ? 'HTTPS' : 'HTTP'
                     });
@@ -84,7 +84,7 @@ export class CloudStorageService implements HttpClient {
                     const accelerometerTransparencyEvent = useTransparencyStore.getState().accelerometerTransparency;
                     useTransparencyStore.getState().setAccelerometerTransparency({
                         ...accelerometerTransparencyEvent,
-                        dataSteps: [...accelerometerTransparencyEvent.dataSteps, TransparencyEventType.DATA_TRANSMISSION],
+                        dataSteps: [...accelerometerTransparencyEvent.dataSteps, TransparencyEventType.DATA_TRANSMISSION, TransparencyEventType.DATA_STORAGE],
                         endpoint: path,
                         protocol: this.baseUrl.includes('https') ? 'HTTPS' : 'HTTP'
                     });
@@ -92,7 +92,7 @@ export class CloudStorageService implements HttpClient {
                     const lightSensorTransparencyEvent = useTransparencyStore.getState().lightSensorTransparency;
                     useTransparencyStore.getState().setLightSensorTransparency({
                         ...lightSensorTransparencyEvent,
-                        dataSteps: [...lightSensorTransparencyEvent.dataSteps, TransparencyEventType.DATA_TRANSMISSION],
+                        dataSteps: [...lightSensorTransparencyEvent.dataSteps, TransparencyEventType.DATA_TRANSMISSION, TransparencyEventType.DATA_STORAGE],
                         endpoint: path,
                         protocol: this.baseUrl.includes('https') ? 'HTTPS' : 'HTTP'
                     });
@@ -101,7 +101,7 @@ export class CloudStorageService implements HttpClient {
                 const sleepTransparencyEvent = useTransparencyStore.getState().generalSleepTransparency;
                 useTransparencyStore.getState().setGeneralSleepTransparency({
                     ...sleepTransparencyEvent,
-                    dataSteps: [...sleepTransparencyEvent.dataSteps, TransparencyEventType.DATA_TRANSMISSION],
+                    dataSteps: [...sleepTransparencyEvent.dataSteps, TransparencyEventType.DATA_TRANSMISSION, TransparencyEventType.DATA_STORAGE],
                     endpoint: path,
                     protocol: this.baseUrl.includes('https') ? 'HTTPS' : 'HTTP'
                 });

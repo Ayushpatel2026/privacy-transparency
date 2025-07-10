@@ -5,6 +5,9 @@ import { CloudSensorDataSource } from './data-sources/CloudSensorDataSource';
 import { LocalSensorDataSource } from './data-sources/LocalSensorDataSource';
 import { SensorDataSource } from './data-sources/SensorDataSource';
 import { EncryptionService } from '../EncryptionService';
+import { useTransparencyStore } from '@/store/transparencyStore';
+import { use } from 'react';
+import { DataDestination } from '@/constants/types/Transparency';
 
 /**
  * Repository for managing sensor data
@@ -46,6 +49,10 @@ export class SensorStorageRepository {
     async createSensorReading(sensorData: Omit<SensorData, 'id' | 'userId'>): Promise<SensorData> {
         const { userId } = this.getAuthenticatedUserData();
         const activeDataSource = this.getActiveDataSource();
+
+        // log transparency event
+        this.logTransparencyEvent(sensorData, activeDataSource);
+
         const sensorDataWithUserId: Omit<SensorData, 'id'> = {
             userId: userId,
             ...sensorData
@@ -119,6 +126,30 @@ export class SensorStorageRepository {
         } catch (error: any) {
             console.error(`Error deleting sensor reading ${id} from ${useProfileStore.getState().userConsentPreferences.cloudStorageEnabled ? 'cloud' : 'local'} storage:`, error);
             throw new Error(`Failed to delete sensor reading: ${error.message}`);
+        }
+    }
+
+    private logTransparencyEvent(sensorData: Omit<SensorData, 'id' | 'userId'>, activeDataSource: SensorDataSource) {
+        if (activeDataSource instanceof CloudSensorDataSource) {
+            if (sensorData.sensorType === 'audio'){
+                const microphoneTransparencyEvent = useTransparencyStore.getState().microphoneTransparency;
+                useTransparencyStore.getState().setMicrophoneTransparency({
+                    ...microphoneTransparencyEvent,
+                    storageLocation: DataDestination.GOOGLE_CLOUD,
+                });
+            } else if (sensorData.sensorType === 'light') {
+                const lightSensorTransparencyEvent = useTransparencyStore.getState().lightSensorTransparency;
+                useTransparencyStore.getState().setLightSensorTransparency({
+                    ...lightSensorTransparencyEvent,
+                    storageLocation: DataDestination.GOOGLE_CLOUD,
+                });
+            } else if (sensorData.sensorType === 'accelerometer') {
+                const accelerometerTransparencyEvent = useTransparencyStore.getState().accelerometerTransparency;
+                useTransparencyStore.getState().setAccelerometerTransparency({
+                    ...accelerometerTransparencyEvent,
+                    storageLocation: DataDestination.GOOGLE_CLOUD,
+                });
+            }
         }
     }
 }

@@ -3,6 +3,10 @@ import { LightSensor } from 'expo-sensors';
 import { Accelerometer } from 'expo-sensors';
 import { SensorService } from './SensorService';
 import { AccelerometerSensorData, AudioSensorData, LightSensorData } from '@/constants/types/SensorData';
+import { useTransparencyStore } from '@/store/transparencyStore';
+import { DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT, DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT, DEFAULT_MICROPHONE_TRANSPARENCY_EVENT, TransparencyEvent, TransparencyEventType } from '@/constants/types/Transparency';
+import { useProfileStore } from '@/store/userProfileStore';
+import { transparencyService } from '@/services';
 
 /**
  * This class implements the SensorService interface using Expo's sensor APIs.
@@ -13,6 +17,10 @@ export class ExpoSensorService extends SensorService {
   private lightSubscription: any = null;
   private accelerometerSubscription: any = null;
   private audioAnalysisInterval: ReturnType<typeof setInterval> | null = null;
+
+  private previousMicrophoneTransparencyEvent: TransparencyEvent = DEFAULT_MICROPHONE_TRANSPARENCY_EVENT
+  private previousLightTransparencyEvent: TransparencyEvent = DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT;
+  private previousAccelerometerTransparencyEvent: TransparencyEvent = DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT;
   
   async isAudioAvailable(): Promise<boolean> {
     try {
@@ -48,6 +56,16 @@ export class ExpoSensorService extends SensorService {
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
       });
+
+      // start the transparency event
+      const microphoneTransparencyEvent = DEFAULT_MICROPHONE_TRANSPARENCY_EVENT;
+      microphoneTransparencyEvent.userConsent = useProfileStore.getState().userConsentPreferences.microphoneEnabled;
+      microphoneTransparencyEvent.backgroundMode = true;
+      microphoneTransparencyEvent.samplingRate = this.config.samplingRates.audio;
+      microphoneTransparencyEvent.dataSteps = [TransparencyEventType.DATA_COLLECTION];
+      useTransparencyStore.getState().setMicrophoneTransparency(
+        microphoneTransparencyEvent
+      )
       
       // Start continuous recording for analysis
       const { recording } = await Audio.Recording.createAsync(
@@ -84,6 +102,16 @@ export class ExpoSensorService extends SensorService {
   async startLightMonitoring(): Promise<void> {
     try {
       LightSensor.setUpdateInterval(this.config.samplingRates.light * 1000);
+
+      // start the transparency event
+      const lightSensorTransparencyEvent = DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT;
+      lightSensorTransparencyEvent.userConsent = useProfileStore.getState().userConsentPreferences.lightSensorEnabled;
+      lightSensorTransparencyEvent.backgroundMode = true;
+      lightSensorTransparencyEvent.samplingRate = this.config.samplingRates.light;
+      lightSensorTransparencyEvent.dataSteps = [TransparencyEventType.DATA_COLLECTION];
+      useTransparencyStore.getState().setLightSensorTransparency(
+        lightSensorTransparencyEvent
+      )
       
       this.lightSubscription = LightSensor.addListener(({ illuminance }) => {
         const lightLevel = this.categorizeLightLevel(illuminance);
@@ -97,6 +125,27 @@ export class ExpoSensorService extends SensorService {
         };
         
         this.onLightData(lightData);
+
+        // at this point, the light sensor transparency event is ready to be sent to the backend
+        const lightSensorEvent = useTransparencyStore.getState().lightSensorTransparency;
+        if (lightSensorEvent === this.previousLightTransparencyEvent) {
+          // reset the data steps
+          useTransparencyStore.getState().setLightSensorTransparency({
+            ...lightSensorEvent,
+            dataSteps: []
+          });
+          return; // no changes, do not prompt LLM because there are no changes
+        } else {
+          this.previousLightTransparencyEvent= lightSensorEvent;
+          transparencyService.analyzePrivacyRisks(lightSensorEvent)
+            .then(updatedLightTransparencyEvent => {
+              useTransparencyStore.getState().setLightSensorTransparency(updatedLightTransparencyEvent);
+              console.log("Updated light sensor transparency", updatedLightTransparencyEvent);
+            })
+            .catch(error => {
+              console.error("Error analyzing privacy risks:", error);
+          });
+        }
       });
     } catch (error) {
       this.onError(error as Error, 'light');
@@ -114,6 +163,16 @@ export class ExpoSensorService extends SensorService {
     try {
       console.log("Starting accelerometer monitoring with sampling rate:", this.config.samplingRates.accelerometer);
       Accelerometer.setUpdateInterval(this.config.samplingRates.accelerometer * 1000);
+
+      // start the transparency event
+      const accelerometerTransparencyEvent = DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT;
+      accelerometerTransparencyEvent.userConsent = useProfileStore.getState().userConsentPreferences.accelerometerEnabled;
+      accelerometerTransparencyEvent.backgroundMode = true;
+      accelerometerTransparencyEvent.samplingRate = this.config.samplingRates.accelerometer;
+      accelerometerTransparencyEvent.dataSteps = [TransparencyEventType.DATA_COLLECTION];
+      useTransparencyStore.getState().setAccelerometerTransparency(
+        accelerometerTransparencyEvent
+      )
       
       this.accelerometerSubscription = Accelerometer.addListener(({ x, y, z }) => {
         const magnitude = Math.sqrt(x * x + y * y + z * z);
@@ -130,6 +189,27 @@ export class ExpoSensorService extends SensorService {
         };
         
         this.onAccelerometerData(accelData);
+
+        // at this point, the accelerometer transparency event is ready to be sent to the backend
+        const accelerometerTransparencyEvent = useTransparencyStore.getState().accelerometerTransparency;
+        if (accelerometerTransparencyEvent === this.previousAccelerometerTransparencyEvent) {
+          // reset the data steps
+          useTransparencyStore.getState().setAccelerometerTransparency({
+            ...accelerometerTransparencyEvent,
+            dataSteps: []
+          });
+          return; // no changes, do not prompt LLM because there are no changes
+        } else {
+          this.previousAccelerometerTransparencyEvent = accelerometerTransparencyEvent;
+          transparencyService.analyzePrivacyRisks(accelerometerTransparencyEvent)
+            .then(updatedAccelerometerTransparency => {
+              useTransparencyStore.getState().setAccelerometerTransparency(updatedAccelerometerTransparency);
+              console.log("Updated accelerometer transparency", updatedAccelerometerTransparency);
+            })
+            .catch(error => {
+              console.error("Error analyzing privacy risks:", error);
+          });
+        }
       });
     } catch (error) {
       this.onError(error as Error, 'accelerometer');
@@ -172,6 +252,27 @@ export class ExpoSensorService extends SensorService {
     };
     
     this.onAudioData(audioData);
+
+    // at this point, the microphone transparency event is ready to be sent to the backend
+    const microphoneTransparencyEvent = useTransparencyStore.getState().microphoneTransparency;
+    if (microphoneTransparencyEvent === this.previousMicrophoneTransparencyEvent) {
+      // reset the data steps
+      useTransparencyStore.getState().setMicrophoneTransparency({
+        ...microphoneTransparencyEvent,
+        dataSteps: []
+      });
+      return; // no changes, do not prompt LLM because there are no changes
+    } else {
+      this.previousMicrophoneTransparencyEvent = microphoneTransparencyEvent;
+      transparencyService.analyzePrivacyRisks(microphoneTransparencyEvent)
+        .then(updatedMicrophoneTransparency => {
+          useTransparencyStore.getState().setMicrophoneTransparency(updatedMicrophoneTransparency);
+          console.log("Updated microphone transparency", updatedMicrophoneTransparency);
+        })
+        .catch(error => {
+          console.error("Error analyzing privacy risks:", error);
+      });
+    }
   }
   
   private categorizeLightLevel(lux: number): 'dark' | 'dim' | 'moderate' | 'bright' {
