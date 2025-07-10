@@ -48,15 +48,15 @@ ${pipedaRegulations ? `**SPECIFIC PIPEDA REGULATIONS**:\n${pipedaRegulations}\n`
   "regulatoryCompliance": {
     "framework": "PIPEDA",
     "compliant": true | false,
-    "issues": ["specific issue 1", "specific issue 2"],
+    "issues": "description of compliance issues",
     "relevantSections": ["section reference 1", "section reference 2"]
   },
   "aiExplanation": {
-    "summary": "Brief overview of the privacy analysis in plain language",
-    "purpose": "Clear explanation of why this data is being collected",
-    "risks": ["risk 1", "risk 2"],
-    "userBenefit": "How this data collection benefits the use",
-    "regulatoryContext": "Relevant regulatory considerations",
+    "why": "brief explanation of why this data is collected and what benefits it provides to the user",
+    "storage": "where the data is stored and how it is protected",
+    "access": "who has access to the data",
+    "privacyRisks": "summary of privacy risks associated with this data",
+    "regulatoryContext": "Relevant regulatory considerations associated with this data collection",
     "privacyPolicyLink": "Link to relevant privacy policy section",
     "regulationLink": "Link to relevant regulation section"
   }

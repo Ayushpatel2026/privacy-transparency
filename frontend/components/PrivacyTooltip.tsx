@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Linking, Alert, Image, Dimensions } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import Tooltip from 'react-native-walkthrough-tooltip';
 import privacyHighIcon from '../assets/images/privacy-high.png';
 import privacyMediumIcon from '../assets/images/privacy-medium.png';
@@ -47,7 +46,7 @@ export const PrivacyTooltip = ({
 }: PrivacyTooltipProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
 	const [tooltipPlacement, setTooltipPlacement] = useState<'top' | 'bottom'>('bottom');
-	const iconRef = useRef<TouchableOpacity>(null);
+	const iconRef = useRef<TouchableOpacity>(null); // VS code shows type error but this still works
 
   const iconKey = showTooltip ? `${iconName}-open` : iconName;
   const iconImageUrl = iconMap[iconKey] || privacyLowIcon;
@@ -86,14 +85,6 @@ export const PrivacyTooltip = ({
 
   const renderTooltipContent = () => (
     <View style={styles.tooltipContent}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>{dataType} Privacy</Text>
-        <TouchableOpacity onPress={() => setShowTooltip(false)}>
-          <Ionicons name="close" size={18} color="#666" />
-        </TouchableOpacity>
-      </View>
-
       {/* Content */}
       <View style={styles.content}>
         {/* Privacy Violations */}
@@ -185,12 +176,12 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   tooltipContainer: {
-    width: 300,
+    width: 400,
     padding: 0,
   },
   tooltipContent: {
     borderRadius: 8,
-    overflow: 'hidden',
+    overflow: 'scroll',
   },
   tooltipArrow: {
     // Custom arrow styling if needed
@@ -208,7 +199,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: 'black',
   },
   content: {
     padding: 12,
@@ -219,12 +210,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 13,
     fontWeight: 'bold',
-    color: '#333',
+    color: 'black',
     marginBottom: 2,
   },
   sectionText: {
     fontSize: 12,
-    color: '#666',
+    color: 'black',
     lineHeight: 16,
   },
   linksSection: {

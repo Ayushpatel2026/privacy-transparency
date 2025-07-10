@@ -110,18 +110,18 @@ export enum RegulatoryFramework {
 export interface RegulatoryCompliance {
   framework: RegulatoryFramework;
   compliant: boolean;
-  issues?: string[];
+  issues?: string;
   relevantSections?: string[];
 }
 
 export interface AIExplanation {
-  summary: string;
-  purpose: string;
-  risks: string[];
-  userBenefit: string;
-  regulatoryContext: string;
-  privacyPolicyLink: string;
-  regulationLink: string;
+  why: string; // explain in simple terms why this data is being collected and what benefits the user gets
+  storage: string; // where is the data stored and how is it protected
+  access: string; // who has access to the data 
+  privacyRisks: string; // what are the privacy risks associated with this data
+  regulatoryContext: string; // explain the risk in relation to the regulatory framework
+  privacyPolicyLink: string; // link to the privacy policy section that explains this data collection
+  regulationLink: string; // link to the specific regulation that applies to this data collection
 }
 
 // this config is used to determine what transparency features are enabled in the app
@@ -157,14 +157,14 @@ export const DEFAULT_JOURNAL_TRANSPARENCY_EVENT: TransparencyEvent = {
   regulatoryCompliance: {
     framework: RegulatoryFramework.PIPEDA,
     compliant: true,
-    issues: [],
+    issues: '',
     relevantSections: []
   },
   aiExplanation: {
-    summary: '',
-    purpose: '',
-    risks: [],
-    userBenefit: '',
+    why: '',
+    privacyRisks: '',
+    storage: '',
+    access: '',
     regulatoryContext: '',
     privacyPolicyLink: '',
     regulationLink: ''
@@ -181,14 +181,14 @@ export const DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT: TransparencyEvent = {
   regulatoryCompliance: {
     framework: RegulatoryFramework.PIPEDA,
     compliant: true,
-    issues: [],
+    issues: '',
     relevantSections: []
   },
   aiExplanation: {
-    summary: '',
-    purpose: '',
-    risks: [],
-    userBenefit: '',
+    why: '',
+    privacyRisks: '',
+    storage: '',
+    access: '',
     regulatoryContext: '',
     privacyPolicyLink: '',
     regulationLink: ''
@@ -201,18 +201,18 @@ export const DEFAULT_MICROPHONE_TRANSPARENCY_EVENT: TransparencyEvent = {
   source: DataSource.MICROPHONE,
   purpose: 'To analyze sleep disturbances such as snoring and talking, as well as understanding the noise level in your sleep environment',
 
-  privacyRisk: PrivacyRisk.LOW, 
+  privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
     framework: RegulatoryFramework.PIPEDA,
     compliant: true,
-    issues: [],
+    issues: '',
     relevantSections: []
   },
   aiExplanation: {
-    summary: '',
-    purpose: '',
-    risks: [],
-    userBenefit: '',
+    why: '',
+    privacyRisks: '',
+    storage: '',
+    access: '',
     regulatoryContext: '',
     privacyPolicyLink: '',
     regulationLink: ''
@@ -229,14 +229,14 @@ export const DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT: TransparencyEvent = {
   regulatoryCompliance: {
     framework: RegulatoryFramework.PIPEDA,
     compliant: true,
-    issues: [],
+    issues: '',
     relevantSections: []
   },
   aiExplanation: {
-    summary: '',
-    purpose: '',
-    risks: [],
-    userBenefit: '',
+    why: '',
+    privacyRisks: '',
+    storage: '',
+    access: '',
     regulatoryContext: '',
     privacyPolicyLink: '',
     regulationLink: ''
@@ -253,14 +253,14 @@ export const DEFAULT_STATISTICS_TRANSPARENCY_EVENT: TransparencyEvent = {
   regulatoryCompliance: {
     framework: RegulatoryFramework.PIPEDA,
     compliant: true,
-    issues: [],
+    issues: '',
     relevantSections: []
   },
   aiExplanation: {
-    summary: '',
-    purpose: '',
-    risks: [],
-    userBenefit: '',
+    why: '',
+    privacyRisks: '',
+    storage: '',
+    access: '',
     regulatoryContext: '',
     privacyPolicyLink: '',
     regulationLink: ''
@@ -277,14 +277,14 @@ export const DEFAULT_GENERAL_SLEEP_TRANSPARENCY_EVENT: TransparencyEvent = {
   regulatoryCompliance: {
     framework: RegulatoryFramework.PIPEDA,
     compliant: true,
-    issues: [],
+    issues: '',
     relevantSections: []
   },
   aiExplanation: {
-    summary: '',
-    purpose: '',
-    risks: [],
-    userBenefit: '',
+    why: '',
+    privacyRisks: '',
+    storage: '',
+    access: '',
     regulatoryContext: '',
     privacyPolicyLink: '',
     regulationLink: ''

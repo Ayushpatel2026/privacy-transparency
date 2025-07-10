@@ -3,7 +3,6 @@ import { LLMService } from './LLMService';
 import { 
   TransparencyEvent, 
   RegulatoryFramework, 
-  UserConsentPreferences,
   PrivacyRisk,
   RegulatoryCompliance,
   AIExplanation 
@@ -135,14 +134,14 @@ export class GeminiLLMService implements LLMService {
       regulatoryCompliance: {
         framework: RegulatoryFramework.PIPEDA,
         compliant: false,
-        issues: ['Unable to complete automated privacy analysis'],
+        issues: 'Unable to complete automated privacy analysis',
         relevantSections: []
       },
       aiExplanation: {
-        summary: 'Automated privacy analysis is temporarily unavailable. Please review this data handling manually.',
-        purpose: transparencyEvent.purpose || 'Data collection purpose not specified',
-        risks: ['Unable to assess privacy risks automatically'],
-        userBenefit: 'Manual review recommended',
+        why: 'Automated privacy analysis is temporarily unavailable. Please review this data handling manually.',
+        storage: 'Not currently available',
+        access: 'Not currently available',
+        privacyRisks: 'Unable to assess privacy risks automatically',
         regulatoryContext: 'Compliance status could not be determined',
         privacyPolicyLink: '',
         regulationLink: ''

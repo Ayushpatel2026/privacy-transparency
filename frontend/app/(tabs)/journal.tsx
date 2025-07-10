@@ -81,7 +81,7 @@ export default function Journal() {
         if (!transparency.regulatoryCompliance?.issues || transparency.regulatoryCompliance.issues.length === 0) {
             return "No privacy violations detected";
         }
-        return transparency.regulatoryCompliance.issues.join(", ");
+        return `${transparency.aiExplanation?.privacyRisks} ${transparency.aiExplanation?.regulatoryContext}`;
     };
 
     useEffect(() => {
@@ -275,10 +275,9 @@ export default function Journal() {
                         iconSize={40}
                         iconName={getPrivacyRiskIcon(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
                         violationsDetected={formatViolationsDetected(journalTransparency)}
-                        purpose={journalTransparency.purpose || "To analyze how your daily mood, habits, sleep goals affects your sleep quality."}
-                        storage={journalTransparency.aiExplanation!.summary}
-                        access={journalTransparency.aiExplanation!.summary}
-                        optOutLink={journalTransparency.aiExplanation?.privacyPolicyLink}
+                        purpose={journalTransparency.aiExplanation!.why}
+                        storage={journalTransparency.aiExplanation!.storage}
+                        access={journalTransparency.aiExplanation!.access}
                         privacyPolicyLink={journalTransparency.aiExplanation?.privacyPolicyLink}
                         privacyPolicySectionLink={journalTransparency.aiExplanation?.regulationLink}
                         dataType="Journal"
@@ -329,9 +328,9 @@ export default function Journal() {
                         iconSize={50}
                         iconName={getPrivacyRiskIcon(accelerometerTransparency.privacyRisk || PrivacyRisk.LOW)}
                         violationsDetected={formatViolationsDetected(accelerometerTransparency)}
-                        purpose={accelerometerTransparency.purpose || "To analyze how your movements during sleep and throughout the day impact sleep quality"}
-                        storage={accelerometerTransparency.aiExplanation!.summary}
-                        access={accelerometerTransparency.aiExplanation!.summary}
+                        purpose={accelerometerTransparency.aiExplanation!.why}
+                        storage={accelerometerTransparency.aiExplanation!.storage}
+                        access={accelerometerTransparency.aiExplanation!.access}
                         optOutLink={accelerometerTransparency.aiExplanation?.privacyPolicyLink}
                         privacyPolicyLink={accelerometerTransparency.aiExplanation?.privacyPolicyLink}
                         privacyPolicySectionLink={accelerometerTransparency.aiExplanation?.regulationLink}

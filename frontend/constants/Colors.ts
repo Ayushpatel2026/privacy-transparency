@@ -11,7 +11,7 @@ export const Colors = {
   generalBlue: "#39ACE7",
   lightBlack: "#181719",
   tooltipGreen: "#E0FFDF",
-  tooltipRed: "#C90909",
+  tooltipRed: "#FA8072",
   tooltipYellow: "#FFFD86",
   grey: "#EBEBF580",
   lightGrey: "#888888",
