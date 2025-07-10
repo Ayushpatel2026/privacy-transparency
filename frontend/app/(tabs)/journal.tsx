@@ -21,8 +21,9 @@ import { Colors } from "@/constants/Colors";
 import { Calendar } from "@/components/Calendar";
 import { useTransparencyStore } from "@/store/transparencyStore";
 import { useProfileStore } from "@/store/userProfileStore";
-import { DataSource, DataType, DEFAULT_JOURNAL_TRANSPARENCY_EVENT, TransparencyEvent, TransparencyEventType } from "@/constants/types/Transparency";
+import { DataSource, DataType, DEFAULT_JOURNAL_TRANSPARENCY_EVENT, PrivacyRisk, TransparencyEvent, TransparencyEventType } from "@/constants/types/Transparency";
 import { transparencyService } from "@/services";
+import PrivacyTooltip from "@/components/PrivacyTooltip";
 
 export default function Journal() {
     const [diaryEntry, setDiaryEntry] = useState("");
@@ -46,8 +47,43 @@ export default function Journal() {
     const [tempSleepNotes, setTempSleepNotes] = useState<SleepNote[]>([]); // Temporary state for modal's sleep notes
 
     // Transparency State
-    const { journalTransparency, setJournalTransparency } = useTransparencyStore();
-    
+    const { journalTransparency, setJournalTransparency, accelerometerTransparency, setAccelerometerTransparency } = useTransparencyStore();
+
+    const getPrivacyRiskColor = (risk: PrivacyRisk) => {
+        switch (risk) {
+            case PrivacyRisk.HIGH:
+                return Colors.tooltipRed;
+            case PrivacyRisk.MEDIUM:
+                return Colors.tooltipYellow;
+            case PrivacyRisk.LOW:
+                return Colors.tooltipGreen;
+            default:
+                return Colors.tooltipGreen;
+        }
+    };
+
+    // Helper function to get privacy risk icon
+    const getPrivacyRiskIcon = (risk: PrivacyRisk) => {
+        switch (risk) {
+            case PrivacyRisk.HIGH:
+                return "privacy-high"
+            case PrivacyRisk.MEDIUM:
+                return "privacy-medium"
+            case PrivacyRisk.LOW:
+                return "privacy-low"
+            default:
+                return "privacy-low"
+        }
+    };
+
+    // Helper function to format violations detected
+    const formatViolationsDetected = (transparency: TransparencyEvent) => {
+        if (!transparency.regulatoryCompliance?.issues || transparency.regulatoryCompliance.issues.length === 0) {
+            return "No privacy violations detected";
+        }
+        return transparency.regulatoryCompliance.issues.join(", ");
+    };
+
     useEffect(() => {
         loadJournalData();
     }, [selectedDate]);
@@ -91,25 +127,21 @@ export default function Journal() {
             };
             
             // set up a new transparency event
-            const transparencyEvent : TransparencyEvent = {
-                dataType: DataType.USER_JOURNAL,
-                timestamp: new Date(),
-                source: DataSource.USER_INPUT,
-                dataSteps: [TransparencyEventType.DATA_COLLECTION],
-                userConsent: true, // User consent is always true for manual input
-                backgroundMode: false, 
-                purpose: DEFAULT_JOURNAL_TRANSPARENCY_EVENT.purpose
-            }
+            const transparencyEvent : TransparencyEvent = DEFAULT_JOURNAL_TRANSPARENCY_EVENT;
+            transparencyEvent.dataSteps = [TransparencyEventType.DATA_COLLECTION];
             setJournalTransparency(transparencyEvent);
 
             const result = await journalDataRepository.editJournal(journalData, selectedDate.toISOString().split('T')[0]);
 
-            const updatedJournalTransparency = await transparencyService.analyzePrivacyRisks(transparencyEvent);
-
-            setJournalTransparency(updatedJournalTransparency);
-
-            console.log("Updated journal transparency", updatedJournalTransparency)
-            console.log("Updated Transparency Event state", journalTransparency);
+            // 
+            transparencyService.analyzePrivacyRisks(transparencyEvent)
+                .then(updatedJournalTransparency => {
+                    setJournalTransparency(updatedJournalTransparency);
+                    console.log("Updated journal transparency", updatedJournalTransparency);
+                })
+                .catch(error => {
+                    console.error("Error analyzing privacy risks:", error);
+            });
 
             if (result) {
                 setJournalExists(true);
@@ -235,8 +267,23 @@ export default function Journal() {
                     </View>
                 </View>
 
-                {/* Diary Section - Title outside the card */}
-                <Text style={styles.sectionTitle}>Diary</Text>
+                {/* Diary Section - Title with Privacy Tooltip */}
+                <View style={styles.sectionTitleWithTooltip}>
+                    <Text style={styles.sectionTitle}>Diary</Text>
+                    <PrivacyTooltip
+                        color={getPrivacyRiskColor(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
+                        iconSize={40}
+                        iconName={getPrivacyRiskIcon(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
+                        violationsDetected={formatViolationsDetected(journalTransparency)}
+                        purpose={journalTransparency.purpose || "To analyze how your daily mood, habits, sleep goals affects your sleep quality."}
+                        storage={journalTransparency.aiExplanation!.summary}
+                        access={journalTransparency.aiExplanation!.summary}
+                        optOutLink={journalTransparency.aiExplanation?.privacyPolicyLink}
+                        privacyPolicyLink={journalTransparency.aiExplanation?.privacyPolicyLink}
+                        privacyPolicySectionLink={journalTransparency.aiExplanation?.regulationLink}
+                        dataType="Journal"
+                    />
+                </View>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingContainer}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -274,8 +321,23 @@ export default function Journal() {
                     </View>
                 </KeyboardAvoidingView>
 
-                {/* Activity Tracker Section */}
-                <Text style={styles.sectionTitle}>Activity Tracker</Text>
+                {/* Activity Tracker Section - Title with Privacy Tooltip */}
+                <View style={styles.sectionTitleWithTooltip}>
+                    <Text style={styles.sectionTitle}>Activity Tracker</Text>
+                    <PrivacyTooltip
+                        color={getPrivacyRiskColor(accelerometerTransparency.privacyRisk || PrivacyRisk.LOW)}
+                        iconSize={50}
+                        iconName={getPrivacyRiskIcon(accelerometerTransparency.privacyRisk || PrivacyRisk.LOW)}
+                        violationsDetected={formatViolationsDetected(accelerometerTransparency)}
+                        purpose={accelerometerTransparency.purpose || "To analyze how your movements during sleep and throughout the day impact sleep quality"}
+                        storage={accelerometerTransparency.aiExplanation!.summary}
+                        access={accelerometerTransparency.aiExplanation!.summary}
+                        optOutLink={accelerometerTransparency.aiExplanation?.privacyPolicyLink}
+                        privacyPolicyLink={accelerometerTransparency.aiExplanation?.privacyPolicyLink}
+                        privacyPolicySectionLink={accelerometerTransparency.aiExplanation?.regulationLink}
+                        dataType="Motion Data"
+                    />
+                </View>
                 <View style={styles.sectionCard}>
                     <View style={styles.activityContent}>
                         <TouchableOpacity style={styles.activityItem}>
@@ -451,6 +513,13 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         paddingHorizontal: 10,
     },
+    sectionTitleWithTooltip: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 15,
+        paddingHorizontal: 10,
+    },
     subSectionCard: {
         backgroundColor: Colors.lightBlack,
         borderRadius: 16,
@@ -504,6 +573,9 @@ const styles = StyleSheet.create({
     },
     editButton: {
         flex: 1,
+        padding: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     diaryEntryPreview: {
         paddingVertical: 15,
