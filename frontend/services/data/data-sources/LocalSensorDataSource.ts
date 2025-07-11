@@ -3,7 +3,7 @@ import { LocalDatabaseManager } from "../LocalDatabaseManager";
 import { SensorDataSource } from "./SensorDataSource";
 import { SensorData, AudioSensorData, LightSensorData, AccelerometerSensorData, BaseSensorReading } from '@/constants/types/SensorData';
 import { useTransparencyStore } from '@/store/transparencyStore';
-import { DataDestination, TransparencyEventType } from '@/constants/types/Transparency';
+import { DataDestination } from '@/constants/types/Transparency';
 
 /**
  * LocalSensorDataSource provides methods to interact with sensor data stored in a local SQLite database.
@@ -207,21 +207,18 @@ export class LocalSensorDataSource implements SensorDataSource {
             const microphoneTransparencyEvent = useTransparencyStore.getState().microphoneTransparency;
             useTransparencyStore.getState().setMicrophoneTransparency({
                 ...microphoneTransparencyEvent,
-                dataSteps: [...microphoneTransparencyEvent.dataSteps, TransparencyEventType.DATA_STORAGE],
                 storageLocation: DataDestination.SQLITE_DB,
             });
         } else if (sensorData.sensorType === 'light') {
             const lightSensorTransparencyEvent = useTransparencyStore.getState().lightSensorTransparency;
             useTransparencyStore.getState().setLightSensorTransparency({
                 ...lightSensorTransparencyEvent,
-                dataSteps: [...lightSensorTransparencyEvent.dataSteps, TransparencyEventType.DATA_STORAGE],
                 storageLocation: DataDestination.SQLITE_DB,
             });
         } else if (sensorData.sensorType === 'accelerometer') {
             const accelerometerTransparencyEvent = useTransparencyStore.getState().accelerometerTransparency;
             useTransparencyStore.getState().setAccelerometerTransparency({
                 ...accelerometerTransparencyEvent,
-                dataSteps: [...accelerometerTransparencyEvent.dataSteps, TransparencyEventType.DATA_STORAGE],
                 storageLocation: DataDestination.SQLITE_DB,
             });
         }

@@ -243,7 +243,6 @@ export class SensorRepository {
      */
     private async handleAudioData(data: Omit<AudioSensorData, 'id' | 'userId'>): Promise<void> {
         try {
-            console.log('Saving audio data:', data);
             await this.sensorStorageRepository.createSensorReading(data);
         } catch (error) {
             console.error('Failed to save audio data:', error);
@@ -256,7 +255,6 @@ export class SensorRepository {
      */
     private async handleLightData(data: Omit<LightSensorData, 'id' | 'userId'>): Promise<void> {
         try {
-            console.log('Saving light data:', data);
             await this.sensorStorageRepository.createSensorReading(data);
         } catch (error) {
             console.error('Failed to save light data:', error);
@@ -269,7 +267,6 @@ export class SensorRepository {
      */
     private async handleAccelerometerData(data: Omit<AccelerometerSensorData, 'id' | 'userId'>): Promise<void> {
         try {
-            console.log('Saving accelerometer data:', data);
             await this.sensorStorageRepository.createSensorReading(data);
         } catch (error) {
             console.error('Failed to save accelerometer data:', error);

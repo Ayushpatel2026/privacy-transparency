@@ -5,7 +5,7 @@ import { GeneralSleepData } from '@/constants/types/GeneralSleepData';
 import { User } from '@/constants/types/User';
 import { JournalData, SleepNote } from '@/constants/types/JournalData';
 import { useTransparencyStore } from '@/store/transparencyStore';
-import { EncryptionMethod, TransparencyEventType } from '@/constants/types/Transparency';
+import { EncryptionMethod } from '@/constants/types/Transparency';
 
 /**
  * The EncryptionService handles encryption and decryption of sensitive data using AES.
@@ -152,7 +152,6 @@ export class EncryptionService {
       ) as SleepNote[]);
       useTransparencyStore.getState().setJournalTransparency({
         ...journalTransparencyEvent,
-        dataSteps: [...journalTransparencyEvent.dataSteps, TransparencyEventType.DATA_ENCRYPTION],
         encryptionMethod: EncryptionMethod.AES_256
       });
     } catch (error) {
@@ -246,7 +245,6 @@ export class EncryptionService {
       }
       useTransparencyStore.getState().setGeneralSleepTransparency({
         ...generalSleepTransparencyEvent,
-        dataSteps: [...generalSleepTransparencyEvent.dataSteps, TransparencyEventType.DATA_ENCRYPTION],
         encryptionMethod: EncryptionMethod.AES_256
       });
     } catch (error) {
@@ -304,7 +302,6 @@ export class EncryptionService {
         } as AudioSensorData;
         useTransparencyStore.getState().setMicrophoneTransparency({
           ...microphoneTransparencyEvent,
-          dataSteps: [...microphoneTransparencyEvent.dataSteps, TransparencyEventType.DATA_ENCRYPTION],
           encryptionMethod: EncryptionMethod.AES_256
         });
       } else if (sensorData.sensorType === 'light') {
@@ -316,7 +313,6 @@ export class EncryptionService {
         } as LightSensorData;
         useTransparencyStore.getState().setLightSensorTransparency({
           ...lightTransparencyEvent,
-          dataSteps: [...lightTransparencyEvent.dataSteps, TransparencyEventType.DATA_ENCRYPTION],
           encryptionMethod: EncryptionMethod.AES_256
         });
       } else if (sensorData.sensorType === 'accelerometer') {
@@ -331,7 +327,6 @@ export class EncryptionService {
         } as AccelerometerSensorData;
         useTransparencyStore.getState().setAccelerometerTransparency({
           ...accelerometerTransparencyEvent,
-          dataSteps: [...accelerometerTransparencyEvent.dataSteps, TransparencyEventType.DATA_ENCRYPTION],
           encryptionMethod: EncryptionMethod.AES_256
         });
       } else {

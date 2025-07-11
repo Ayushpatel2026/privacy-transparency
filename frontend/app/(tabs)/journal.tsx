@@ -20,8 +20,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from "@/constants/Colors";
 import { Calendar } from "@/components/Calendar";
 import { useTransparencyStore } from "@/store/transparencyStore";
-import { useProfileStore } from "@/store/userProfileStore";
-import { DataSource, DataType, DEFAULT_JOURNAL_TRANSPARENCY_EVENT, PrivacyRisk, TransparencyEvent, TransparencyEventType } from "@/constants/types/Transparency";
+import { DEFAULT_JOURNAL_TRANSPARENCY_EVENT, PrivacyRisk, TransparencyEvent } from "@/constants/types/Transparency";
 import { transparencyService } from "@/services";
 import PrivacyTooltip from "@/components/PrivacyTooltip";
 
@@ -128,7 +127,6 @@ export default function Journal() {
             
             // set up a new transparency event
             const transparencyEvent : TransparencyEvent = DEFAULT_JOURNAL_TRANSPARENCY_EVENT;
-            transparencyEvent.dataSteps = [TransparencyEventType.DATA_COLLECTION];
             setJournalTransparency(transparencyEvent);
 
             const result = await journalDataRepository.editJournal(journalData, selectedDate.toISOString().split('T')[0]);

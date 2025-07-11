@@ -6,7 +6,6 @@ import { UserConsentPreferences } from "./UserConsentPreferences";
  */
 export interface TransparencyEvent {
   timestamp?: Date;
-  dataSteps: TransparencyEventType[];	 // what processes happened on that data
   dataType: DataType;
   source: DataSource;
 
@@ -44,16 +43,6 @@ export interface AIPrompt {
 
   // Future extension for determining risk levels based on user's risk tolerance
   userRiskTolerance?: any;
-}
-
-export enum TransparencyEventType {
-  DATA_COLLECTION = 'DATA_COLLECTION',
-  DATA_STORAGE = 'DATA_STORAGE',
-  DATA_TRANSMISSION = 'DATA_TRANSMISSION',
-  DATA_PROCESSING = 'DATA_PROCESSING',
-  DATA_ENCRYPTION = 'DATA_ENCRYPTION',
-  DATA_DELETION = 'DATA_DELETION',
-  CONSENT_CHANGE = 'CONSENT_CHANGE'
 }
 
 export enum DataType {
@@ -148,7 +137,6 @@ export const DEFAULT_TRANSPARENCY_SETTINGS: TransparencySettings = {
  * These are used to initialize the UI elements before any data is collected.
  */
 export const DEFAULT_JOURNAL_TRANSPARENCY_EVENT: TransparencyEvent = {
-  dataSteps: [],
   dataType: DataType.USER_JOURNAL,
   source: DataSource.USER_INPUT,
   purpose: "To analyze how your daily mood, habits, sleep goals affects your sleep quality.",
@@ -172,12 +160,10 @@ export const DEFAULT_JOURNAL_TRANSPARENCY_EVENT: TransparencyEvent = {
 }
 
 export const DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT: TransparencyEvent = {
-  dataSteps: [],
   dataType: DataType.SENSOR_LIGHT,
   source: DataSource.LIGHT_SENSOR,
   purpose: 'To understand how the light conditions in your sleep environment may affect your sleep quality ',
-  sensorType: 'light_sensor',
-
+  
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
     framework: RegulatoryFramework.PIPEDA,
@@ -197,12 +183,10 @@ export const DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT: TransparencyEvent = {
 }
 
 export const DEFAULT_MICROPHONE_TRANSPARENCY_EVENT: TransparencyEvent = {
-  dataSteps: [],
   dataType: DataType.SENSOR_AUDIO,
   source: DataSource.MICROPHONE,
   purpose: 'To analyze sleep disturbances such as snoring and talking, as well as understanding the noise level in your sleep environment',
-  sensorType: 'microphone',
- 
+
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
     framework: RegulatoryFramework.PIPEDA,
@@ -222,11 +206,9 @@ export const DEFAULT_MICROPHONE_TRANSPARENCY_EVENT: TransparencyEvent = {
 }
 
 export const DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT: TransparencyEvent = {
-  dataSteps: [],
   dataType: DataType.SENSOR_MOTION,
   source: DataSource.ACCELEROMETER,
   purpose: 'To analyze how your movements during sleep and throughout the day impact sleep quality',
-  sensorType: 'accelerometer',
 
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
@@ -247,7 +229,6 @@ export const DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT: TransparencyEvent = {
 }
 
 export const DEFAULT_STATISTICS_TRANSPARENCY_EVENT: TransparencyEvent = {
-  dataSteps: [],
   dataType: DataType.SLEEP_STATISTICS,
   source: DataSource.DERIVED_DATA,
   purpose: 'Provide summaries and actionable insights to help improve your sleep quality',
@@ -271,7 +252,6 @@ export const DEFAULT_STATISTICS_TRANSPARENCY_EVENT: TransparencyEvent = {
 }
 
 export const DEFAULT_GENERAL_SLEEP_TRANSPARENCY_EVENT: TransparencyEvent = {
-  dataSteps: [],
   dataType: DataType.GENERAL_SLEEP,
   source: DataSource.USER_INPUT,
   purpose: 'To understand your current sleep quality and how we can improve it',

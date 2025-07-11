@@ -24,7 +24,6 @@ export class CloudSensorDataSource implements SensorDataSource {
     }
 
     async createSensorReading(sensorData: Omit<SensorData, 'id'>): Promise<SensorData> {
-        console.log("Creating sensor reading in cloud with data:", sensorData);
         const token = this.getAuthToken();
         try {
             const response = await this.httpClient.post<{ sensorReading: SensorData }>('/phi/sensor-data/', sensorData, token);

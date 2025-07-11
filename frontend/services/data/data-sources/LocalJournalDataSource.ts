@@ -3,7 +3,7 @@ import { LocalDatabaseManager } from "../LocalDatabaseManager";
 import { JournalDataSource } from "./JournalDataSource";
 import * as Crypto from 'expo-crypto';
 import { useTransparencyStore } from "@/store/transparencyStore";
-import { DataDestination, TransparencyEventType } from "@/constants/types/Transparency";
+import { DataDestination } from "@/constants/types/Transparency";
 
 /**
  * LocalJournalDataSource provides methods to interact with journal data stored in a local SQLite database.
@@ -79,7 +79,6 @@ export class LocalJournalDataSource implements JournalDataSource {
                 if (sql) {
                     useTransparencyStore.getState().setJournalTransparency({
                         ...journalTransparencyEvent,
-                        dataSteps: [...journalTransparencyEvent.dataSteps, TransparencyEventType.DATA_STORAGE],
                         storageLocation: DataDestination.SQLITE_DB
                     });
                 }
@@ -156,7 +155,6 @@ export class LocalJournalDataSource implements JournalDataSource {
             if (sql) {
                 useTransparencyStore.getState().setJournalTransparency({
                     ...journalTransparencyEvent,
-                    dataSteps: [...journalTransparencyEvent.dataSteps, TransparencyEventType.DATA_STORAGE],
                     storageLocation: DataDestination.SQLITE_DB
                 });
             }

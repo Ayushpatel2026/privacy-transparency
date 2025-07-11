@@ -4,7 +4,7 @@ import { Accelerometer } from 'expo-sensors';
 import { SensorService } from './SensorService';
 import { AccelerometerSensorData, AudioSensorData, LightSensorData } from '@/constants/types/SensorData';
 import { useTransparencyStore } from '@/store/transparencyStore';
-import { DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT, DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT, DEFAULT_MICROPHONE_TRANSPARENCY_EVENT, TransparencyEvent, TransparencyEventType } from '@/constants/types/Transparency';
+import { DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT, DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT, DEFAULT_MICROPHONE_TRANSPARENCY_EVENT, TransparencyEvent } from '@/constants/types/Transparency';
 import { useProfileStore } from '@/store/userProfileStore';
 import { transparencyService } from '@/services';
 
@@ -62,7 +62,6 @@ export class ExpoSensorService extends SensorService {
       microphoneTransparencyEvent.userConsent = useProfileStore.getState().userConsentPreferences.microphoneEnabled;
       microphoneTransparencyEvent.backgroundMode = true;
       microphoneTransparencyEvent.samplingRate = this.config.samplingRates.audio;
-      microphoneTransparencyEvent.dataSteps = [TransparencyEventType.DATA_COLLECTION];
       useTransparencyStore.getState().setMicrophoneTransparency(
         microphoneTransparencyEvent
       )
@@ -96,7 +95,7 @@ export class ExpoSensorService extends SensorService {
   }
   
   /**
-   * The ambient light sensor will not work through Expo Sensors on IOS devices. It would require a native module.
+   * The ambient light sensor WILL NOT WORK through Expo Sensors on IOS devices. It would require a native module.
    * The code below will only work on Android devices. 
    */
   async startLightMonitoring(): Promise<void> {
@@ -108,7 +107,6 @@ export class ExpoSensorService extends SensorService {
       lightSensorTransparencyEvent.userConsent = useProfileStore.getState().userConsentPreferences.lightSensorEnabled;
       lightSensorTransparencyEvent.backgroundMode = true;
       lightSensorTransparencyEvent.samplingRate = this.config.samplingRates.light;
-      lightSensorTransparencyEvent.dataSteps = [TransparencyEventType.DATA_COLLECTION];
       useTransparencyStore.getState().setLightSensorTransparency(
         lightSensorTransparencyEvent
       )
@@ -128,19 +126,13 @@ export class ExpoSensorService extends SensorService {
 
         // at this point, the light sensor transparency event is ready to be sent to the backend
         const lightSensorEvent = useTransparencyStore.getState().lightSensorTransparency;
-        if (lightSensorEvent === this.previousLightTransparencyEvent) {
-          // reset the data steps
-          useTransparencyStore.getState().setLightSensorTransparency({
-            ...lightSensorEvent,
-            dataSteps: []
-          });
+        if (this.tranparencyEventEquality(lightSensorEvent, this.previousLightTransparencyEvent)) {
           return; // no changes, do not prompt LLM because there are no changes
         } else {
           this.previousLightTransparencyEvent= lightSensorEvent;
           transparencyService.analyzePrivacyRisks(lightSensorEvent)
             .then(updatedLightTransparencyEvent => {
               useTransparencyStore.getState().setLightSensorTransparency(updatedLightTransparencyEvent);
-              console.log("Updated light sensor transparency", updatedLightTransparencyEvent);
             })
             .catch(error => {
               console.error("Error analyzing privacy risks:", error);
@@ -169,7 +161,6 @@ export class ExpoSensorService extends SensorService {
       accelerometerTransparencyEvent.userConsent = useProfileStore.getState().userConsentPreferences.accelerometerEnabled;
       accelerometerTransparencyEvent.backgroundMode = true;
       accelerometerTransparencyEvent.samplingRate = this.config.samplingRates.accelerometer;
-      accelerometerTransparencyEvent.dataSteps = [TransparencyEventType.DATA_COLLECTION];
       useTransparencyStore.getState().setAccelerometerTransparency(
         accelerometerTransparencyEvent
       )
@@ -192,19 +183,13 @@ export class ExpoSensorService extends SensorService {
 
         // at this point, the accelerometer transparency event is ready to be sent to the backend
         const accelerometerTransparencyEvent = useTransparencyStore.getState().accelerometerTransparency;
-        if (accelerometerTransparencyEvent === this.previousAccelerometerTransparencyEvent) {
-          // reset the data steps
-          useTransparencyStore.getState().setAccelerometerTransparency({
-            ...accelerometerTransparencyEvent,
-            dataSteps: []
-          });
+        if (this.tranparencyEventEquality(accelerometerTransparencyEvent, this.previousAccelerometerTransparencyEvent)) {
           return; // no changes, do not prompt LLM because there are no changes
         } else {
           this.previousAccelerometerTransparencyEvent = accelerometerTransparencyEvent;
           transparencyService.analyzePrivacyRisks(accelerometerTransparencyEvent)
             .then(updatedAccelerometerTransparency => {
               useTransparencyStore.getState().setAccelerometerTransparency(updatedAccelerometerTransparency);
-              console.log("Updated accelerometer transparency", updatedAccelerometerTransparency);
             })
             .catch(error => {
               console.error("Error analyzing privacy risks:", error);
@@ -255,19 +240,13 @@ export class ExpoSensorService extends SensorService {
 
     // at this point, the microphone transparency event is ready to be sent to the backend
     const microphoneTransparencyEvent = useTransparencyStore.getState().microphoneTransparency;
-    if (microphoneTransparencyEvent === this.previousMicrophoneTransparencyEvent) {
-      // reset the data steps
-      useTransparencyStore.getState().setMicrophoneTransparency({
-        ...microphoneTransparencyEvent,
-        dataSteps: []
-      });
+    if (this.tranparencyEventEquality(microphoneTransparencyEvent, this.previousMicrophoneTransparencyEvent)) {
       return; // no changes, do not prompt LLM because there are no changes
     } else {
       this.previousMicrophoneTransparencyEvent = microphoneTransparencyEvent;
       transparencyService.analyzePrivacyRisks(microphoneTransparencyEvent)
         .then(updatedMicrophoneTransparency => {
           useTransparencyStore.getState().setMicrophoneTransparency(updatedMicrophoneTransparency);
-          console.log("Updated microphone transparency", updatedMicrophoneTransparency);
         })
         .catch(error => {
           console.error("Error analyzing privacy risks:", error);
@@ -294,5 +273,18 @@ export class ExpoSensorService extends SensorService {
     if (decibels < 50) return 'moderate';
     if (decibels < 70) return 'loud';
     return 'very_loud';
+  }
+
+  // HELPER METHOD TO CHECK EQUALITY OF TRANSPARENCY EVENTS
+  private tranparencyEventEquality(event1: TransparencyEvent, event2: TransparencyEvent): boolean {
+    return (
+      event1.userConsent === event2.userConsent &&
+      event1.backgroundMode === event2.backgroundMode &&
+      event1.encryptionMethod === event2.encryptionMethod &&
+      event1.protocol === event2.protocol &&
+      event1.storageLocation === event2.storageLocation &&
+      event1.source === event2.source &&
+      event1.sensorType === event2.sensorType
+    );
   }
 }

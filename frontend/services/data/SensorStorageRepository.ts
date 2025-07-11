@@ -57,7 +57,6 @@ export class SensorStorageRepository {
             userId: userId,
             ...sensorData
         };
-        console.log("Creating sensor reading with userId:", userId, "and sensorData:", sensorData);
         try {
             const encryptedData = await this.encryptionService.encryptSensorData(sensorDataWithUserId);
             const response =  await activeDataSource.createSensorReading(encryptedData, userId);
