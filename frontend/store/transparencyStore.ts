@@ -22,6 +22,7 @@ interface TransparencyState {
     setGeneralSleepTransparency: (event: TransparencyEvent) => Promise<void>;
     statisticsTransparency: TransparencyEvent;
     setStatisticsTransparency: (event: TransparencyEvent) => Promise<void>;
+    loadTransparencyStatus: () => Promise<void>;
 }
 
 export const useTransparencyStore = create<TransparencyState>((set, get) => ({

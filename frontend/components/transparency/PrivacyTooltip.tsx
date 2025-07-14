@@ -142,7 +142,7 @@ export const PrivacyTooltip = ({
     >
       <PrivacyIcon
         handleIconPress={handleIconPress}
-        showTooltip={showTooltip}
+        showPrivacyUI={showTooltip}
         iconName={iconName}
         iconSize={iconSize}
         iconRef={iconRef}
@@ -152,9 +152,6 @@ export const PrivacyTooltip = ({
 };
 
 const styles = StyleSheet.create({
-  iconButton: {
-    padding: 4,
-  },
   tooltipContainer: {
     width: 400,
     padding: 0,

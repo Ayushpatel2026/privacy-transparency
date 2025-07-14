@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import { useProfileStore } from "@/store/userProfileStore";
 import { sensorBackgroundTaskManager } from "@/services";
+import { useTransparencyStore } from "@/store/transparencyStore";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -15,6 +16,7 @@ export default function RootLayout() {
 
   const { checkAuth, user, token } = useAuthStore();
   const { loadProfileStatus, hasCompletedAppOnboarding, hasCompletedPrivacyOnboarding } = useProfileStore();
+  const { loadTransparencyStatus } = useTransparencyStore();
   const [fontsLoaded] = useFonts({
     "SpaceMono-Regular": require("@/assets/fonts/SpaceMono-Regular.ttf"),
   })
@@ -29,6 +31,7 @@ export default function RootLayout() {
   useEffect(() => {
     checkAuth()
     loadProfileStatus();
+    loadTransparencyStatus();
     console.log("Checking auth and loading profile status");
     sensorBackgroundTaskManager.registerAccelerometer();
     sensorBackgroundTaskManager.registerLightSensor();
