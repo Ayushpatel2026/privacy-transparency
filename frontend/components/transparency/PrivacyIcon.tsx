@@ -1,0 +1,54 @@
+import { TouchableOpacity, Image, StyleSheet } from "react-native"
+import privacyHighIcon from '../assets/images/privacy-high.png';
+import privacyMediumIcon from '../assets/images/privacy-medium.png';
+import privacyLowIcon from '../assets/images/privacy-low.png';
+import privacyHighOpenIcon from '../assets/images/privacy-high-open.png';
+import privacyMediumOpenIcon from '../assets/images/privacy-medium-open.png';
+import privacyLowOpenIcon from '../assets/images/privacy-low-open.png';
+
+
+const iconMap: { [key: string]: any } = {
+  'privacy-high': privacyHighIcon,
+  'privacy-medium': privacyMediumIcon,
+  'privacy-low': privacyLowIcon,
+  'privacy-high-open': privacyHighOpenIcon,
+  'privacy-medium-open': privacyMediumOpenIcon,
+  'privacy-low-open': privacyLowOpenIcon,
+};
+
+interface PrivacyIconProps {
+		handleIconPress: () => void;
+		showTooltip: boolean;
+		iconName: string;
+		iconSize?: number;
+		iconRef: React.RefObject<TouchableOpacity>; // this is a type error in VS Code but it still works
+}
+
+export const PrivacyIcon = ({
+    handleIconPress,
+		showTooltip,
+		iconName,
+		iconSize = 20,
+		iconRef
+} : PrivacyIconProps) => {
+		const iconKey = showTooltip ? `${iconName}-open` : iconName;
+		const iconImageUrl = iconMap[iconKey] || privacyLowIcon;
+    return (
+			<TouchableOpacity
+				onPress={() => handleIconPress()}
+				style={styles.iconButton}
+				ref={iconRef}
+				>
+				<Image
+					source={iconImageUrl}
+					style={{ width: iconSize, height: iconSize }}
+				/>
+			</TouchableOpacity>
+    )
+}
+
+const styles = StyleSheet.create({
+  iconButton: {
+    padding: 4,
+  },
+});

@@ -20,13 +20,13 @@ interface TimeModalProps {
     onCancel: () => void;
 }
 
-export const TimeModal: React.FC<TimeModalProps> = ({
+export const TimeModal = ({
     isVisible,
     label,
     defaultTime,
     onSave,
     onCancel,
-}) => {
+} : TimeModalProps) => {
     const [hours, setHours] = useState<string>('');
     const [minutes, setMinutes] = useState<string>('');
     const [ampm, setAmpm] = useState<string>('AM'); // Default to AM

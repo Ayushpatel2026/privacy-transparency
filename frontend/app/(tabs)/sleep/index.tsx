@@ -15,7 +15,7 @@ import { Colors } from "@/constants/Colors";
 import { useRouter } from 'expo-router';
 import { journalDataRepository } from "@/services";
 import Loader from "@/components/Loader";
-import { TimeModal } from "@/components/TimeModal";
+import { TimeModal } from "@/components/modal/TimeModal";
 
 export default function Sleep() {
     const [loading, setIsLoading] = useState(true);

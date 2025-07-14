@@ -1,12 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Linking, Alert, Image, Dimensions } from 'react-native';
 import Tooltip from 'react-native-walkthrough-tooltip';
-import privacyHighIcon from '../assets/images/privacy-high.png';
-import privacyMediumIcon from '../assets/images/privacy-medium.png';
-import privacyLowIcon from '../assets/images/privacy-low.png';
-import privacyHighOpenIcon from '../assets/images/privacy-high-open.png';
-import privacyMediumOpenIcon from '../assets/images/privacy-medium-open.png';
-import privacyLowOpenIcon from '../assets/images/privacy-low-open.png';
+import { PrivacyIcon } from './PrivacyIcon';
 
 interface PrivacyTooltipProps {
   color: string;
@@ -21,15 +16,6 @@ interface PrivacyTooltipProps {
   privacyPolicySectionLink?: string;
   dataType: string;
 }
-
-const iconMap: { [key: string]: any } = {
-  'privacy-high': privacyHighIcon,
-  'privacy-medium': privacyMediumIcon,
-  'privacy-low': privacyLowIcon,
-  'privacy-high-open': privacyHighOpenIcon,
-  'privacy-medium-open': privacyMediumOpenIcon,
-  'privacy-low-open': privacyLowOpenIcon,
-};
 
 export const PrivacyTooltip = ({
   color,
@@ -47,9 +33,6 @@ export const PrivacyTooltip = ({
   const [showTooltip, setShowTooltip] = useState(false);
 	const [tooltipPlacement, setTooltipPlacement] = useState<'top' | 'bottom'>('bottom');
 	const iconRef = useRef<TouchableOpacity>(null); // VS code shows type error but this still works
-
-  const iconKey = showTooltip ? `${iconName}-open` : iconName;
-  const iconImageUrl = iconMap[iconKey] || privacyLowIcon;
 
 	const screenHeight = Dimensions.get('window').height;
 
@@ -157,16 +140,13 @@ export const PrivacyTooltip = ({
       arrowStyle={styles.tooltipArrow}
       placement={tooltipPlacement}
     >
-      <TouchableOpacity
-        onPress={() => handleIconPress()}
-        style={styles.iconButton}
-				ref={iconRef}
-      >
-        <Image
-          source={iconImageUrl}
-          style={{ width: iconSize, height: iconSize }}
-        />
-      </TouchableOpacity>
+      <PrivacyIcon
+        handleIconPress={handleIconPress}
+        showTooltip={showTooltip}
+        iconName={iconName}
+        iconSize={iconSize}
+        iconRef={iconRef}
+      />
     </Tooltip>
   );
 };

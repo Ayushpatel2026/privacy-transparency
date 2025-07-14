@@ -22,7 +22,9 @@ import { Calendar } from "@/components/Calendar";
 import { useTransparencyStore } from "@/store/transparencyStore";
 import { DEFAULT_JOURNAL_TRANSPARENCY_EVENT, PrivacyRisk, TransparencyEvent } from "@/constants/types/Transparency";
 import { transparencyService } from "@/services";
-import PrivacyTooltip from "@/components/PrivacyTooltip";
+import PrivacyTooltip from "@/components/transparency/PrivacyTooltip";
+import { JournalEntryModal } from "@/components/modal/JournalEntryModal";
+import { SleepNotesModal } from "@/components/modal/SleepNotesModal";
 
 export default function Journal() {
     const [diaryEntry, setDiaryEntry] = useState("");
@@ -48,6 +50,9 @@ export default function Journal() {
     // Transparency State
     const { journalTransparency, setJournalTransparency, accelerometerTransparency, setAccelerometerTransparency } = useTransparencyStore();
 
+    // transparency UI configuration for this page
+    const [ tooltipUI, setTooltipUI ] = useState(false);
+    
     const getPrivacyRiskColor = (risk: PrivacyRisk) => {
         switch (risk) {
             case PrivacyRisk.HIGH:
@@ -171,17 +176,6 @@ export default function Journal() {
         setIsSleepNotesModalVisible(true);
     };
 
-    // Function to toggle a sleep note selection in the modal
-    const toggleSleepNote = (note: SleepNote) => {
-        setTempSleepNotes(prevNotes => {
-            if (prevNotes.includes(note)) {
-                return prevNotes.filter(n => n !== note); // Remove note if already selected
-            } else {
-                return [...prevNotes, note]; // Add note if not selected
-            }
-        });
-    };
-
     const handleEditJournalEntry = () => {
         setTempDiaryEntry(diaryEntry); // Set the temporary state to current diary entry
         setIsJournalModalVisible(true);
@@ -207,12 +201,6 @@ export default function Journal() {
     const handleCancelSleepNotes = () => {
         setIsSleepNotesModalVisible(false); // Discard changes by closing
     };
-
-    // Data for sleep notes options
-    const sleepNoteOptions: SleepNote[] = [
-        "Pain", "Stress", "Anxiety", "Medication", "Caffeine", "Alcohol", "Warm Bath", "Heavy Meal"
-    ];
-
 
     if (isLoading || isSaving) {
         return (
@@ -241,6 +229,7 @@ export default function Journal() {
                     </TouchableOpacity>
                 </View>
                 {showCalendar && <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />}
+                {!tooltipUI && }
             </ImageBackground>
 
             <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -357,95 +346,24 @@ export default function Journal() {
             </ScrollView>
 
             {/* Journal Entry Modal */}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={isJournalModalVisible}
-                onRequestClose={() => {
-                    setIsJournalModalVisible(!isJournalModalVisible);
-                }}
-            >
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
-                    style={styles.modalBackground}
-                    keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -50}
-                >
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Diary</Text>
-                        <TextInput
-                            style={styles.modalTextInput}
-                            value={tempDiaryEntry}
-                            onChangeText={setTempDiaryEntry}
-                            placeholder="Write something to record this special day..."
-                            placeholderTextColor="#8E8E93"
-                            multiline
-                        />
-                        <View style={styles.modalButtonsContainer}>
-                            <TouchableOpacity
-                                style={[styles.modalButton, styles.modalCancelButton]}
-                                onPress={handleCancelModalEdit}
-                            >
-                                <Text style={styles.modalButtonText}>Cancel</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.modalButton, styles.modalSaveButton]}
-                                onPress={handleSaveModalEdit}
-                            >
-                                <Text style={styles.modalButtonText}>Save</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </KeyboardAvoidingView>
-            </Modal>
+            <JournalEntryModal 
+                isJournalModalVisible 
+                setIsJournalModalVisible={setIsJournalModalVisible} 
+                tempDiaryEntry={tempDiaryEntry}
+                setTempDiaryEntry={setTempDiaryEntry}
+                handleCancelModalEdit={handleCancelModalEdit}
+                handleSaveModalEdit={handleSaveModalEdit}
+            />
 
             {/* Sleep Notes Modal */}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={isSleepNotesModalVisible}
-                onRequestClose={() => {
-                    setIsSleepNotesModalVisible(!isSleepNotesModalVisible);
-                }}
-            >
-                <View style={styles.modalBackground}>
-                    <View style={styles.modalContent}>
-                        <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>Sleep notes</Text>
-                            <TouchableOpacity onPress={handleCancelSleepNotes}>
-                                <Ionicons name="close-circle-outline" size={28} color="#FFFFFF" />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.sleepNotesOptionsContainer}>
-                            {sleepNoteOptions.map((note, index) => (
-                                <TouchableOpacity
-                                    key={index}
-                                    style={[
-                                        styles.sleepNoteOption,
-                                        tempSleepNotes.includes(note) && styles.sleepNoteOptionSelected
-                                    ]}
-                                    onPress={() => toggleSleepNote(note)}
-                                >
-                                    <Text style={styles.sleepNoteOptionText}>{note}</Text>
-                                </TouchableOpacity>
-                            ))}
-                        </View>
-                        <View style={styles.modalButtonsContainer}>
-                            <TouchableOpacity
-                                style={[styles.modalButton, styles.modalSaveButton]}
-                                onPress={handleSaveSleepNotes}
-                            >
-                                <Text style={styles.modalButtonText}>Save</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.modalButton, styles.modalCancelButton]}
-                                onPress={handleCancelSleepNotes}
-                            >
-                                <Text style={styles.modalButtonText}>Cancel</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
+            <SleepNotesModal 
+                isSleepNotesModalVisible={isSleepNotesModalVisible}
+                setIsSleepNotesModalVisible={setIsSleepNotesModalVisible}
+                tempSleepNotes={tempSleepNotes}
+                handleCancelSleepNotes={handleCancelSleepNotes}
+                handleSaveSleepNotes={handleSaveSleepNotes}
+                setTempSleepNotes={setTempSleepNotes}
+            />
         </View>
     );
 }
@@ -676,93 +594,5 @@ const styles = StyleSheet.create({
     },
     keyboardAvoidingContainer: {
         flex: 1,
-    },
-
-    // ===== General Modal Styles (Reused) =====
-    modalBackground: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    },
-    modalContent: {
-        backgroundColor: Colors.lightBlack,
-        borderRadius: 16,
-        padding: 20,
-        width: '90%',
-        maxHeight: '70%',
-    },
-    modalTitle: {
-        color: '#FFFFFF',
-        fontSize: 20,
-        fontWeight: '600',
-        marginBottom: 20,
-        textAlign: 'center',
-    },
-    modalButtonsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-    },
-    modalButton: {
-        flex: 1,
-        paddingVertical: 12,
-        borderRadius: 12,
-        alignItems: 'center',
-        marginHorizontal: 5,
-    },
-    modalCancelButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    },
-    modalSaveButton: {
-        backgroundColor: Colors.generalBlue,
-    },
-    modalButtonText: {
-        color: '#FFFFFF',
-        fontSize: 16,
-        fontWeight: '600',
-    },
-
-    // ===== Journal Entry Modal Specific Styles =====
-    modalTextInput: {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        borderRadius: 12,
-        padding: 15,
-        color: '#FFFFFF',
-        fontSize: 16,
-        minHeight: 150,
-        textAlignVertical: 'top',
-        marginBottom: 20,
-    },
-
-    // ===== Sleep Notes Modal Specific Styles =====
-    modalHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    sleepNotesOptionsContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center', 
-        marginBottom: 20,
-        gap: 10,
-    },
-    sleepNoteOption: {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)', 
-        borderRadius: 20,
-        paddingVertical: 8,
-        paddingHorizontal: 15,
-        borderWidth: 1,
-        borderColor: 'transparent',
-    },
-    sleepNoteOptionSelected: {
-        backgroundColor: Colors.generalBlue, 
-        borderColor: Colors.generalBlue, 
-    },
-    sleepNoteOptionText: {
-        color: '#FFFFFF',
-        fontSize: 16,
-        fontWeight: '500',
     },
 });
