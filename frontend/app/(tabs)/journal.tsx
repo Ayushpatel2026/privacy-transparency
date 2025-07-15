@@ -49,7 +49,7 @@ export default function Journal() {
     const { journalTransparency, setJournalTransparency, accelerometerTransparency, setAccelerometerTransparency } = useTransparencyStore();
 
     // transparency UI configuration for this page - TODO - turn this into a config file
-    const [ showToolTipUI, setShowTooltipUI ] = useState(false);
+    const [ showToolTipUI, setShowTooltipUI ] = useState(true);
     const [ displayNormalUI, setDisplayNormalUI ] = useState(true);
 
     useEffect(() => {
