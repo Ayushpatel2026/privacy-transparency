@@ -40,14 +40,26 @@ export const useTransparencyStore = create<TransparencyState>((set, get) => ({
             const accelerometerTransparency = await AsyncStorage.getItem('accelerometerTransparency');
             const journalTransparency = await AsyncStorage.getItem('journalTransparency');
             const statisticsTransparency = await AsyncStorage.getItem('statisticsTransparency');
+            const generalSleepTransparency = await AsyncStorage.getItem('generalSleepTransparency');
 
-            set({
-                lightSensorTransparency: lightSensorTransparency ? JSON.parse(lightSensorTransparency) : null,
-                microphoneTransparency: microphoneTransparency ? JSON.parse(microphoneTransparency) : null,
-                accelerometerTransparency: accelerometerTransparency ? JSON.parse(accelerometerTransparency) : null,
-                journalTransparency: journalTransparency ? JSON.parse(journalTransparency) : null,
-                statisticsTransparency: statisticsTransparency ? JSON.parse(statisticsTransparency) : null
-            });
+            if (lightSensorTransparency){
+                set({ lightSensorTransparency: JSON.parse(lightSensorTransparency) });
+            }
+            if (microphoneTransparency) {
+                set({ microphoneTransparency: JSON.parse(microphoneTransparency) });
+            }
+            if (accelerometerTransparency) {
+                set({ accelerometerTransparency: JSON.parse(accelerometerTransparency) });
+            }
+            if (journalTransparency) {
+                set({ journalTransparency: JSON.parse(journalTransparency) });
+            }
+            if (statisticsTransparency) {
+                set({ statisticsTransparency: JSON.parse(statisticsTransparency) });
+            }
+            if (generalSleepTransparency) {
+                set({ generalSleepTransparency: JSON.parse(generalSleepTransparency) });
+            }
         } catch (error) {
             console.error('Failed to load transparency status', error);
         }

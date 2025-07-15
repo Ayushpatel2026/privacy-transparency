@@ -5,20 +5,23 @@ import { formatPrivacyViolations, getPrivacyRiskLabel } from '@/utils/transparen
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-export const PrivacySleepPage = () => {
-    const { journalTransparency } = useTransparencyStore();
+/**
+ * TODO - this page is exact same as PrivacySleepPage.tsx, turn this into a generic component that can be reused
+ */
+export const PrivacyStatisticsPage = () => {
+    const { statisticsTransparency } = useTransparencyStore();
     
     return (
         <View style={styles.container}>
             {/* Header Section */}
             <View style={styles.headerSection}>
                 <Text style={styles.headerTitle}>
-                    {getPrivacyRiskLabel(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
+                    {getPrivacyRiskLabel(statisticsTransparency.privacyRisk || PrivacyRisk.LOW)}
                 </Text>
-                {!(journalTransparency.privacyRisk === PrivacyRisk.LOW) && 
+                {!(statisticsTransparency.privacyRisk === PrivacyRisk.LOW) && 
                     <>
                         <Text style={styles.headerText}>
-                            {formatPrivacyViolations(journalTransparency)}
+                            {formatPrivacyViolations(statisticsTransparency)}
                         </Text>
                         <TouchableOpacity style={styles.linkButton}>
                             <Text style={styles.linkText}>Relevant Privacy Policy Section - Link to Regulations</Text>
@@ -30,7 +33,7 @@ export const PrivacySleepPage = () => {
             <View style={styles.section}>
                 <View style={styles.subSectionContainer}>
                     <Text style={styles.subSectionText}>
-                        <Text style={{fontWeight: 'bold'}}>Purpose: </Text> {journalTransparency.aiExplanation!.why}
+                        <Text style={{fontWeight: 'bold'}}>Purpose: </Text> {statisticsTransparency.aiExplanation!.why}
                     </Text>
                 </View>
             </View>
@@ -38,7 +41,7 @@ export const PrivacySleepPage = () => {
             <View style={styles.section}>
                 <View style={styles.subSectionContainer}>
                     <Text style={styles.subSectionText}>
-                        <Text style={{fontWeight: 'bold'}}>Storage: </Text> {journalTransparency.aiExplanation!.storage}
+                        <Text style={{fontWeight: 'bold'}}>Storage: </Text> {statisticsTransparency.aiExplanation!.storage}
                     </Text>
                 </View>
             </View>
@@ -46,7 +49,7 @@ export const PrivacySleepPage = () => {
             <View style={styles.section}>
                 <View style={styles.subSectionContainer}>
                     <Text style={styles.subSectionText}>
-                        <Text style={{fontWeight: 'bold'}}>Access: </Text> {journalTransparency.aiExplanation!.access}
+                        <Text style={{fontWeight: 'bold'}}>Access: </Text> {statisticsTransparency.aiExplanation!.access}
                     </Text>
                 </View>
             </View>
@@ -59,9 +62,9 @@ export const PrivacySleepPage = () => {
     );
 };
 
-// =============================================================
+// ===============================================================
 // Styles
-// =============================================================
+// ===============================================================
 
 const styles = StyleSheet.create({
     container: {

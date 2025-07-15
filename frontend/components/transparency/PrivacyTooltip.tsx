@@ -4,6 +4,7 @@ import Tooltip from 'react-native-walkthrough-tooltip';
 import { PrivacyIcon } from './PrivacyIcon';
 import { getPrivacyRiskLabel } from '@/utils/transparency';
 import { PrivacyRisk } from '@/constants/types/Transparency';
+import { Colors } from '@/constants/Colors';
 
 interface PrivacyTooltipProps {
   color: string;
@@ -171,6 +172,10 @@ export const PrivacyTooltip = ({
   );
 };
 
+// =============================================================
+// Styles
+// =============================================================
+
 const styles = StyleSheet.create({
   tooltipContainer: {
     padding: 0,
@@ -231,7 +236,7 @@ const styles = StyleSheet.create({
   },
   linkText: {
     fontSize: 12,
-    color: '#007AFF',
+    color: Colors.hyperlinkBlue,
     textDecorationLine: 'underline',
     flexWrap: 'wrap',
   },

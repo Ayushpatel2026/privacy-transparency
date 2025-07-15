@@ -109,6 +109,10 @@ export const PrivacyJournalPage = () => {
     );
 };
 
+// =============================================================
+// Styles
+// =============================================================
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -152,6 +152,10 @@ export const NormalJournalPage = ({
     )
 };
 
+// =============================================================
+// Styles
+// =============================================================
+
 const styles = StyleSheet.create({
     sectionCard: {
         backgroundColor: Colors.lightBlack,

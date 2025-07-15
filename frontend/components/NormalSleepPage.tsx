@@ -56,6 +56,10 @@ export const NormalSleepPage = ({
     )
 };
 
+// =============================================================
+// Styles
+// =============================================================
+
 const styles = StyleSheet.create({
     sleepTrackerContainer: {
         width: '100%',
