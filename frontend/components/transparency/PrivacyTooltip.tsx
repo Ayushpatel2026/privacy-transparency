@@ -8,6 +8,7 @@ interface PrivacyTooltipProps {
   iconSize?: number;
   iconName: string;
   violationsDetected: string;
+  privacyViolations?: string;
   purpose: string;
   storage: string;
   access: string;
@@ -22,6 +23,7 @@ export const PrivacyTooltip = ({
   iconSize = 20,
   iconName,
   violationsDetected,
+  privacyViolations,
   purpose,
   storage,
   access,
@@ -72,9 +74,9 @@ export const PrivacyTooltip = ({
       <View style={styles.content}>
         {/* Privacy Violations */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Privacy Violations Detected:</Text>
+          <Text style={styles.sectionTitle}>{violationsDetected}</Text>
           <Text style={styles.sectionText}>
-            {violationsDetected}
+            {privacyViolations}
           </Text>
         </View>
 
@@ -142,7 +144,7 @@ export const PrivacyTooltip = ({
     >
       <PrivacyIcon
         handleIconPress={handleIconPress}
-        showPrivacyUI={showTooltip}
+        isOpen={showTooltip}
         iconName={iconName}
         iconSize={iconSize}
         iconRef={iconRef}

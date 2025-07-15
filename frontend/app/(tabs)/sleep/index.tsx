@@ -2,20 +2,23 @@ import { useEffect, useState } from "react";
 import {
     View,
     Text,
-    TouchableOpacity,
     StyleSheet,
     StatusBar,
     Platform,
     Alert,
-    Image,
     SafeAreaView
 } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { Colors } from "@/constants/Colors";
 import { useRouter } from 'expo-router';
-import { journalDataRepository } from "@/services";
+import { journalDataRepository, transparencyService } from "@/services";
 import Loader from "@/components/Loader";
 import { TimeModal } from "@/components/modal/TimeModal";
+import { NormalSleepPage } from "@/components/NormalSleepPage";
+import { useTransparencyStore } from "@/store/transparencyStore";
+import PrivacyTooltip from "@/components/transparency/PrivacyTooltip";
+import { PrivacyIcon } from "@/components/transparency/PrivacyIcon";
+import { formatPrivacyViolations, getPrivacyRiskColor, getPrivacyRiskIcon, getPrivacyRiskLabel } from "@/utils/transparency";
+import { DEFAULT_JOURNAL_TRANSPARENCY_EVENT, PrivacyRisk, TransparencyEvent } from "@/constants/types/Transparency";
+import { PrivacySleepPage } from "@/components/transparency/PrivacySleepPage";
 
 export default function Sleep() {
     const [loading, setIsLoading] = useState(true);
@@ -24,9 +27,15 @@ export default function Sleep() {
     const [bedtime, setBedtime] = useState<string>('');
     const [alarm, setAlarm] = useState<string>('');
 
+    const { journalTransparency, setJournalTransparency} = useTransparencyStore();
+
     // Modal visibility states
     const [isBedtimeModalVisible, setIsBedtimeModalVisible] = useState(false);
     const [isAlarmModalVisible, setIsAlarmModalVisible] = useState(false);
+
+    // Transparency UI states - TODO - turn this into a config file
+    const [displayNormalUI, setDisplayNormalUI] = useState(true);
+    const [showTooltipUI, setShowTooltipUI] = useState(true);
 
     useEffect(() => {
         const loadJournalData = async () => {
@@ -52,12 +61,27 @@ export default function Sleep() {
     const saveBedTimeToJournal = async (newBedtime: string) => {
         try {
             const dateToSave = new Date().toISOString().split('T')[0];
+            // set up a new transparency event
+            const transparencyEvent : TransparencyEvent = DEFAULT_JOURNAL_TRANSPARENCY_EVENT;
+            transparencyEvent.purpose = "Your bedtime and alarm time are used to help you maintain a healthy sleep schedule.";
+            setJournalTransparency(transparencyEvent);
+            
             const result = await journalDataRepository.editJournal({
-                date: dateToSave,
-                bedtime: newBedtime,
-				sleepDuration: newBedtime && alarm ? '8 hours' : '', // TODO - calculate actual sleep duration
-            }, dateToSave
+                    date: dateToSave,
+                    bedtime: newBedtime,
+                    sleepDuration: newBedtime && alarm ? '8 hours' : '', // TODO - calculate actual sleep duration
+                }, dateToSave
             );
+            // Analyze privacy risks - do not wait for this to complete
+            transparencyService.analyzePrivacyRisks(transparencyEvent)
+                .then(updatedJournalTransparency => {
+                    setJournalTransparency(updatedJournalTransparency);
+                    console.log("Updated journal transparency", updatedJournalTransparency);
+                })
+                .catch(error => {
+                    console.error("Error analyzing privacy risks:", error);
+            });
+
             if (result) {
                 setBedtime(result.bedtime);
                 Alert.alert("Success", "Bedtime saved successfully!");
@@ -73,12 +97,29 @@ export default function Sleep() {
     const saveAlarmToJournal = async (newAlarm: string) => {
         try {
             const dateToSave = new Date().toISOString().split('T')[0];
+
+            // set up a new transparency event
+            const transparencyEvent : TransparencyEvent = DEFAULT_JOURNAL_TRANSPARENCY_EVENT;
+            transparencyEvent.purpose = "Your bedtime and alarm time are used to help you maintain a healthy sleep schedule.";
+            setJournalTransparency(transparencyEvent);
+
             const result = await journalDataRepository.editJournal({
-                date: dateToSave,
-                alarmTime: newAlarm,
-				sleepDuration: bedtime && newAlarm ? '8 hours' : '', // TODO - calculate actual sleep duration
-            }, dateToSave
+                    date: dateToSave,
+                    alarmTime: newAlarm,
+                    sleepDuration: bedtime && newAlarm ? '8 hours' : '', // TODO - calculate actual sleep duration
+                }, dateToSave
             );
+
+            // Analyze privacy risks - do not wait for this to complete
+            transparencyService.analyzePrivacyRisks(transparencyEvent)
+                .then(updatedJournalTransparency => {
+                    setJournalTransparency(updatedJournalTransparency);
+                    console.log("Updated journal transparency", updatedJournalTransparency);
+                })
+                .catch(error => {
+                    console.error("Error analyzing privacy risks:", error);
+            });
+
             if (result) {
                 setAlarm(result.alarmTime);
                 Alert.alert("Success", "Alarm time saved successfully!");
@@ -138,44 +179,46 @@ export default function Sleep() {
         <View style={styles.container}>
             <StatusBar barStyle="light-content" />
             <SafeAreaView style={styles.safeArea}>
-
-                <Text style={styles.headerText}>
-                    Sleep Tracker
-                </Text>
-
-                {/* Sleep Tracker Visual */}
-                <View style={styles.sleepTrackerContainer}>
-                    <Image
-                        source={require('@/assets/images/sleep-duration-wheel.png')}
-                        style={styles.sleepDurationImage}
-                    />
+                <View style={styles.headerContainer}>
+                    <Text style={styles.headerText}>
+                        Sleep Tracker
+                    </Text>
+                    {showTooltipUI ? (
+                        <PrivacyTooltip
+                            color={getPrivacyRiskColor(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
+                            iconSize={40}
+                            iconName={getPrivacyRiskIcon(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
+                            violationsDetected={getPrivacyRiskLabel(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
+                            privacyViolations={formatPrivacyViolations(journalTransparency)}
+                            purpose={journalTransparency.aiExplanation!.why}
+                            storage={journalTransparency.aiExplanation!.storage}
+                            access={journalTransparency.aiExplanation!.access}
+                            privacyPolicyLink={journalTransparency.aiExplanation?.privacyPolicyLink}
+                            privacyPolicySectionLink={journalTransparency.aiExplanation?.regulationLink}
+                            dataType="Journal"
+                        />
+                    ) : (
+                        <PrivacyIcon 
+                            handleIconPress={() => setDisplayNormalUI(!displayNormalUI)}
+                            isOpen={!displayNormalUI}
+                            iconName={getPrivacyRiskIcon(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
+                            iconSize={50}
+                        />
+                    )}
                 </View>
 
-                {/* Bedtime Section */}
-                <View style={styles.inputCard}>
-                    <Text style={styles.inputLabel}>Bedtime</Text>
-                    <Text style={styles.inputValue}>{bedtime}</Text>
-                    <TouchableOpacity onPress={handleEditBedtime}>
-                        <Ionicons name="pencil-outline" size={20} color={'#ffffff'} />
-                    </TouchableOpacity>
-                </View>
+                {(displayNormalUI || showTooltipUI) && 
+                <NormalSleepPage
+                    handleEditBedtime={handleEditBedtime}
+                    bedtime={bedtime || 'Set Time'}
+                    handleEditAlarm={handleEditAlarm}
+                    alarm={alarm || 'Set Time'}
+                    handleStartSleepSession={handleStartSleepSession}
+                />}
 
-                {/* Alarm Section */}
-                <View style={styles.inputCard}>
-                    <Text style={styles.inputLabel}>Alarm</Text>
-                    <Text style={styles.inputValue}>{alarm}</Text>
-                    <TouchableOpacity onPress={handleEditAlarm}>
-                        <Ionicons name="pencil-outline" size={20} color={'#ffffff'} />
-                    </TouchableOpacity>
-                </View>
-
-                {/* Sleep Now Button */}
-                <TouchableOpacity
-                    style={styles.sleepNowButton}
-                    onPress={handleStartSleepSession}
-                >
-                    <Text style={styles.sleepNowButtonText}>SLEEP NOW</Text>
-                </TouchableOpacity>
+                {(!displayNormalUI && !showTooltipUI) &&
+                    <PrivacySleepPage/>
+                }
 
                 {/* Bedtime TimeModal */}
                 <TimeModal
@@ -209,75 +252,26 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         alignItems: 'center',
         paddingHorizontal: 20,
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     },
     safeArea: {
         flex: 1,
         width: '100%',
-        alignItems: 'center',
-        justifyContent: 'center', 
+    },
+    headerContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        paddingTop: 50, 
+        paddingHorizontal: 0, 
+        marginBottom: 10, 
     },
     headerText: {
         color: '#ffffff',
         fontSize: 30,
         fontWeight: 'bold',
-        marginBottom: 20,
         textAlign: 'center',
-        paddingTop: 30,
-    },
-    sleepTrackerContainer: {
-        width: '100%',
-        aspectRatio: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 30,
-    },
-    sleepDurationImage: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'contain', 
-        borderRadius: 100,
-    },
-    inputCard: {
-        backgroundColor: Colors.lightBlack,
-        borderRadius: 12,
-        paddingVertical: 15,
-        paddingHorizontal: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-        marginBottom: 15,
-    },
-    inputLabel: {
-        color: '#ffffff',
-        fontSize: 18,
-        fontWeight: '500',
-        flex: 1,
-    },
-    inputValue: {
-        color: '#ffffff',
-        fontSize: 18,
-        opacity: 0.8,
-        marginRight: 10,
-    },
-    sleepNowButton: {
-        backgroundColor: Colors.generalBlue,
-        borderRadius: 12,
-        paddingVertical: 18,
-        width: '100%',
-        alignItems: 'center',
-        marginTop: 20,
-        marginBottom: 30,
-        shadowColor: Colors.generalBlue,
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.5,
-        shadowRadius: 10,
-        elevation: 10,
-    },
-    sleepNowButtonText: {
-        color: '#ffffff',
-        fontSize: 20,
-        fontWeight: 'bold',
+        flex: 1, 
+        marginRight: 60, 
     },
 });

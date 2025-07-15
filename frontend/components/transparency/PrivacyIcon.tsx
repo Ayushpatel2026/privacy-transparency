@@ -18,7 +18,7 @@ const iconMap: { [key: string]: any } = {
 
 interface PrivacyIconProps {
 	handleIconPress: () => void;
-	showPrivacyUI: boolean;
+	isOpen: boolean;
 	iconName: string;
 	iconSize?: number;
 	iconRef?: React.RefObject<TouchableOpacity>; // this is a type error in VS Code but it still works
@@ -26,12 +26,12 @@ interface PrivacyIconProps {
 
 export const PrivacyIcon = ({
     handleIconPress,
-	showPrivacyUI,
+	isOpen,
 	iconName,
 	iconSize = 20,
 	iconRef
 } : PrivacyIconProps) => {
-		const iconKey = showPrivacyUI ? `${iconName}-open` : iconName;
+		const iconKey = isOpen ? `${iconName}-open` : iconName;
 		const iconImageUrl = iconMap[iconKey] || privacyLowIcon;
     return (
 			<TouchableOpacity

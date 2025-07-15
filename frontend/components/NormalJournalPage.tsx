@@ -1,6 +1,6 @@
 import { View, Text, KeyboardAvoidingView, Platform, TouchableOpacity, StyleSheet } from "react-native";
 import PrivacyTooltip from "./transparency/PrivacyTooltip";
-import { formatViolationsDetected, getPrivacyRiskColor, getPrivacyRiskIcon } from "@/utils/transparency";
+import { formatPrivacyViolations, getPrivacyRiskColor, getPrivacyRiskIcon, getPrivacyRiskLabel } from "@/utils/transparency";
 import { Ionicons } from "@expo/vector-icons";
 import { useTransparencyStore } from "@/store/transparencyStore";
 import { PrivacyRisk } from "@/constants/types/Transparency";
@@ -27,7 +27,7 @@ export const NormalJournalPage = ({
     diaryEntry,
     handleEditJournalEntry,
     handleAddSleepNote,
-} : NormalJournalPageProps) => {
+}: NormalJournalPageProps) => {
 
     const { journalTransparency, accelerometerTransparency } = useTransparencyStore();
 
@@ -56,12 +56,13 @@ export const NormalJournalPage = ({
             {/* Diary Section - Title with Privacy Tooltip */}
             <View style={styles.sectionTitleWithTooltip}>
                 <Text style={styles.sectionTitle}>Diary</Text>
-                {showToolTipUI && 
+                {showToolTipUI &&
                     <PrivacyTooltip
                         color={getPrivacyRiskColor(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
                         iconSize={40}
                         iconName={getPrivacyRiskIcon(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
-                        violationsDetected={formatViolationsDetected(journalTransparency)}
+                        violationsDetected={getPrivacyRiskLabel(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
+                        privacyViolations={formatPrivacyViolations(journalTransparency)}
                         purpose={journalTransparency.aiExplanation!.why}
                         storage={journalTransparency.aiExplanation!.storage}
                         access={journalTransparency.aiExplanation!.access}
@@ -111,12 +112,13 @@ export const NormalJournalPage = ({
             {/* Activity Tracker Section - Title with Privacy Tooltip */}
             <View style={styles.sectionTitleWithTooltip}>
                 <Text style={styles.sectionTitle}>Activity Tracker</Text>
-                { showToolTipUI && 
+                {showToolTipUI &&
                     <PrivacyTooltip
                         color={getPrivacyRiskColor(accelerometerTransparency.privacyRisk || PrivacyRisk.LOW)}
                         iconSize={50}
                         iconName={getPrivacyRiskIcon(accelerometerTransparency.privacyRisk || PrivacyRisk.LOW)}
-                        violationsDetected={formatViolationsDetected(accelerometerTransparency)}
+                        violationsDetected={getPrivacyRiskLabel(accelerometerTransparency.privacyRisk || PrivacyRisk.LOW)}
+                        privacyViolations={formatPrivacyViolations(accelerometerTransparency)}
                         purpose={accelerometerTransparency.aiExplanation!.why}
                         storage={accelerometerTransparency.aiExplanation!.storage}
                         access={accelerometerTransparency.aiExplanation!.access}

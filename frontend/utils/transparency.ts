@@ -51,8 +51,21 @@ export const getPrivacyRiskColorForPage = (risks: PrivacyRisk[]) => {
     }
 }
 
+export const getPrivacyRiskLabel = (risk: PrivacyRisk) => {
+    switch (risk) {
+        case PrivacyRisk.HIGH:
+            return "Major Privacy Violation Detected:";
+        case PrivacyRisk.MEDIUM:
+            return "Some Privacy Concerns Detected:";
+        case PrivacyRisk.LOW:
+            return "No Privacy Violations Detected";
+        default:
+            return "Unknown Privacy Risk";
+    }
+}
+
 // Helper function to format violations detected
-export const formatViolationsDetected = (transparency: TransparencyEvent) => {
+export const formatPrivacyViolations = (transparency: TransparencyEvent) => {
     if (!transparency.regulatoryCompliance?.issues || transparency.regulatoryCompliance.issues.length === 0) {
         return "No privacy violations detected";
     }

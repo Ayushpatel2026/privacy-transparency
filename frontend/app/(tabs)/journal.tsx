@@ -100,7 +100,7 @@ export default function Journal() {
 
             const result = await journalDataRepository.editJournal(journalData, selectedDate.toISOString().split('T')[0]);
 
-            // 
+            // Analyze privacy risks - do not wait for this to complete
             transparencyService.analyzePrivacyRisks(transparencyEvent)
                 .then(updatedJournalTransparency => {
                     setJournalTransparency(updatedJournalTransparency);
@@ -196,7 +196,7 @@ export default function Journal() {
                 {!showToolTipUI && 
                     <View style={{ position: 'absolute', top: 50, right: 30 }}>
                         <PrivacyIcon handleIconPress={() => setDisplayNormalUI(!displayNormalUI)}
-                            showPrivacyUI={!displayNormalUI}
+                            isOpen={!displayNormalUI}
                             iconName={getPrivacyRiskIconForPage([journalTransparency.privacyRisk || PrivacyRisk.LOW, accelerometerTransparency.privacyRisk || PrivacyRisk.LOW])}
                             iconSize={50}
                         />
