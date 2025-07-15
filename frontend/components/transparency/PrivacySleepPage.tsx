@@ -97,12 +97,6 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 12,
     },
-    subSectionLabel: {
-        color: '#FFFFFF',
-        fontSize: 16,
-        fontWeight: '600',
-        marginBottom: 12,
-    },
     subSectionText: {
         color: '#FFFFFF',
         fontSize: 14,

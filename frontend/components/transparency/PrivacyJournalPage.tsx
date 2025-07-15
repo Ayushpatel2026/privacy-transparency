@@ -4,31 +4,49 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors';
 import { useTransparencyStore } from '@/store/transparencyStore';
 import privacyIcon from '@/assets/images/accelerometer-local.png'
+import { PrivacyRisk } from '@/constants/types/Transparency';
+import { formatPrivacyViolations, getPrivacyRiskLabel } from '@/utils/transparency';
 
 export const PrivacyJournalPage = () => {
     const { journalTransparency, accelerometerTransparency } = useTransparencyStore();
-    return (
-        <View style={styles.container}>
-            {/* Journal Section */}
+    const isAccelerometerMoreSevere = 
+        (accelerometerTransparency.privacyRisk ?? PrivacyRisk.LOW) > 
+        (journalTransparency.privacyRisk ?? PrivacyRisk.LOW);
+
+    const renderJournalSection = () => {
+        return (
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Journal</Text>
+                <Text style={styles.headerTitle}>
+                    {getPrivacyRiskLabel(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
+                </Text>
+                {!(journalTransparency.privacyRisk === PrivacyRisk.LOW) && 
+                    <>
+                        <Text style={styles.headerText}>
+                            {formatPrivacyViolations(journalTransparency)}
+                        </Text>
+                        <TouchableOpacity style={styles.linkButton}>
+                            <Text style={styles.linkText}>Relevant Privacy Policy Section - Link to Regulations</Text>
+                        </TouchableOpacity>
+                    </>
+                }
                 <View style={styles.subSectionContainer}>
-                    <Text style={styles.subSectionLabel}>Purpose:</Text>
                     <Text style={styles.subSectionText}>
-                        {journalTransparency.aiExplanation!.why}
+                        <Text style={{fontWeight: 'bold'}}>Purpose: </Text> {journalTransparency.aiExplanation!.why}
                     </Text>
-                    <Text style={styles.subSectionLabel}>Storage:</Text>
                     <Text style={styles.subSectionText}>
-                        {journalTransparency.aiExplanation!.storage}
+                        <Text style={{fontWeight: 'bold'}}>Storage: </Text> {journalTransparency.aiExplanation!.storage}
                     </Text>
-                    <Text style={styles.subSectionLabel}>Access:</Text>
                     <Text style={styles.subSectionText}>
-                        {journalTransparency.aiExplanation!.access}
+                        <Text style={{fontWeight: 'bold'}}>Access: </Text> {journalTransparency.aiExplanation!.access}
                     </Text>
                 </View>
             </View>
+        )
+    }
 
-            {/* Activity Tracker Section */}
+    const renderAccelerometerSection = () => {
+        return (
             <View style={styles.section}>
                 <View style={styles.activityHeader}>
                     <Text style={styles.sectionTitle}>Activity Tracker</Text>
@@ -39,23 +57,49 @@ export const PrivacyJournalPage = () => {
                         />
                     </View>
                 </View>
-                
+
+                <Text style={styles.headerTitle}>
+                    {getPrivacyRiskLabel(accelerometerTransparency.privacyRisk || PrivacyRisk.LOW)}
+                </Text>
+                {!(accelerometerTransparency.privacyRisk === PrivacyRisk.LOW) && 
+                    <>
+                        <Text style={styles.headerText}>
+                            {formatPrivacyViolations(accelerometerTransparency)}
+                        </Text>
+                        <TouchableOpacity style={styles.linkButton}>
+                            <Text style={styles.linkText}>Relevant Privacy Policy Section - Link to Regulations</Text>
+                        </TouchableOpacity>
+                    </>
+                }
                 <View style={styles.subSectionContainer}>
-                    <Text style={styles.subSectionLabel}>Purpose:</Text>
                     <Text style={styles.subSectionText}>
-                        {accelerometerTransparency.aiExplanation!.why}
-                        <Text style={styles.linkText}>OPT OUT</Text>
+                        <Text style={{fontWeight: 'bold'}}>Purpose: </Text> {accelerometerTransparency.aiExplanation!.why}
                     </Text>
-                    <Text style={styles.subSectionLabel}>Storage:</Text>
+                    <Text style={styles.linkText}>OPT OUT</Text>
                     <Text style={styles.subSectionText}>
-                        {accelerometerTransparency.aiExplanation!.storage}
+                        <Text style={{fontWeight: 'bold'}}>Storage: </Text> {accelerometerTransparency.aiExplanation!.storage}
                     </Text>
-                    <Text style={styles.subSectionLabel}>Access:</Text>
                     <Text style={styles.subSectionText}>
-                        {accelerometerTransparency.aiExplanation!.access}
+                        <Text style={{fontWeight: 'bold'}}>Access: </Text> {accelerometerTransparency.aiExplanation!.access}
                     </Text>
                 </View>
             </View>
+        )
+    }
+
+    return (
+        <View style={styles.container}>
+            {isAccelerometerMoreSevere ?
+                <>
+                    {renderAccelerometerSection()}
+                    {renderJournalSection()}
+                </> :
+                <>
+                    {renderJournalSection()}
+                    {renderAccelerometerSection()}
+                </>
+            }
+        
 
             {/* Privacy Policy Link */}
             <TouchableOpacity style={styles.privacyPolicyButton}>
@@ -78,6 +122,24 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '600',
         marginBottom: 12,
+        paddingHorizontal: 15,
+    },
+    headerTitle: {
+        color: '#FFFFFF',
+        fontSize: 20,
+        fontWeight: '600',
+        paddingHorizontal: 15,
+    },
+    headerText: {
+        color: '#FFFFFF',
+        fontSize: 14,
+        lineHeight: 20,
+        marginBottom: 12,
+        paddingHorizontal: 15,
+    },
+    linkButton: {
+        alignSelf: 'flex-start',
+        marginTop: 8,
     },
     activityHeader: {
         flexDirection: 'row',
@@ -92,7 +154,7 @@ const styles = StyleSheet.create({
     subSectionContainer: {
         marginBottom: 16,
         backgroundColor: Colors.lightBlack,
-        padding: 20,
+        padding: 15,
         borderRadius: 12,
     },
     subSectionLabel: {
