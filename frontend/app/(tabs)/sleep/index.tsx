@@ -186,7 +186,7 @@ export default function Sleep() {
                     {showTooltipUI ? (
                         <PrivacyTooltip
                             color={getPrivacyRiskColor(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
-                            iconSize={40}
+                            iconSize={50}
                             iconName={getPrivacyRiskIcon(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
                             violationsDetected={getPrivacyRiskLabel(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
                             privacyViolations={formatPrivacyViolations(journalTransparency)}

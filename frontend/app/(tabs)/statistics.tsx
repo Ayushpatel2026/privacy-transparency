@@ -78,7 +78,7 @@ export default function Statistics() {
 						handleIconPress={() => setDisplayNormalUI(!displayNormalUI)}
 						isOpen={!displayNormalUI}
 						iconName={getPrivacyRiskIcon(statisticsTransparency.privacyRisk || PrivacyRisk.LOW)}
-						iconSize={40}
+						iconSize={50}
 					/>
 				</View>
 				{activeTab === 'daily' && <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />}

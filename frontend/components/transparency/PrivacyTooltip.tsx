@@ -29,7 +29,7 @@ interface PrivacyTooltipProps {
  */
 export const PrivacyTooltip = ({
   color,
-  iconSize = 20,
+  iconSize = 40,
   iconName,
   violationsDetected,
   privacyViolations,

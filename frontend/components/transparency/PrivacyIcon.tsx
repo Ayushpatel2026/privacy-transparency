@@ -28,11 +28,12 @@ export const PrivacyIcon = ({
     handleIconPress,
 	isOpen,
 	iconName,
-	iconSize = 20,
+	iconSize = 40,
 	iconRef
 } : PrivacyIconProps) => {
 		const iconKey = isOpen ? `${iconName}-open` : iconName;
 		const iconImageUrl = iconMap[iconKey] || privacyLowIcon;
+		iconSize = isOpen ? iconSize + 10 : iconSize; // increase size when open
     return (
 			<TouchableOpacity
 				onPress={() => handleIconPress()}
