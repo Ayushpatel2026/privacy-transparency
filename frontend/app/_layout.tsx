@@ -29,13 +29,20 @@ export default function RootLayout() {
   }, [fontsLoaded]);
 
   useEffect(() => {
-    checkAuth()
-    loadProfileStatus();
-    loadTransparencyStatus();
-    console.log("Checking auth and loading profile status");
-    sensorBackgroundTaskManager.registerAccelerometer();
-    sensorBackgroundTaskManager.registerLightSensor();
-    sensorBackgroundTaskManager.registerAudioSensor();
+    const initialize = async () => {
+      checkAuth();
+      await loadProfileStatus();
+      await loadTransparencyStatus();
+      console.log("Checking auth and loading profile status");
+      const userConsentPreferences = useProfileStore.getState().userConsentPreferences;
+      sensorBackgroundTaskManager.updateConfig({
+        accelerometerEnabled: userConsentPreferences?.accelerometerEnabled ?? false,
+      })
+      sensorBackgroundTaskManager.registerAccelerometer();
+      sensorBackgroundTaskManager.registerLightSensor();
+      sensorBackgroundTaskManager.registerAudioSensor();
+    };
+    initialize();
   }, []);
 
   // handle the navigation based on authentication state
