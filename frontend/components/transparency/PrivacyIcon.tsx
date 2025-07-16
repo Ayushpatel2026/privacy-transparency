@@ -1,10 +1,10 @@
 import { TouchableOpacity, Image, StyleSheet } from "react-native"
-import privacyHighIcon from '@/assets/images/privacy-high.png';
-import privacyMediumIcon from '@/assets/images/privacy-medium.png';
-import privacyLowIcon from '@/assets/images/privacy-low.png';
-import privacyHighOpenIcon from '@/assets/images/privacy-high-open.png';
-import privacyMediumOpenIcon from '@/assets/images/privacy-medium-open.png';
-import privacyLowOpenIcon from '@/assets/images/privacy-low-open.png';
+import privacyHighIcon from '@/assets/images/privacy/privacy-high.png';
+import privacyMediumIcon from '@/assets/images/privacy/privacy-medium.png';
+import privacyLowIcon from '@/assets/images/privacy/privacy-low.png';
+import privacyHighOpenIcon from '@/assets/images/privacy/privacy-high-open.png';
+import privacyMediumOpenIcon from '@/assets/images/privacy/privacy-medium-open.png';
+import privacyLowOpenIcon from '@/assets/images/privacy/privacy-low-open.png';
 
 
 const iconMap: { [key: string]: any } = {

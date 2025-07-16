@@ -5,6 +5,7 @@ import { PrivacyIcon } from './PrivacyIcon';
 import { getPrivacyRiskLabel } from '@/utils/transparency';
 import { PrivacyRisk } from '@/constants/types/Transparency';
 import { Colors } from '@/constants/Colors';
+import { SensorPrivacyIcon } from './SensorPrivacyIcon';
 
 interface PrivacyTooltipProps {
   color: string;
@@ -161,13 +162,25 @@ export const PrivacyTooltip = ({
       arrowStyle={styles.tooltipArrow}
       placement={tooltipPlacement}
     >
-      <PrivacyIcon
-        handleIconPress={handleIconPress}
-        isOpen={showTooltip}
-        iconName={iconName}
-        iconSize={iconSize}
-        iconRef={iconRef}
-      />
+      {dataType.includes('sensor') ? (
+        <SensorPrivacyIcon
+          sensorType={dataType.split('-')[1] as 'accelerometer' | 'light' | 'microphone'}
+          iconName={iconName}
+          storageType={dataType.includes('cloud') ? 'cloud' : 'local'}
+          handleIconPress={handleIconPress}
+          iconRef={iconRef}
+        />
+      )
+      
+      : (
+        <PrivacyIcon
+          handleIconPress={handleIconPress}
+          isOpen={showTooltip}
+          iconName={iconName}
+          iconSize={iconSize}
+          iconRef={iconRef}
+        />
+      )}
     </Tooltip>
   );
 };

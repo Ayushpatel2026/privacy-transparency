@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useTransparencyStore } from '@/store/transparencyStore';
-import privacyIcon from '@/assets/images/accelerometer-local.png'
-import { PrivacyRisk } from '@/constants/types/Transparency';
-import { formatPrivacyViolations, getPrivacyRiskLabel } from '@/utils/transparency';
+import { DataDestination, PrivacyRisk } from '@/constants/types/Transparency';
+import { formatPrivacyViolations, getPrivacyRiskIcon, getPrivacyRiskLabel } from '@/utils/transparency';
+import { SensorPrivacyIcon } from './SensorPrivacyIcon';
 
 export const PrivacyJournalPage = () => {
     const { journalTransparency, accelerometerTransparency } = useTransparencyStore();
@@ -51,9 +50,11 @@ export const PrivacyJournalPage = () => {
                 <View style={styles.activityHeader}>
                     <Text style={styles.sectionTitle}>Activity Tracker</Text>
                     <View style={styles.activityIconContainer}>
-                        <Image
-                            source={privacyIcon}
-                            style={{ width: 109, height: 38 }} // these dimensions are from the figma design
+                        <SensorPrivacyIcon
+                            sensorType="accelerometer"
+                            iconName={getPrivacyRiskIcon(accelerometerTransparency.privacyRisk || PrivacyRisk.LOW)}
+                            storageType={accelerometerTransparency.storageLocation === DataDestination.GOOGLE_CLOUD ? 'cloud' : 'local'}
+                            handleIconPress={() => {}}
                         />
                     </View>
                 </View>

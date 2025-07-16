@@ -3,7 +3,7 @@ import PrivacyTooltip from "./transparency/PrivacyTooltip";
 import { formatPrivacyViolations, getPrivacyRiskColor, getPrivacyRiskIcon, getPrivacyRiskLabel } from "@/utils/transparency";
 import { Ionicons } from "@expo/vector-icons";
 import { useTransparencyStore } from "@/store/transparencyStore";
-import { PrivacyRisk } from "@/constants/types/Transparency";
+import { DataDestination, PrivacyRisk } from "@/constants/types/Transparency";
 import { Colors } from "@/constants/Colors";
 import { SleepNote } from "@/constants/types/JournalData";
 
@@ -115,7 +115,7 @@ export const NormalJournalPage = ({
                 {showToolTipUI &&
                     <PrivacyTooltip
                         color={getPrivacyRiskColor(accelerometerTransparency.privacyRisk || PrivacyRisk.LOW)}
-                        iconSize={50}
+                        iconSize={40}
                         iconName={getPrivacyRiskIcon(accelerometerTransparency.privacyRisk || PrivacyRisk.LOW)}
                         violationsDetected={getPrivacyRiskLabel(accelerometerTransparency.privacyRisk || PrivacyRisk.LOW)}
                         privacyViolations={formatPrivacyViolations(accelerometerTransparency)}
@@ -125,7 +125,7 @@ export const NormalJournalPage = ({
                         optOutLink={accelerometerTransparency.aiExplanation?.privacyPolicyLink}
                         privacyPolicyLink={accelerometerTransparency.aiExplanation?.privacyPolicyLink}
                         privacyPolicySectionLink={accelerometerTransparency.aiExplanation?.regulationLink}
-                        dataType="Motion Data"
+                        dataType={"Activity Tracker"}
                     />
                 }
             </View>
