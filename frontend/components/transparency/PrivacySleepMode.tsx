@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { Colors } from '@/constants/Colors';
 import { useTransparencyStore } from '@/store/transparencyStore';
 import { PrivacyRisk } from '@/constants/types/Transparency';
-import { formatPrivacyViolations, getPrivacyRiskLabel } from '@/utils/transparency';
+import { formatPrivacyViolations, getPrivacyRiskLabel, handleLinkPress } from '@/utils/transparency';
+import { useRouter } from 'expo-router';
 
 const privacyRiskOrder: Record<PrivacyRisk, number> = {
   [PrivacyRisk.LOW]: 0,
@@ -13,7 +14,8 @@ const privacyRiskOrder: Record<PrivacyRisk, number> = {
 
 export const PrivacySleepMode = () => {
     const { lightSensorTransparency, accelerometerTransparency, microphoneTransparency } = useTransparencyStore();
-    
+    const router = useRouter();
+
     // Sort sensors by privacy risk severity (highest first)
     const sensors = [
         {
@@ -34,6 +36,27 @@ export const PrivacySleepMode = () => {
         return riskB - riskA; // Sort highest first
     });
 
+    const renderLinks = (sensor: any) => {
+        return (
+            <View style={styles.linksContainer}>
+                <View style={styles.linkRow}>
+                    <TouchableOpacity style={styles.linkButton} onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: sensor.data.aiExplanation?.privacyPolicyLink}})}>
+                        <Text style={styles.linkText}>Privacy Policy Section</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.linkButton} onPress={() => handleLinkPress(sensor.data.aiExplanation?.regulationLink || '')}>
+                        <Text style={styles.linkText}>PIPEDA Regulation</Text>
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                    style={styles.linkButtonSingle}
+                    onPress={() => router.push('/(tabs)/profile/consent-preferences/')}
+                >
+                    <Text style={styles.linkText}>Opt Out</Text>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
     const renderSensorSection = (sensor : any) => {
         const riskLevel = sensor.data.privacyRisk || PrivacyRisk.LOW;
         const isHighRisk = riskLevel !== PrivacyRisk.LOW;
@@ -45,20 +68,21 @@ export const PrivacySleepMode = () => {
                     {getPrivacyRiskLabel(sensor.data.privacyRisk || PrivacyRisk.LOW)}
                 </Text>
                 {!isHighRisk && (
-                    <TouchableOpacity style={styles.linkButton}>
-                        <Text style={styles.linkText}>Relevant Privacy Policy Section - Link to Regulations</Text>
-                        <Text style={styles.linkText}>OPT OUT</Text>
-                    </TouchableOpacity>
+                    <>
+                        <View style={styles.subSectionContainer}>
+                            <Text style={styles.subSectionText}>
+                                <Text style={{fontWeight: 'bold'}}>Purpose: </Text> {accelerometerTransparency.aiExplanation!.why}
+                            </Text>
+                        </View>
+                        {renderLinks(sensor)}
+                    </>
                 )}
                 {isHighRisk && 
                     <>
                         <Text style={styles.headerText}>
                             {formatPrivacyViolations(sensor.data)}
                         </Text>
-                        <TouchableOpacity style={styles.linkButton}>
-                            <Text style={styles.linkText}>Relevant Privacy Policy Section - Link to Regulations</Text>
-                            <Text style={styles.linkText}>OPT OUT</Text>
-                        </TouchableOpacity>
+                        {renderLinks(sensor)}
                     </>
                 }
             </View>
@@ -71,7 +95,7 @@ export const PrivacySleepMode = () => {
                 {sensors.map(sensor => renderSensorSection(sensor))}
             </View>
 
-            <TouchableOpacity style={styles.privacyPolicyButton}>
+            <TouchableOpacity style={styles.privacyPolicyButton} onPress={() => router.push('/privacy-policy')}>
                 <Text style={styles.privacyPolicyText}>View Privacy Policy</Text>
             </TouchableOpacity>
         </View>
@@ -122,11 +146,21 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         opacity: 0.9,
     },
-    linkButton: {
-        alignSelf: 'flex-start',
-        marginTop: 4,
-        marginBottom: 6,
+    linksContainer: {
+        marginTop: 8,
         paddingHorizontal: 8,
+    },
+    linkRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 8,
+    },
+    linkButton: {
+        flex: 1,
+        marginRight: 8,
+    },
+    linkButtonSingle: {
+        alignSelf: 'flex-start',
     },
     subSectionContainer: {
         marginBottom: 0,
@@ -149,14 +183,11 @@ const styles = StyleSheet.create({
     },
     privacyPolicyButton: {
         alignSelf: 'center',
-        marginTop: 12,
-        paddingVertical: 6,
+        marginTop: 20,
     },
     privacyPolicyText: {
         color: Colors.hyperlinkBlue,
-        fontSize: 14,
+        fontSize: 16,
         textDecorationLine: 'underline',
-        textAlign: 'center',
-        fontWeight: '500',
     },
 });

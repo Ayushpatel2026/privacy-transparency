@@ -3,11 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useTransparencyStore } from '@/store/transparencyStore';
 import { DataDestination, PrivacyRisk } from '@/constants/types/Transparency';
-import { formatPrivacyViolations, getPrivacyRiskIcon, getPrivacyRiskLabel } from '@/utils/transparency';
+import { formatPrivacyViolations, getPrivacyRiskIcon, getPrivacyRiskLabel, handleLinkPress } from '@/utils/transparency';
 import { SensorPrivacyIcon } from './SensorPrivacyIcon';
+import { useRouter } from 'expo-router';
 
 export const PrivacyJournalPage = () => {
     const { journalTransparency, accelerometerTransparency } = useTransparencyStore();
+    const router = useRouter();
     const isAccelerometerMoreSevere = 
         (accelerometerTransparency.privacyRisk ?? PrivacyRisk.LOW) > 
         (journalTransparency.privacyRisk ?? PrivacyRisk.LOW);
@@ -24,22 +26,29 @@ export const PrivacyJournalPage = () => {
                         <Text style={styles.headerText}>
                             {formatPrivacyViolations(journalTransparency)}
                         </Text>
-                        <TouchableOpacity style={styles.linkButton}>
-                            <Text style={styles.linkText}>Relevant Privacy Policy Section - Link to Regulations</Text>
-                        </TouchableOpacity>
                     </>
                 }
                 <View style={styles.subSectionContainer}>
                     <Text style={styles.subSectionText}>
                         <Text style={{fontWeight: 'bold'}}>Purpose: </Text> {journalTransparency.aiExplanation!.why}
                     </Text>
-                    <Text style={styles.subSectionText}>
-                        <Text style={{fontWeight: 'bold'}}>Storage: </Text> {journalTransparency.aiExplanation!.storage}
-                    </Text>
-                    <Text style={styles.subSectionText}>
-                        <Text style={{fontWeight: 'bold'}}>Access: </Text> {journalTransparency.aiExplanation!.access}
-                    </Text>
+                    {journalTransparency.privacyRisk === PrivacyRisk.LOW && (
+                        <>
+                            <Text style={styles.subSectionText}>
+                                <Text style={{fontWeight: 'bold'}}>Storage: </Text> {journalTransparency.aiExplanation!.storage}
+                            </Text>
+                            <Text style={styles.subSectionText}>
+                                <Text style={{fontWeight: 'bold'}}>Access: </Text> {journalTransparency.aiExplanation!.access}
+                            </Text>
+                        </>
+                    )}
                 </View>
+                <TouchableOpacity style={styles.linkButton} onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: journalTransparency.aiExplanation?.privacyPolicyLink}})}>
+                    <Text style={styles.linkText}>Privacy Policy Section</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.linkButton} onPress={() => handleLinkPress(journalTransparency.aiExplanation?.regulationLink || '')}>
+                    <Text style={styles.linkText}>PIPEDA Regulation</Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -67,23 +76,35 @@ export const PrivacyJournalPage = () => {
                         <Text style={styles.headerText}>
                             {formatPrivacyViolations(accelerometerTransparency)}
                         </Text>
-                        <TouchableOpacity style={styles.linkButton}>
-                            <Text style={styles.linkText}>Relevant Privacy Policy Section - Link to Regulations</Text>
-                        </TouchableOpacity>
                     </>
                 }
                 <View style={styles.subSectionContainer}>
                     <Text style={styles.subSectionText}>
                         <Text style={{fontWeight: 'bold'}}>Purpose: </Text> {accelerometerTransparency.aiExplanation!.why}
                     </Text>
-                    <Text style={styles.linkText}>OPT OUT</Text>
-                    <Text style={styles.subSectionText}>
-                        <Text style={{fontWeight: 'bold'}}>Storage: </Text> {accelerometerTransparency.aiExplanation!.storage}
-                    </Text>
-                    <Text style={styles.subSectionText}>
-                        <Text style={{fontWeight: 'bold'}}>Access: </Text> {accelerometerTransparency.aiExplanation!.access}
-                    </Text>
+                    {accelerometerTransparency.privacyRisk === PrivacyRisk.LOW && (
+                        <>
+                            <Text style={styles.subSectionText}>
+                                <Text style={{fontWeight: 'bold'}}>Storage: </Text> {accelerometerTransparency.aiExplanation!.storage}
+                            </Text>
+                            <Text style={styles.subSectionText}>
+                                <Text style={{fontWeight: 'bold'}}>Access: </Text> {accelerometerTransparency.aiExplanation!.access}
+                            </Text>
+                        </>
+                    )}
                 </View>
+                <TouchableOpacity style={styles.linkButton} onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: accelerometerTransparency.aiExplanation?.privacyPolicyLink}})}>
+                    <Text style={styles.linkText}>Privacy Policy Section</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.linkButton} onPress={() => handleLinkPress(accelerometerTransparency.aiExplanation?.regulationLink || '')}>
+                    <Text style={styles.linkText}>PIPEDA Regulation</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.linkButton}
+                    onPress={() => router.push('/(tabs)/profile/consent-preferences/')}
+                >
+                    <Text style={styles.linkText}>Opt Out</Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -104,7 +125,7 @@ export const PrivacyJournalPage = () => {
 
             {/* Privacy Policy Link */}
             <TouchableOpacity style={styles.privacyPolicyButton}>
-                <Text style={styles.privacyPolicyText}>View our Privacy Policy</Text>
+                <Text style={styles.privacyPolicyText}>View Full Privacy Policy</Text>
             </TouchableOpacity>
         </View>
     );
@@ -145,6 +166,7 @@ const styles = StyleSheet.create({
     linkButton: {
         alignSelf: 'flex-start',
         marginTop: 8,
+        paddingHorizontal: 15,
     },
     activityHeader: {
         flexDirection: 'row',

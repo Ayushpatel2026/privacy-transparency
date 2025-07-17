@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Linking, Alert, Image, Dimensions, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import Tooltip from 'react-native-walkthrough-tooltip';
 import { PrivacyIcon } from './PrivacyIcon';
-import { getPrivacyRiskLabel } from '@/utils/transparency';
+import { getPrivacyRiskLabel, handleLinkPress } from '@/utils/transparency';
 import { PrivacyRisk } from '@/constants/types/Transparency';
 import { Colors } from '@/constants/Colors';
 import { SensorPrivacyIcon } from './SensorPrivacyIcon';
+import { useRouter } from 'expo-router';
 
 interface PrivacyTooltipProps {
   color: string;
@@ -17,8 +18,8 @@ interface PrivacyTooltipProps {
   storage: string;
   access: string;
   optOutLink?: string;
-  privacyPolicyLink?: string;
   privacyPolicySectionLink?: string;
+  regulationLink?: string;
   dataType: string;
 }
 
@@ -37,13 +38,14 @@ export const PrivacyTooltip = ({
   storage,
   access,
   optOutLink,
-  privacyPolicyLink,
   privacyPolicySectionLink,
+  regulationLink,
   dataType
 }: PrivacyTooltipProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
 	const [tooltipPlacement, setTooltipPlacement] = useState<'top' | 'bottom'>('bottom');
 	const iconRef = useRef<TouchableOpacity>(null); // VS code shows type error but this still works
+  const router = useRouter();
 
 	const screenHeight = Dimensions.get('window').height;
 	const screenWidth = Dimensions.get('window').width;
@@ -63,20 +65,6 @@ export const PrivacyTooltip = ({
 			});
 		}
 	};
-
-
-  const handleLinkPress = async (url: string, linkType: string) => {
-    try {
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
-        await Linking.openURL(url);
-      } else {
-        Alert.alert('Error', `Cannot open ${linkType} link`);
-      }
-    } catch (error) {
-      Alert.alert('Error', `Failed to open ${linkType} link`);
-    }
-  };
 
   const renderTooltipContent = () => (
     <ScrollView 
@@ -106,47 +94,64 @@ export const PrivacyTooltip = ({
           <Text style={styles.sectionText}>{purpose}</Text>
         </View>
 
-        {/* Storage */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Storage:</Text>
-          <Text style={styles.sectionText}>{storage}</Text>
-        </View>
+        {violationsDetected === getPrivacyRiskLabel(PrivacyRisk.LOW) && (
+          <>
+            {/* Storage */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Storage:</Text>
+              <Text style={styles.sectionText}>{storage}</Text>
+            </View>
 
-        {/* Access */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Access:</Text>
-          <Text style={styles.sectionText}>{access}</Text>
-        </View>
+            {/* Access */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Access:</Text>
+              <Text style={styles.sectionText}>{access}</Text>
+            </View>
+          </>
+        )}
 
         {/* Links */}
-        {(optOutLink || privacyPolicyLink || privacyPolicySectionLink) && (
+        {(optOutLink || privacyPolicySectionLink || regulationLink) && (
           <View style={styles.linksSection}>
             {privacyPolicySectionLink && (
               <TouchableOpacity
                 style={styles.linkButton}
-                onPress={() => handleLinkPress(privacyPolicySectionLink, 'Privacy Policy Section')}
+                onPress={() => {
+                  setShowTooltip(false);
+                  router.push({pathname: "/privacy-policy", params: {sectionId: privacyPolicySectionLink}})
+                }}
               >
                 <Text style={styles.linkText}>Link to privacy policy section</Text>
+              </TouchableOpacity>
+            )}
+
+            {regulationLink && (
+              <TouchableOpacity
+                style={styles.linkButton}
+                onPress={() => handleLinkPress(regulationLink)}
+              >
+                <Text style={styles.linkText}>PIPEDA regulation</Text>
               </TouchableOpacity>
             )}
 
             {optOutLink && (
               <TouchableOpacity
                 style={styles.linkButton}
-                onPress={() => handleLinkPress(optOutLink, 'Opt Out')}
+                onPress={() => {
+                  setShowTooltip(false);
+                  router.push(optOutLink)}}
               >
-                <Text style={styles.linkText}>Link to Opt Out</Text>
+                <Text style={styles.linkText}>Opt Out</Text>
               </TouchableOpacity>
             )}
-
-            {privacyPolicyLink && (
-              <TouchableOpacity
-                style={styles.linkButton}
-                onPress={() => handleLinkPress(privacyPolicyLink, 'Privacy Policy')}
-              >
-                <Text style={styles.linkText}>Link to Full Privacy Policy</Text>
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity
+              style={styles.linkButton}
+              onPress={() => {
+                setShowTooltip(false);
+                router.push('/privacy-policy')}}
+            >
+              <Text style={styles.linkText}>View Full Privacy Policy</Text>
+            </TouchableOpacity>
           </View>
         )}
       </View>

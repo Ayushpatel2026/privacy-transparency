@@ -1,15 +1,17 @@
 import { Colors } from '@/constants/Colors';
 import { PrivacyRisk } from '@/constants/types/Transparency';
 import { useTransparencyStore } from '@/store/transparencyStore';
-import { formatPrivacyViolations, getPrivacyRiskLabel } from '@/utils/transparency';
+import { formatPrivacyViolations, getPrivacyRiskLabel, handleLinkPress } from '@/utils/transparency';
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 /**
  * TODO - this page is exact same as PrivacySleepPage.tsx, turn this into a generic component that can be reused
  */
 export const PrivacyStatisticsPage = () => {
     const { statisticsTransparency } = useTransparencyStore();
+    const router = useRouter();
     
     return (
         <View style={styles.container}>
@@ -23,9 +25,6 @@ export const PrivacyStatisticsPage = () => {
                         <Text style={styles.headerText}>
                             {formatPrivacyViolations(statisticsTransparency)}
                         </Text>
-                        <TouchableOpacity style={styles.linkButton}>
-                            <Text style={styles.linkText}>Relevant Privacy Policy Section - Link to Regulations</Text>
-                        </TouchableOpacity>
                     </>
                 }
             </View>
@@ -38,25 +37,36 @@ export const PrivacyStatisticsPage = () => {
                 </View>
             </View>
 
-            <View style={styles.section}>
-                <View style={styles.subSectionContainer}>
-                    <Text style={styles.subSectionText}>
-                        <Text style={{fontWeight: 'bold'}}>Storage: </Text> {statisticsTransparency.aiExplanation!.storage}
-                    </Text>
-                </View>
-            </View>
+            {statisticsTransparency.privacyRisk === PrivacyRisk.LOW && (
+                <>
+                    <View style={styles.section}>
+                        <View style={styles.subSectionContainer}>
+                            <Text style={styles.subSectionText}>
+                                <Text style={{fontWeight: 'bold'}}>Storage: </Text> {statisticsTransparency.aiExplanation!.storage}
+                            </Text>
+                        </View>
+                    </View>
 
-            <View style={styles.section}>
-                <View style={styles.subSectionContainer}>
-                    <Text style={styles.subSectionText}>
-                        <Text style={{fontWeight: 'bold'}}>Access: </Text> {statisticsTransparency.aiExplanation!.access}
-                    </Text>
-                </View>
-            </View>
+                    <View style={styles.section}>
+                        <View style={styles.subSectionContainer}>
+                            <Text style={styles.subSectionText}>
+                                <Text style={{fontWeight: 'bold'}}>Access: </Text> {statisticsTransparency.aiExplanation!.access}
+                            </Text>
+                        </View>
+                    </View>
+                </>
+            )}
+
+            <TouchableOpacity style={styles.linkButton} onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: statisticsTransparency.aiExplanation?.privacyPolicyLink}})}>
+                <Text style={styles.linkText}>Privacy Policy Section</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.linkButton} onPress={() => handleLinkPress(statisticsTransparency.aiExplanation?.regulationLink || '')}>
+                <Text style={styles.linkText}>PIPEDA Regulation</Text>
+            </TouchableOpacity>
 
             {/* Privacy Policy Link */}
             <TouchableOpacity style={styles.privacyPolicyButton}>
-                <Text style={styles.privacyPolicyText}>View our Full Privacy Policy</Text>
+                <Text style={styles.privacyPolicyText}>View Full Privacy Policy</Text>
             </TouchableOpacity>
         </View>
     );

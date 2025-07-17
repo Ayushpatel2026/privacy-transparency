@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { LLMService } from './LLMService';
 import { 
   TransparencyEvent, 
-  RegulatoryFramework, 
+  RegulatoryFramework,
   PrivacyRisk,
   RegulatoryCompliance,
   AIExplanation 
@@ -36,12 +36,9 @@ export class GeminiLLMService implements LLMService {
     prompt: string
   ): Promise<TransparencyEvent> {
     try {
-      console.log(prompt);
       const result = await this.model.generateContent(prompt);
       const response = await result.response;
-			console.log("Response from llm", response);
       const text = response.text();
-			console.log("Response text: ", text);
 
       // Parse the JSON response
       const analysis = this.parseAnalysisResponse(text);
@@ -109,7 +106,15 @@ export class GeminiLLMService implements LLMService {
       // Ensure arrays exist
       parsed.regulatoryCompliance.issues = parsed.regulatoryCompliance.issues || [];
       parsed.regulatoryCompliance.relevantSections = parsed.regulatoryCompliance.relevantSections || [];
-      parsed.aiExplanation.risks = parsed.aiExplanation.risks || [];
+
+      // sometimes the AI returns the whole json link with '.' instead of just the id
+      if (parsed.aiExplanation.privacyPolicyLink.includes('.')) {
+        parsed.aiExplanation.privacyPolicyLink = parsed.aiExplanation.privacyPolicyLink.split('.').pop() || '';
+      }
+
+      if (parsed.aiExplanation.regulationLink.includes('.')) {
+        parsed.aiExplanation.regulationLink = parsed.aiExplanation.regulationLink.split('.').pop() || '';
+      }
 
       return {
         privacyRisk: parsed.privacyRisk,

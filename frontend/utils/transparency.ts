@@ -1,5 +1,24 @@
 import { Colors } from "@/constants/Colors";
 import { PrivacyRisk, TransparencyEvent } from "@/constants/types/Transparency";
+import { Linking, Alert } from "react-native";
+
+export const pipedaBaseUrl = "https://www.priv.gc.ca/en/privacy-topics/privacy-laws-in-canada/the-personal-information-protection-and-electronic-documents-act-pipeda/p_principle/principles"
+export const handleLinkPress = async (regulationLink : string) => {
+    try {
+      let url = `${pipedaBaseUrl}/p_${regulationLink}/`;
+      if (regulationLink === "") {
+        url = pipedaBaseUrl; // Fallback to base URL if no specific link is provided
+      }
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert('Error', `Cannot open ${regulationLink} link`);
+      }
+    } catch (error) {
+      Alert.alert('Error', `Failed to open ${regulationLink} link`);
+    }
+};
 
 // Helper function to get privacy risk color based on the risk level
 export const getPrivacyRiskColor = (risk: PrivacyRisk) => {

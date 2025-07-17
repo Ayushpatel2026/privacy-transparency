@@ -109,59 +109,59 @@ const PrivacyPolicyScreen = () => {
           {/* Introduction Section */}
           <View
             style={styles.sectionContainer}
-            onLayout={(event) => onLayout(event, 'introduction')}
+            onLayout={(event) => onLayout(event, sections.introduction.id)}
           >
-            <Text style={styles.bodyText}>{sections.introduction}</Text>
+            <Text style={styles.bodyText}>{sections.introduction.content}</Text>
           </View>
 
           {/* Interpretations and Definitions Section */}
           <View
             style={styles.sectionContainer}
-            onLayout={(event) => onLayout(event, 'interpretationsAndDefinitions')}
+            onLayout={(event) => onLayout(event, sections.interpretationsAndDefinitions.id)}
           >
             <Text style={styles.headingLevel1}>Interpretation and Definitions</Text>
                 <View style={styles.definitionItem}>
                   <Text style={styles.definitionTerm}>
                     You:
                   </Text>
-                  <Text style={styles.definitionText}>{sections.interpretationsAndDefinitions.you}</Text>
+                  <Text style={styles.definitionText}>{sections.interpretationsAndDefinitions.content.you}</Text>
                 </View>
                 <View style={styles.definitionItem}>
                   <Text style={styles.definitionTerm}>
                     Company:
                   </Text>
-                  <Text style={styles.definitionText}>{sections.interpretationsAndDefinitions.company}</Text>
+                  <Text style={styles.definitionText}>{sections.interpretationsAndDefinitions.content.company}</Text>
                 </View>
                 <View style={styles.definitionItem}>
                   <Text style={styles.definitionTerm}>
                     App:
                   </Text>
-                  <Text style={styles.definitionText}>{sections.interpretationsAndDefinitions.app}</Text>
+                  <Text style={styles.definitionText}>{sections.interpretationsAndDefinitions.content.app}</Text>
                 </View>
                 <View style={styles.definitionItem}>
                   <Text style={styles.definitionTerm}>
                     Personal Information: 
                   </Text>
-                  <Text style={styles.definitionText}>{sections.interpretationsAndDefinitions.personalInformation}</Text>
+                  <Text style={styles.definitionText}>{sections.interpretationsAndDefinitions.content.personalInformation}</Text>
                 </View>
                 <View style={styles.definitionItem}>
                   <Text style={styles.definitionTerm}>
                     Personal Health Information: 
                   </Text>
-                  <Text style={styles.definitionText}>{sections.interpretationsAndDefinitions.personalHealthInformation}</Text>
+                  <Text style={styles.definitionText}>{sections.interpretationsAndDefinitions.content.personalHealthInformation}</Text>
                 </View>
           </View>
 
           {/* Types of Information Collected and How We Use it (dataCollection) */}
           <View
             style={styles.sectionContainer}
-            onLayout={(event) => onLayout(event, 'dataCollection')}
+            onLayout={(event) => onLayout(event, sections.dataCollection.id)}
           >
             <Text style={styles.headingLevel1}>{sections.dataCollection.title}</Text>
             <Text style={styles.bodyText}>{sections.dataCollection.content}</Text>
 
             {/* Personal Information */}
-            <View style={styles.subSectionContainer}>
+            <View style={styles.subSectionContainer} onLayout={(event) => onLayout(event, sections.dataCollection.personalInformation.id)}>
               <Text style={styles.headingLevel2}>{sections.dataCollection.personalInformation.title}</Text>
               <Text style={styles.descriptionText}>{sections.dataCollection.personalInformation.description}</Text>
               <Text style={styles.headingLevel3}>Account Information</Text>
@@ -172,40 +172,40 @@ const PrivacyPolicyScreen = () => {
             </View>
 
             {/* Personal Health Information */}
-            <View style={styles.subSectionContainer}>
+            <View style={styles.subSectionContainer} onLayout={(event) => onLayout(event, sections.dataCollection.personalHealthInformation.id)}>
               <Text style={styles.headingLevel2}>{sections.dataCollection.personalHealthInformation.title}</Text>
               <Text style={styles.descriptionText}>{sections.dataCollection.personalHealthInformation.description}</Text>
 
               {/* Sensor Data */}
-              <Text style={styles.headingLevel3}>{sections.dataCollection.personalHealthInformation.sensorData.title}</Text>
-              <Text style={styles.subHeading} onLayout={(event) => onLayout(event, 'microphone')}>Microphone:</Text>
+              <Text style={styles.headingLevel3} onLayout={(event) => onLayout(event, sections.dataCollection.personalHealthInformation.sensorData.id)}>{sections.dataCollection.personalHealthInformation.sensorData.title}</Text>
+              <Text style={styles.subHeading} onLayout={(event) => onLayout(event, sections.dataCollection.personalHealthInformation.sensorData.microphone.id)}>Microphone:</Text>
               <Text style={styles.dataPoint}>• Data Type: <Text style={styles.dataPointValue}>{sections.dataCollection.personalHealthInformation.sensorData.microphone.dataType}</Text></Text>
               <Text style={styles.dataPoint}>• Purpose: <Text style={styles.dataPointValue}>{sections.dataCollection.personalHealthInformation.sensorData.microphone.purpose}</Text></Text>
               <Text style={styles.dataPoint}>• Collection Method: <Text style={styles.dataPointValue}>{sections.dataCollection.personalHealthInformation.sensorData.microphone.collectionMethod}</Text></Text>
 
-              <Text style={styles.subHeading} onLayout={(event) => onLayout(event, 'accelerometer')}>Accelerometer:</Text>
+              <Text style={styles.subHeading} onLayout={(event) => onLayout(event, sections.dataCollection.personalHealthInformation.sensorData.accelerometer.id)}>Accelerometer:</Text>
               <Text style={styles.dataPoint}>• Data Type: <Text style={styles.dataPointValue}>{sections.dataCollection.personalHealthInformation.sensorData.accelerometer.dataType}</Text></Text>
               <Text style={styles.dataPoint}>• Purpose: <Text style={styles.dataPointValue}>{sections.dataCollection.personalHealthInformation.sensorData.accelerometer.purpose}</Text></Text>
               <Text style={styles.dataPoint}>• Collection Method: <Text style={styles.dataPointValue}>{sections.dataCollection.personalHealthInformation.sensorData.accelerometer.collectionMethod}</Text></Text>
 
-              <Text style={styles.subHeading} onLayout={(event) => onLayout(event, 'lightSensor')}>Light Sensor:</Text>
+              <Text style={styles.subHeading} onLayout={(event) => onLayout(event, sections.dataCollection.personalHealthInformation.sensorData.lightSensor.id)}>Light Sensor:</Text>
               <Text style={styles.dataPoint}>• Data Type: <Text style={styles.dataPointValue}>{sections.dataCollection.personalHealthInformation.sensorData.lightSensor.dataType}</Text></Text>
               <Text style={styles.dataPoint}>• Purpose: <Text style={styles.dataPointValue}>{sections.dataCollection.personalHealthInformation.sensorData.lightSensor.purpose}</Text></Text>
               <Text style={styles.dataPoint}>• Collection Method: <Text style={styles.dataPointValue}>{sections.dataCollection.personalHealthInformation.sensorData.lightSensor.collectionMethod}</Text></Text>
 
               {/* Journal Data */}
-              <Text style={styles.headingLevel3} onLayout={(event) => onLayout(event, 'journalData')}>Journal Data</Text>
+              <Text style={styles.headingLevel3} onLayout={(event) => onLayout(event, sections.dataCollection.personalHealthInformation.journalData.id)}>Journal Data</Text>
               <Text style={styles.dataPoint}>• Data Type: <Text style={styles.dataPointValue}>{sections.dataCollection.personalHealthInformation.journalData.dataType}</Text></Text>
               <Text style={styles.dataPoint}>• Purpose: <Text style={styles.dataPointValue}>{sections.dataCollection.personalHealthInformation.journalData.purpose}</Text></Text>
               <Text style={styles.dataPoint}>• Collection Method: <Text style={styles.dataPointValue}>{sections.dataCollection.personalHealthInformation.journalData.collectionMethod}</Text></Text>
 
               {/* Derived Data */}
-              <Text style={styles.headingLevel3} onLayout={(event) => onLayout(event, 'derivedData')}>Derived Data</Text>
-              <Text style={styles.bodyText}>{sections.dataCollection.personalHealthInformation.derivedData}</Text>
+              <Text style={styles.headingLevel3} onLayout={(event) => onLayout(event, sections.dataCollection.personalHealthInformation.derivedData.id)}>Derived Data</Text>
+              <Text style={styles.bodyText}>{sections.dataCollection.personalHealthInformation.derivedData.content}</Text>
             </View>
 
             {/* Usage Data */}
-            <View style={styles.subSectionContainer}>
+            <View style={styles.subSectionContainer} onLayout={(event) => onLayout(event, sections.dataCollection.usageData.id)}>
               <Text style={styles.headingLevel2}>{sections.dataCollection.usageData.title}</Text>
               <Text style={styles.descriptionText}>{sections.dataCollection.usageData.description}</Text>
               <Text style={styles.headingLevel3}>Technical Information</Text>
@@ -221,13 +221,13 @@ const PrivacyPolicyScreen = () => {
           {/* Cloud vs. Local Data Storage & Processing (cloudVsLocalStorage) */}
           <View
             style={styles.sectionContainer}
-            onLayout={(event) => onLayout(event, 'cloudVsLocalStorage')}
+            onLayout={(event) => onLayout(event, sections.cloudVsLocalStorage.id)}
           >
             <Text style={styles.headingLevel1}>{sections.cloudVsLocalStorage.title}</Text>
             <Text style={styles.bodyText}>{sections.cloudVsLocalStorage.content}</Text>
 
             {/* Cloud Storage */}
-            <View style={styles.subSectionContainer}>
+            <View style={styles.subSectionContainer} onLayout={(event) => onLayout(event, sections.cloudVsLocalStorage.cloudStorage.id)}>
               <Text style={styles.headingLevel2}>{sections.cloudVsLocalStorage.cloudStorage.title}</Text>
               <Text style={styles.descriptionText}>{sections.cloudVsLocalStorage.cloudStorage.description}</Text>
               <Text style={styles.dataPoint}>• Benefits: <Text style={styles.dataPointValue}>{sections.cloudVsLocalStorage.cloudStorage.benefits}</Text></Text>
@@ -236,7 +236,7 @@ const PrivacyPolicyScreen = () => {
             </View>
 
             {/* Local Storage */}
-            <View style={styles.subSectionContainer}>
+            <View style={styles.subSectionContainer} onLayout={(event) => onLayout(event, sections.cloudVsLocalStorage.localStorage.id)}>
               <Text style={styles.headingLevel2}>{sections.cloudVsLocalStorage.localStorage.title}</Text>
               <Text style={styles.descriptionText}>{sections.cloudVsLocalStorage.localStorage.description}</Text>
               <Text style={styles.dataPoint}>• Limitations: <Text style={styles.dataPointValue}>{sections.cloudVsLocalStorage.localStorage.limitations}</Text></Text>
@@ -248,13 +248,13 @@ const PrivacyPolicyScreen = () => {
           {/* Data Encryption and Pseudonymization (dataEncryptionAndPsuedonymization) */}
           <View
             style={styles.sectionContainer}
-            onLayout={(event) => onLayout(event, 'dataEncryptionAndPsuedonymization')}
+            onLayout={(event) => onLayout(event, sections.dataEncryptionAndPsuedonymization.id)}
           >
             <Text style={styles.headingLevel1}>{sections.dataEncryptionAndPsuedonymization.title}</Text>
             <Text style={styles.descriptionText}>{sections.dataEncryptionAndPsuedonymization.description}</Text>
 
             {/* Encryption */}
-            <View style={styles.subSectionContainer}>
+            <View style={styles.subSectionContainer} onLayout={(event) => onLayout(event, sections.dataEncryptionAndPsuedonymization.encryption.id)}>
               <Text style={styles.headingLevel2}>Encryption</Text>
               <Text style={styles.subHeading}>At Rest:</Text>
               <Text style={styles.dataPoint}>• Server Data: <Text style={styles.dataPointValue}>{sections.dataEncryptionAndPsuedonymization.encryption.atRest.serverData}</Text></Text>
@@ -264,7 +264,7 @@ const PrivacyPolicyScreen = () => {
             </View>
 
             {/* Pseudonymization */}
-            <View style={styles.subSectionContainer}>
+            <View style={styles.subSectionContainer} onLayout={(event) => onLayout(event, sections.dataEncryptionAndPsuedonymization.pseudonymization.id)}>
               <Text style={styles.headingLevel2}>Pseudonymization</Text>
               <Text style={styles.descriptionText}>{sections.dataEncryptionAndPsuedonymization.pseudonymization.description}</Text>
               <Text style={styles.dataPoint}>• Purpose: <Text style={styles.dataPointValue}>{sections.dataEncryptionAndPsuedonymization.pseudonymization.purpose}</Text></Text>
@@ -274,7 +274,7 @@ const PrivacyPolicyScreen = () => {
           {/* How We share Your information (dataSharing) */}
           <View
             style={styles.sectionContainer}
-            onLayout={(event) => onLayout(event, 'dataSharing')}
+            onLayout={(event) => onLayout(event, sections.dataSharing.id)}
           >
             <Text style={styles.headingLevel1}>{sections.dataSharing.title}</Text>
             <Text style={styles.descriptionText}>{sections.dataSharing.description}</Text>
@@ -295,7 +295,7 @@ const PrivacyPolicyScreen = () => {
           {/* Retention of Your Information (dataRetention) */}
           <View
             style={styles.sectionContainer}
-            onLayout={(event) => onLayout(event, 'dataRetention')}
+            onLayout={(event) => onLayout(event, sections.dataRetention.id)}
           >
             <Text style={styles.headingLevel1}>{sections.dataRetention.title}</Text>
             <Text style={styles.descriptionText}>{sections.dataRetention.description}</Text>
@@ -327,7 +327,7 @@ const PrivacyPolicyScreen = () => {
           {/* Your Rights under PIPEDA (userRights) */}
           <View
             style={styles.sectionContainer}
-            onLayout={(event) => onLayout(event, 'userRights')}
+            onLayout={(event) => onLayout(event, sections.userRights.id)}
           >
             <Text style={styles.headingLevel1}>{sections.userRights.title}</Text>
             <Text style={styles.descriptionText}>{sections.userRights.description}</Text>
@@ -356,7 +356,7 @@ const PrivacyPolicyScreen = () => {
           {/* Data Breach Notification (dataBreachNotification) */}
           <View
             style={styles.sectionContainer}
-            onLayout={(event) => onLayout(event, 'dataBreachNotification')}
+            onLayout={(event) => onLayout(event, sections.dataBreachNotification.id)}
           >
             <Text style={styles.headingLevel1}>{sections.dataBreachNotification.title}</Text>
             <Text style={styles.descriptionText}>{sections.dataBreachNotification.description}</Text>
@@ -387,16 +387,16 @@ const PrivacyPolicyScreen = () => {
           {/* Changes to the Privacy Policy (policyChanges) */}
           <View
             style={styles.sectionContainer}
-            onLayout={(event) => onLayout(event, 'policyChanges')}
+            onLayout={(event) => onLayout(event, sections.policyChanges.id)}
           >
             <Text style={styles.headingLevel1}>Changes to the Privacy Policy</Text>
-            <Text style={styles.bodyText}>{sections.policyChanges}</Text>
+            <Text style={styles.bodyText}>{sections.policyChanges.content}</Text>
           </View>
 
           {/* Contact Us (contact) */}
           <View
             style={styles.sectionContainer}
-            onLayout={(event) => onLayout(event, 'contact')}
+            onLayout={(event) => onLayout(event, sections.contact.id)}
           >
             <Text style={styles.headingLevel1}>{sections.contact.title}</Text>
             <Text style={styles.descriptionText}>{sections.contact.description}</Text>

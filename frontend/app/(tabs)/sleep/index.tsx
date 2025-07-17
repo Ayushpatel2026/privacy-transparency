@@ -35,7 +35,7 @@ export default function Sleep() {
 
     // Transparency UI states - TODO - turn this into a config file
     const [displayNormalUI, setDisplayNormalUI] = useState(true);
-    const [showTooltipUI, setShowTooltipUI] = useState(true);
+    const [showTooltipUI, setShowTooltipUI] = useState(false);
 
     useEffect(() => {
         const loadJournalData = async () => {
@@ -193,8 +193,8 @@ export default function Sleep() {
                             purpose={journalTransparency.aiExplanation!.why}
                             storage={journalTransparency.aiExplanation!.storage}
                             access={journalTransparency.aiExplanation!.access}
-                            privacyPolicyLink={journalTransparency.aiExplanation?.privacyPolicyLink}
-                            privacyPolicySectionLink={journalTransparency.aiExplanation?.regulationLink}
+                            privacyPolicySectionLink={journalTransparency.aiExplanation?.privacyPolicyLink}
+                            regulationLink={journalTransparency.aiExplanation?.regulationLink}
                             dataType="Journal"
                         />
                     ) : (
