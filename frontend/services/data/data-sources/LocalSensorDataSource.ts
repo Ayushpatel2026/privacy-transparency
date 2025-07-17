@@ -2,6 +2,8 @@ import * as Crypto from 'expo-crypto';
 import { LocalDatabaseManager } from "../LocalDatabaseManager";
 import { SensorDataSource } from "./SensorDataSource";
 import { SensorData, AudioSensorData, LightSensorData, AccelerometerSensorData, BaseSensorReading } from '@/constants/types/SensorData';
+import { useTransparencyStore } from '@/store/transparencyStore';
+import { DataDestination } from '@/constants/types/Transparency';
 
 /**
  * LocalSensorDataSource provides methods to interact with sensor data stored in a local SQLite database.
@@ -115,6 +117,9 @@ export class LocalSensorDataSource implements SensorDataSource {
                 ...sensorData,
                 id: id
             } as SensorData; // Cast to SensorData as 'id' is now present
+
+            // log transparency event
+            this.logTransparencyEvent(sensorData);
             
             return createdSensorData;
 
@@ -194,6 +199,28 @@ export class LocalSensorDataSource implements SensorDataSource {
         } catch (error) {
             console.error(`Error deleting sensor reading ${id} from local DB:`, error);
             throw new Error(`Failed to delete sensor reading ${id}: ${error}`);
+        }
+    }
+
+    private logTransparencyEvent(sensorData: Omit<SensorData, 'id'>) {
+        if (sensorData.sensorType === 'audio'){
+            const microphoneTransparencyEvent = useTransparencyStore.getState().microphoneTransparency;
+            useTransparencyStore.getState().setMicrophoneTransparency({
+                ...microphoneTransparencyEvent,
+                storageLocation: DataDestination.SQLITE_DB,
+            });
+        } else if (sensorData.sensorType === 'light') {
+            const lightSensorTransparencyEvent = useTransparencyStore.getState().lightSensorTransparency;
+            useTransparencyStore.getState().setLightSensorTransparency({
+                ...lightSensorTransparencyEvent,
+                storageLocation: DataDestination.SQLITE_DB,
+            });
+        } else if (sensorData.sensorType === 'accelerometer') {
+            const accelerometerTransparencyEvent = useTransparencyStore.getState().accelerometerTransparency;
+            useTransparencyStore.getState().setAccelerometerTransparency({
+                ...accelerometerTransparencyEvent,
+                storageLocation: DataDestination.SQLITE_DB,
+            });
         }
     }
 }

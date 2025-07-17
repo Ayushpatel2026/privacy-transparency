@@ -1,20 +1,36 @@
 import { UserConsentPreferences } from "./UserConsentPreferences";
 
+/**
+ * This is the main type for transparency events in the app.
+ * It captures all the necessary information about data collection, processing, and transmission, regulatory compliance, and privacy risks.
+ */
 export interface TransparencyEvent {
-  id: string;
-  timestamp: Date;
-  dataSteps: TransparencyEventType[];	 // what processes happened on that data
+  timestamp?: Date;
   dataType: DataType;
   source: DataSource;
-  destination?: DataDestination;
-  info: Eventdata;  // information about the event
-}
 
-// this type is what comes back from the backend (LLM API)
-export interface TransparencyEventWithExplanation extends TransparencyEvent {
-  privacyRisk: PrivacyRisk; // indicates the level of privacy risk associated with the event
-  regulatoryCompliance: RegulatoryCompliance; // indicates the regulatory compliance status of the event
-  aiExplanation: AIExplanation; // AI generated explanation of the event
+  // sensor data collection specific
+  sensorType?: string;
+  samplingRate?: number;
+  duration?: number;
+  
+  // Storage specific
+  encryptionMethod?: EncryptionMethod;
+  storageLocation?: DataDestination;
+  
+  // Transmission specific
+  endpoint?: string;
+  protocol?: 'HTTP' | 'HTTPS' | 'WSS';
+  
+  // Additional context
+  userConsent?: boolean; // this is applicable for sensor data collection, for user input, it is always true
+  backgroundMode?: boolean; // was this data collected while the app was in the background
+  purpose?: string; // why is this data being collected
+
+  // AI generated explanation of the event
+  privacyRisk?: PrivacyRisk; // indicates the level of privacy risk associated with the event
+  regulatoryCompliance?: RegulatoryCompliance; // indicates the regulatory compliance status of the event
+  aiExplanation?: AIExplanation; // AI generated explanation of the event
 }
 
 // this is what is sent to the backend
@@ -22,17 +38,11 @@ export interface AIPrompt {
   transparencyEvent: TransparencyEvent;
   privacyPolicy: string; // TODO - how to send the privacy policy (or parts of it) to the backend
   userConsentPreferences: UserConsentPreferences;
+  regulationFrameworks: RegulatoryFramework[]; // list of regulatory frameworks to check against
+  pipedaRegulations?: string; // specific PIPEDA regulations to check against - TODO - determine how this will be sent
 
   // Future extension for determining risk levels based on user's risk tolerance
-  userRiskTolerance: any;
-}
-
-export enum TransparencyEventType {
-  DATA_COLLECTION = 'DATA_COLLECTION',
-  DATA_STORAGE = 'DATA_STORAGE',
-  DATA_TRANSMISSION = 'DATA_TRANSMISSION',
-  DATA_PROCESSING = 'DATA_PROCESSING',
-  CONSENT_CHANGE = 'CONSENT_CHANGE'
+  userRiskTolerance?: any;
 }
 
 export enum DataType {
@@ -42,6 +52,7 @@ export enum DataType {
   USER_JOURNAL = 'USER_JOURNAL',
   USER_PROFILE = 'USER_PROFILE',
   GENERAL_SLEEP = 'GENERAL_SLEEP',
+  SLEEP_STATISTICS = 'SLEEP_STATISTICS',
   DEVICE_INFO = 'DEVICE_INFO',
   LOCATION = 'LOCATION',
   USAGE_ANALYTICS = 'USAGE_ANALYTICS'
@@ -52,6 +63,7 @@ export enum DataSource {
   ACCELEROMETER = 'ACCELEROMETER',
   LIGHT_SENSOR = 'LIGHT_SENSOR',
   USER_INPUT = 'USER_INPUT',
+  DERIVED_DATA = 'DERIVED_DATA', 
   SYSTEM_INFO = 'SYSTEM_INFO',
 }
 
@@ -60,8 +72,7 @@ export enum DataDestination {
   SECURE_STORE = 'SECURE_STORE',
   SQLITE_DB = 'SQLITE_DB',
   MEMORY = 'MEMORY',
-  BACKEND_API = 'BACKEND_API',
-  FIRESTORE = 'FIRESTORE',
+  GOOGLE_CLOUD = 'GOOGLE_CLOUD',
   THIRD_PARTY = 'THIRD_PARTY'
 }
 
@@ -88,39 +99,18 @@ export enum RegulatoryFramework {
 export interface RegulatoryCompliance {
   framework: RegulatoryFramework;
   compliant: boolean;
-  issues?: string[];
+  issues?: string;
   relevantSections?: string[];
 }
 
-export interface Eventdata {
-  // sensor data collection specific
-  sensorType?: string;
-  samplingRate?: number;
-  duration?: number;
-  
-  // Storage specific
-  encryptionMethod?: EncryptionMethod;
-  storageLocation?: DataDestination;
-  
-  // Transmission specific
-  endpoint?: string;
-  protocol?: 'HTTP' | 'HTTPS' | 'WSS';
-  encrypted?: boolean;
-  
-  // Additional context
-  userConsent?: boolean;
-  backgroundMode?: boolean; // was this data collected while the app was in the background
-  purpose?: string; // why is this data being collected
-}
-
 export interface AIExplanation {
-  summary: string;
-  purpose: string;
-  risks: string[];
-  userBenefit: string;
-  regulatoryContext: string;
-  privacyPolicyLink: string;
-  regulationLink: string;
+  why: string; // explain in simple terms why this data is being collected and what benefits the user gets
+  storage: string; // where is the data stored and how is it protected
+  access: string; // who has access to the data 
+  privacyRisks: string; // what are the privacy risks associated with this data
+  regulatoryContext: string; // explain the risk in relation to the regulatory framework
+  privacyPolicyLink: string; // link to the most relevant privacy policy section that explains this data collection
+  regulationLink: string; // link to the most relevant principle of PIPEDA that applies to this data collection 
 }
 
 // this config is used to determine what transparency features are enabled in the app
@@ -142,7 +132,150 @@ export const DEFAULT_TRANSPARENCY_SETTINGS: TransparencySettings = {
 	regulatoryChecks: true
 }
 
-// If real time notifications are implemented, the below interfaces will be used
+/**
+ * Defaults for transparency events for each data type.
+ * These are used to initialize the UI elements before any data is collected.
+ */
+export const DEFAULT_JOURNAL_TRANSPARENCY_EVENT: TransparencyEvent = {
+  dataType: DataType.USER_JOURNAL,
+  source: DataSource.USER_INPUT,
+  purpose: "To analyze how your daily mood, habits, sleep goals affects your sleep quality.",
+
+  privacyRisk: PrivacyRisk.LOW,
+  regulatoryCompliance: {
+    framework: RegulatoryFramework.PIPEDA,
+    compliant: true,
+    issues: '',
+    relevantSections: []
+  },
+  aiExplanation: {
+    why: 'To analyze how your daily mood, habits, sleep goals affects your sleep quality.',
+    privacyRisks: '',
+    storage: '',
+    access: '',
+    regulatoryContext: '',
+    privacyPolicyLink: '',
+    regulationLink: ''
+  }
+}
+
+export const DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT: TransparencyEvent = {
+  dataType: DataType.SENSOR_LIGHT,
+  source: DataSource.LIGHT_SENSOR,
+  purpose: 'To understand how the light conditions in your sleep environment may affect your sleep quality',
+  
+  privacyRisk: PrivacyRisk.LOW,
+  regulatoryCompliance: {
+    framework: RegulatoryFramework.PIPEDA,
+    compliant: true,
+    issues: '',
+    relevantSections: []
+  },
+  aiExplanation: {
+    why: 'To understand how the light conditions in your sleep environment may affect your sleep quality',
+    privacyRisks: '',
+    storage: '',
+    access: '',
+    regulatoryContext: '',
+    privacyPolicyLink: '',
+    regulationLink: ''
+  }
+}
+
+export const DEFAULT_MICROPHONE_TRANSPARENCY_EVENT: TransparencyEvent = {
+  dataType: DataType.SENSOR_AUDIO,
+  source: DataSource.MICROPHONE,
+  purpose: 'To analyze sleep disturbances such as snoring and talking, as well as understanding the noise level in your sleep environment',
+
+  privacyRisk: PrivacyRisk.LOW,
+  regulatoryCompliance: {
+    framework: RegulatoryFramework.PIPEDA,
+    compliant: true,
+    issues: '',
+    relevantSections: []
+  },
+  aiExplanation: {
+    why: 'To analyze sleep disturbances such as snoring and talking, as well as understanding the noise level in your sleep environment',
+    privacyRisks: '',
+    storage: '',
+    access: '',
+    regulatoryContext: '',
+    privacyPolicyLink: '',
+    regulationLink: ''
+  }
+}
+
+export const DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT: TransparencyEvent = {
+  dataType: DataType.SENSOR_MOTION,
+  source: DataSource.ACCELEROMETER,
+  purpose: 'To analyze how your movements during sleep and throughout the day impact sleep quality',
+
+  privacyRisk: PrivacyRisk.LOW,
+  regulatoryCompliance: {
+    framework: RegulatoryFramework.PIPEDA,
+    compliant: true,
+    issues: '',
+    relevantSections: []
+  },
+  aiExplanation: {
+    why: 'To analyze how your movements during sleep and throughout the day impact sleep quality',
+    privacyRisks: '',
+    storage: '',
+    access: '',
+    regulatoryContext: '',
+    privacyPolicyLink: '',
+    regulationLink: ''
+  }
+}
+
+export const DEFAULT_STATISTICS_TRANSPARENCY_EVENT: TransparencyEvent = {
+  dataType: DataType.SLEEP_STATISTICS,
+  source: DataSource.DERIVED_DATA,
+  purpose: 'Provide summaries and actionable insights to help improve your sleep quality',
+
+  privacyRisk: PrivacyRisk.LOW,
+  regulatoryCompliance: {
+    framework: RegulatoryFramework.PIPEDA,
+    compliant: true,
+    issues: '',
+    relevantSections: []
+  },
+  aiExplanation: {
+    why: 'Provide summaries and actionable insights to help improve your sleep quality',
+    privacyRisks: 'No privacy risks',
+    storage: 'This data is stored securely in your preferred storage location with encryption.',
+    access: 'No third parties have access to this data. Only you can view it through the app.',
+    regulatoryContext: 'None',
+    privacyPolicyLink: 'derivedData',
+    regulationLink: 'access'
+  }
+}
+
+export const DEFAULT_GENERAL_SLEEP_TRANSPARENCY_EVENT: TransparencyEvent = {
+  dataType: DataType.GENERAL_SLEEP,
+  source: DataSource.USER_INPUT,
+  purpose: 'To understand your current sleep quality and how we can improve it',
+
+  privacyRisk: PrivacyRisk.LOW,
+  regulatoryCompliance: {
+    framework: RegulatoryFramework.PIPEDA,
+    compliant: true,
+    issues: '',
+    relevantSections: []
+  },
+  aiExplanation: {
+    why: 'To understand your current sleep quality and how we can improve it',
+    privacyRisks: '',
+    storage: '',
+    access: '',
+    regulatoryContext: '',
+    privacyPolicyLink: '',
+    regulationLink: ''
+  }
+}
+
+
+// If real time notifications are implemented, the below interfaces may be used
 
 export interface TransparencyNotification {
   id: string;

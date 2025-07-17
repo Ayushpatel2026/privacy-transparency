@@ -1,4 +1,4 @@
-import { User } from '../../constants/types';
+import { User } from '../../constants/types/User';
 import { UserRepository } from '../UserRepository';
 import { db } from '../../config/firebaseConfig'; 
 import { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore';

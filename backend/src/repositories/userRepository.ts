@@ -1,4 +1,4 @@
-import { User } from '../constants/types';
+import { User } from '../constants/types/User';
 
 export interface UserRepository {
     createUser: (user: User) => Promise<User>;

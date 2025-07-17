@@ -13,6 +13,12 @@ import { useRouter } from 'expo-router';
 import { journalDataRepository, sensorBackgroundTaskManager } from '@/services'; 
 import { useProfileStore } from '@/store/userProfileStore';
 import { Colors } from '@/constants/Colors';
+import { useTransparencyStore } from '@/store/transparencyStore';
+import { PrivacyIcon } from '@/components/transparency/PrivacyIcon';
+import { formatPrivacyViolations, getPrivacyRiskColor, getPrivacyRiskIcon, getPrivacyRiskIconForPage, getPrivacyRiskLabel } from '@/utils/transparency';
+import PrivacyTooltip from '@/components/transparency/PrivacyTooltip';
+import { DataDestination } from '@/constants/types/Transparency';
+import { PrivacySleepMode } from '@/components/transparency/PrivacySleepMode';
 
 export default function SleepMode() {
     const router = useRouter();
@@ -25,6 +31,13 @@ export default function SleepMode() {
     const [pressDuration, setPressDuration] = useState(0);
     const pressIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const requiredPressDuration = 2000; // 2 seconds
+
+    // transparency state
+    const { lightSensorTransparency, microphoneTransparency, accelerometerTransparency } = useTransparencyStore();
+
+    // transparency UI configuration for this page - TODO - turn this into a config file
+    const [ showToolTipUI, setShowTooltipUI ] = useState(false);
+    const [ displayNormalUI, setDisplayNormalUI ] = useState(true);
 
     useEffect(() => {
         // Update current time every second
@@ -103,29 +116,96 @@ export default function SleepMode() {
                 resizeMode="cover"
             >
                 <SafeAreaView style={styles.safeArea}>
-                    {/* Current Time Display */}
-                    <View style={styles.currentTimeContainer}>
-                        <Text style={styles.currentTimeText}>{currentTime}</Text>
-                    </View>
+                    {!showToolTipUI &&
+                        <View style={{position: 'absolute', top: 50, right: 30}}>
+                            <PrivacyIcon
+                                handleIconPress={() => {setDisplayNormalUI(!displayNormalUI)}}
+                                isOpen={!displayNormalUI}
+                                iconName={getPrivacyRiskIconForPage([accelerometerTransparency.privacyRisk!, lightSensorTransparency.privacyRisk!, microphoneTransparency.privacyRisk!])}
+                                iconSize={50}
+                            />
+                        </View>
+                    }
+                    {showToolTipUI && 
+                        <View style={styles.tooltipContainer}>
+                            {/* First row - two tooltips */}
+                            <View style={styles.tooltipRow}>
+                                <PrivacyTooltip
+                                    color={getPrivacyRiskColor(accelerometerTransparency.privacyRisk!)}
+                                    iconName={getPrivacyRiskIcon(accelerometerTransparency.privacyRisk!)}
+                                    violationsDetected={getPrivacyRiskLabel(accelerometerTransparency.privacyRisk!)}
+                                    privacyViolations={formatPrivacyViolations(accelerometerTransparency)}
+                                    purpose={accelerometerTransparency.aiExplanation!.why}
+                                    storage={accelerometerTransparency.aiExplanation!.storage}
+                                    access={accelerometerTransparency.aiExplanation!.access}
+                                    optOutLink={'/(tabs)/profile/consent-preferences'}
+                                    privacyPolicySectionLink={accelerometerTransparency.aiExplanation!.privacyPolicyLink}
+                                    regulationLink={accelerometerTransparency.aiExplanation!.regulationLink}
+                                    dataType={`sensor-accelerometer-${accelerometerTransparency.storageLocation === DataDestination.GOOGLE_CLOUD ? 'cloud' : 'local'}`}
+                                />
+                                <PrivacyTooltip
+                                    color={getPrivacyRiskColor(lightSensorTransparency.privacyRisk!)}
+                                    iconName={getPrivacyRiskIcon(lightSensorTransparency.privacyRisk!)}
+                                    violationsDetected={getPrivacyRiskLabel(lightSensorTransparency.privacyRisk!)}
+                                    privacyViolations={formatPrivacyViolations(lightSensorTransparency)}
+                                    purpose={lightSensorTransparency.aiExplanation!.why}
+                                    storage={lightSensorTransparency.aiExplanation!.storage}
+                                    access={lightSensorTransparency.aiExplanation!.access}
+                                    optOutLink={'/(tabs)/profile/consent-preferences'}
+                                    privacyPolicySectionLink={lightSensorTransparency.aiExplanation!.privacyPolicyLink}
+                                    regulationLink={lightSensorTransparency.aiExplanation!.regulationLink}
+                                    dataType={`sensor-light-${lightSensorTransparency.storageLocation === DataDestination.GOOGLE_CLOUD ? 'cloud' : 'local'}`}
+                                />
+                            </View>
+                            
+                            {/* Second row - centered tooltip */}
+                            <View style={styles.tooltipRowCentered}>
+                                <PrivacyTooltip
+                                    color={getPrivacyRiskColor(microphoneTransparency.privacyRisk!)}
+                                    iconName={getPrivacyRiskIcon(microphoneTransparency.privacyRisk!)}
+                                    violationsDetected={getPrivacyRiskLabel(microphoneTransparency.privacyRisk!)}
+                                    privacyViolations={formatPrivacyViolations(microphoneTransparency)}
+                                    purpose={microphoneTransparency.aiExplanation!.why}
+                                    storage={microphoneTransparency.aiExplanation!.storage}
+                                    access={microphoneTransparency.aiExplanation!.access}
+                                    optOutLink={'/(tabs)/profile/consent-preferences'}
+                                    privacyPolicySectionLink={microphoneTransparency.aiExplanation!.privacyPolicyLink}
+                                    regulationLink={microphoneTransparency.aiExplanation!.regulationLink}
+                                    dataType={`sensor-microphone-${microphoneTransparency.storageLocation === DataDestination.GOOGLE_CLOUD ? 'cloud' : 'local'}`}
+                                />
+                            </View>
+                        </View>
+                    }
 
-                    {/* Alarm Box */}
-                    <View style={styles.alarmBox}>
-                        <Text style={styles.alarmLabel}>Alarm</Text>
-                        <Text style={styles.alarmTime}>{alarmTime}</Text>
-                    </View>
+                    {displayNormalUI ? (
+                        <>
+                            {/* Current Time Display */}
+                            <View style={styles.currentTimeContainer}>
+                                <Text style={styles.currentTimeText}>{currentTime}</Text>
+                            </View>
 
-                    {/* Wake Up Button */}
-                    <TouchableOpacity
-                        style={styles.wakeUpButton}
-                        onPressIn={handlePressIn}
-                        onPressOut={handlePressOut}
-                        activeOpacity={1} // Prevents opacity change on press
-                    >
-                        <View style={[styles.progressBar, { width: `${progress}%` }]} />
-                        <Text style={styles.wakeUpButtonText}>
-                            {pressDuration >= requiredPressDuration ? "Releasing..." : "Wake up"}
-                        </Text>
-                    </TouchableOpacity>
+                            {/* Alarm Box */}
+                            <View style={styles.alarmBox}>
+                                <Text style={styles.alarmLabel}>Alarm</Text>
+                                <Text style={styles.alarmTime}>{alarmTime}</Text>
+                            </View>
+
+                            {/* Wake Up Button */}
+                            <TouchableOpacity
+                                style={styles.wakeUpButton}
+                                onPressIn={handlePressIn}
+                                onPressOut={handlePressOut}
+                                activeOpacity={1} // Prevents opacity change on press
+                            >
+                                <View style={[styles.progressBar, { width: `${progress}%` }]} />
+                                <Text style={styles.wakeUpButtonText}>
+                                    {pressDuration >= requiredPressDuration ? "Releasing..." : "Wake up"}
+                                </Text>
+                            </TouchableOpacity>
+                        </>
+                    ) : (
+                        <PrivacySleepMode/>
+                    )}
                 </SafeAreaView>
             </ImageBackground>
         </View>
@@ -150,6 +230,24 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         justifyContent: 'space-between', // Distribute content vertically
+    },
+    tooltipContainer: {
+        position: 'absolute',
+        top: 50,
+        left: 20,
+        right: 20,
+        alignItems: 'center',
+    },
+    tooltipRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginBottom: 15,
+    },
+    tooltipRowCentered: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        width: '100%',
     },
     currentTimeContainer: {
         flex: 1, // Allows it to take available space

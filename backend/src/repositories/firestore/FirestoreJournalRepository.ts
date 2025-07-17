@@ -1,5 +1,5 @@
 import { JournalRepository } from '../JournalRepository';
-import { JournalData, SleepNote } from '../../constants/types'; 
+import { JournalData, SleepNote } from '../../constants/types/Journal'; 
 import { db } from '../../config/firebaseConfig';
 import { DocumentData, DocumentSnapshot } from 'firebase-admin/firestore';
 

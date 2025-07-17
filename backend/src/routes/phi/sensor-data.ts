@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { SensorData, AudioSensorData, LightSensorData, AccelerometerSensorData } from '../../constants/types';
+import { SensorData } from '../../constants/types/SensorData';
 import verifyToken from '../../middleware/auth';
 import { RequestHandler } from 'express';
 import { FirestoreSensorDataRepository } from '../../repositories/firestore/FirestoreSensorDataRepository';
@@ -11,7 +11,6 @@ const sensorDataRepository: SensorDataRepository = new FirestoreSensorDataReposi
 
 router.post('/', verifyToken as RequestHandler, async (req: Request, res: Response) => {
     try {
-        console.log('Creating sensor reading with body:', req.body);
         const userId = req.userId; 
         const { timestamp, date, sensorType, ...sensorSpecificData } = req.body;
 
@@ -24,64 +23,7 @@ router.post('/', verifyToken as RequestHandler, async (req: Request, res: Respon
         // Construct the sensor data object based on sensorType
         const newSensorData: Omit<SensorData, 'id'> = req.body;
 
-        // I DO NOT THINK THIS IS NEEDED ANYMORE
-        // switch (sensorType) {
-        //     case 'audio':
-        //         const { averageDecibels, peakDecibels, frequencyBands, audioClipUri, snoreDetected, ambientNoiseLevel } = sensorSpecificData;
-        //         if (averageDecibels === undefined || peakDecibels === undefined || frequencyBands === undefined || snoreDetected === undefined || ambientNoiseLevel === undefined) {
-        //             res.status(400).json({ message: 'Missing required fields for audio sensor data.' });
-        //             return;
-        //         }
-        //         newSensorData = {
-        //             userId,
-        //             timestamp,
-        //             date,
-        //             sensorType: 'audio',
-        //             averageDecibels,
-        //             peakDecibels,
-        //             frequencyBands,
-        //             audioClipUri,
-        //             snoreDetected,
-        //             ambientNoiseLevel,
-        //         } as Omit<AudioSensorData, 'id'>;
-        //         break;
-        //     case 'light':
-        //         const { illuminance, lightLevel } = sensorSpecificData;
-        //         if (illuminance === undefined || lightLevel === undefined) {
-        //             return res.status(400).json({ message: 'Missing required fields for light sensor data.' });
-        //         }
-        //         newSensorData = {
-        //             userId,
-        //             timestamp,
-        //             date,
-        //             sensorType: 'light',
-        //             illuminance,
-        //             lightLevel,
-        //         } as Omit<LightSensorData, 'id'>;
-        //         break;
-        //     case 'accelerometer':
-        //         const { x, y, z, magnitude, movementIntensity } = sensorSpecificData;
-        //         if (x === undefined || y === undefined || z === undefined || magnitude === undefined || movementIntensity === undefined) {
-        //             return res.status(400).json({ message: 'Missing required fields for accelerometer sensor data.' });
-        //         }
-        //         newSensorData = {
-        //             userId,
-        //             timestamp,
-        //             date,
-        //             sensorType: 'accelerometer',
-        //             x,
-        //             y,
-        //             z,
-        //             magnitude,
-        //             movementIntensity,
-        //         } as Omit<AccelerometerSensorData, 'id'>;
-        //         break;
-        //     default:
-        //         return res.status(400).json({ message: `Unknown sensor type: ${sensorType}` });
-        // }
-
         const createdSensorReading = await sensorDataRepository.createSensorReading(newSensorData);
-        console.log('Sensor reading created:', createdSensorReading);
         res.status(201).json({ message: 'Sensor reading created successfully', sensorReading: createdSensorReading });
 
     } catch (error: any) {

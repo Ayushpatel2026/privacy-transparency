@@ -3,8 +3,9 @@ import cors from 'cors';
 import 'dotenv/config';
 import authRoutes from './routes/auth';
 import journalRoutes from './routes/phi/journal';
-import generalHealthRoutes from './routes/phi/generalHealth';
+import generalSleepRoutes from './routes/phi/generalSleep';
 import sensorRoutes from './routes/phi/sensor-data';
+import llmRoutes from './routes/transparency/ai';
 
 const app = express();
 
@@ -20,8 +21,9 @@ app.use(cors());
 // set up the routes
 app.use('/api/auth', authRoutes);
 app.use('/api/phi/journal', journalRoutes);
-app.use('/api/phi/generalHealth', generalHealthRoutes);
+app.use('/api/phi/generalSleep', generalSleepRoutes);
 app.use('/api/phi/sensor-data', sensorRoutes);
+app.use('/api/transparency/ai', llmRoutes);
 
 // test endpoint
 app.get('/api/test', async (req : Request, res : Response) => {

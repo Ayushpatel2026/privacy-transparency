@@ -2,6 +2,8 @@ import { JournalData } from "@/constants/types/JournalData";
 import { LocalDatabaseManager } from "../LocalDatabaseManager";
 import { JournalDataSource } from "./JournalDataSource";
 import * as Crypto from 'expo-crypto';
+import { useTransparencyStore } from "@/store/transparencyStore";
+import { DataDestination } from "@/constants/types/Transparency";
 
 /**
  * LocalJournalDataSource provides methods to interact with journal data stored in a local SQLite database.
@@ -59,6 +61,7 @@ export class LocalJournalDataSource implements JournalDataSource {
         try {
             // First, check if the journal exists and belongs to the user
             const existingJournal = await this.getJournalByDate(userId, date);
+            const journalTransparencyEvent = useTransparencyStore.getState().journalTransparency;
             console.log(`Existing journal for date ${date}:`, existingJournal);
             if (!existingJournal){
                 console.log(`Journal for date ${date} does not exist. Creating a new journal.`);
@@ -72,6 +75,13 @@ export class LocalJournalDataSource implements JournalDataSource {
                 `;
 
                 const sleepNotesJson = journalData.sleepNotes ? JSON.stringify(journalData.sleepNotes) : null;
+
+                if (sql) {
+                    useTransparencyStore.getState().setJournalTransparency({
+                        ...journalTransparencyEvent,
+                        storageLocation: DataDestination.SQLITE_DB
+                    });
+                }
 
                 const params = [
                     journalId,
@@ -141,6 +151,13 @@ export class LocalJournalDataSource implements JournalDataSource {
                 SET ${updateFields.join(', ')}
                 WHERE date = ? AND userId = ?
             `;
+
+            if (sql) {
+                useTransparencyStore.getState().setJournalTransparency({
+                    ...journalTransparencyEvent,
+                    storageLocation: DataDestination.SQLITE_DB
+                });
+            }
 
             params.push(date, userId);
 
