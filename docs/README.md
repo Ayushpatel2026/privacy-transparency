@@ -35,6 +35,8 @@
 **Security Implementation**
 
 - **Encryption Layer**: Dedicated encryption/decryption module implemented to secure sensitive data both at rest and in transit
+  - The encryption service using the crypto-js library to encrypt and decrypt sensitive health data.
+  - There are some compatibility issues with Expo and crypto-js. The suggestions from [this Stack Overflow thread](https://stackoverflow.com/questions/60733815/how-to-encrypt-data-in-react-native-using-expo) were followed and crypto-js version 3.1.1 was used and it worked.
 - **JWT Token Authentication**: Secure token-based authentication system for user sessions and API access
 
 **Code Architecture**
@@ -42,7 +44,7 @@
 - **Storage Abstractions**: Implemented abstraction layers for both frontend and backend storage operations using a repository pattern.
 - **Modular Design**: Sensor services, storage operations, and privacy monitoring components are designed as separate, reusable modules
 
-**User Interface Design**
+**General User Interface Design**
 
 - **Color Management**: Centralized color scheme management through `constants/Colors.ts` file for consistent theming
 - **Asset Management**: Hard-coded images used for non-core UI elements to prioritize development focus on prototype functionality
