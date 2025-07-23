@@ -89,9 +89,3 @@ The prototype will be a simplified sleep-tracking application that aims to prove
    - Implement visual indicators that show data collection activities as they occur
    - Create interactive elements that provide immediate access to privacy information
    - Ensure privacy features integrate seamlessly with core application functionality
-
-4. **Provide Comprehensive Privacy Analytics**
-   - Build a dashboard that summarizes data collection practices over time
-   - Display trends in data collection frequency, types, and transmission patterns
-   - Highlight privacy risks and regulatory compliance issues
-   - Enable users to track their data exposure over different time periods

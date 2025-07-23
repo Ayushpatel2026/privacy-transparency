@@ -107,8 +107,8 @@ export interface AIExplanation {
   access: string; // who has access to the data 
   privacyRisks: string; // what are the privacy risks associated with this data
   regulatoryContext: string; // explain the risk in relation to the regulatory framework
-  privacyPolicyLink: string; // link to the privacy policy section that explains this data collection
-  regulationLink: string; // link to the specific regulation that applies to this data collection
+  privacyPolicyLink: string; // link to the most relevant privacy policy section that explains this data collection
+  regulationLink: string; // link to the most relevant principle of PIPEDA that applies to this data collection 
 }
 
 // this config is used to determine what transparency features are enabled in the app
@@ -147,7 +147,7 @@ export const DEFAULT_JOURNAL_TRANSPARENCY_EVENT: TransparencyEvent = {
     relevantSections: []
   },
   aiExplanation: {
-    why: '',
+    why: 'To analyze how your daily mood, habits, sleep goals affects your sleep quality.',
     privacyRisks: '',
     storage: '',
     access: '',
@@ -160,7 +160,7 @@ export const DEFAULT_JOURNAL_TRANSPARENCY_EVENT: TransparencyEvent = {
 export const DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT: TransparencyEvent = {
   dataType: DataType.SENSOR_LIGHT,
   source: DataSource.LIGHT_SENSOR,
-  purpose: 'To understand how the light conditions in your sleep environment may affect your sleep quality ',
+  purpose: 'To understand how the light conditions in your sleep environment may affect your sleep quality',
   
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
@@ -170,7 +170,7 @@ export const DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT: TransparencyEvent = {
     relevantSections: []
   },
   aiExplanation: {
-    why: '',
+    why: 'To understand how the light conditions in your sleep environment may affect your sleep quality',
     privacyRisks: '',
     storage: '',
     access: '',
@@ -193,7 +193,7 @@ export const DEFAULT_MICROPHONE_TRANSPARENCY_EVENT: TransparencyEvent = {
     relevantSections: []
   },
   aiExplanation: {
-    why: '',
+    why: 'To analyze sleep disturbances such as snoring and talking, as well as understanding the noise level in your sleep environment',
     privacyRisks: '',
     storage: '',
     access: '',
@@ -216,7 +216,7 @@ export const DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT: TransparencyEvent = {
     relevantSections: []
   },
   aiExplanation: {
-    why: '',
+    why: 'To analyze how your movements during sleep and throughout the day impact sleep quality',
     privacyRisks: '',
     storage: '',
     access: '',
@@ -239,13 +239,13 @@ export const DEFAULT_STATISTICS_TRANSPARENCY_EVENT: TransparencyEvent = {
     relevantSections: []
   },
   aiExplanation: {
-    why: '',
-    privacyRisks: '',
-    storage: '',
-    access: '',
-    regulatoryContext: '',
-    privacyPolicyLink: '',
-    regulationLink: ''
+    why: 'Provide summaries and actionable insights to help improve your sleep quality',
+    privacyRisks: 'No privacy risks',
+    storage: 'This data is stored securely in your preferred storage location with encryption.',
+    access: 'No third parties have access to this data. Only you can view it through the app.',
+    regulatoryContext: 'None',
+    privacyPolicyLink: 'derivedData',
+    regulationLink: 'access'
   }
 }
 
@@ -262,7 +262,7 @@ export const DEFAULT_GENERAL_SLEEP_TRANSPARENCY_EVENT: TransparencyEvent = {
     relevantSections: []
   },
   aiExplanation: {
-    why: '',
+    why: 'To understand your current sleep quality and how we can improve it',
     privacyRisks: '',
     storage: '',
     access: '',
