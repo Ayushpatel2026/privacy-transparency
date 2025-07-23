@@ -19,6 +19,7 @@ import { PrivacyIcon } from "@/components/transparency/PrivacyIcon";
 import { formatPrivacyViolations, getPrivacyRiskColor, getPrivacyRiskIcon, getPrivacyRiskLabel } from "@/utils/transparency";
 import { DEFAULT_JOURNAL_TRANSPARENCY_EVENT, PrivacyRisk, TransparencyEvent } from "@/constants/types/Transparency";
 import { PrivacySleepPage } from "@/components/transparency/PrivacySleepPage";
+import { TRANSPARENCY_UI_CONFIG } from "@/constants/config/TransparencyUIConfig";
 
 export default function Sleep() {
     const [loading, setIsLoading] = useState(true);
@@ -33,9 +34,8 @@ export default function Sleep() {
     const [isBedtimeModalVisible, setIsBedtimeModalVisible] = useState(false);
     const [isAlarmModalVisible, setIsAlarmModalVisible] = useState(false);
 
-    // Transparency UI states - TODO - turn this into a config file
-    const [displayNormalUI, setDisplayNormalUI] = useState(true);
-    const [showTooltipUI, setShowTooltipUI] = useState(false);
+    // this is only needed when rendering the privacy page UI, not for the tooltip UI
+    const [ displayNormalUI, setDisplayNormalUI ] = useState(true);
 
     useEffect(() => {
         const loadJournalData = async () => {
@@ -183,7 +183,7 @@ export default function Sleep() {
                     <Text style={styles.headerText}>
                         Sleep Tracker
                     </Text>
-                    {showTooltipUI ? (
+                    {TRANSPARENCY_UI_CONFIG.sleepPageTooltipEnabled ? (
                         <PrivacyTooltip
                             color={getPrivacyRiskColor(journalTransparency.privacyRisk || PrivacyRisk.LOW)}
                             iconSize={50}
@@ -207,7 +207,7 @@ export default function Sleep() {
                     )}
                 </View>
 
-                {(displayNormalUI || showTooltipUI) && 
+                {(displayNormalUI || TRANSPARENCY_UI_CONFIG.sleepPageTooltipEnabled) && 
                 <NormalSleepPage
                     handleEditBedtime={handleEditBedtime}
                     bedtime={bedtime || 'Set Time'}
@@ -216,7 +216,7 @@ export default function Sleep() {
                     handleStartSleepSession={handleStartSleepSession}
                 />}
 
-                {(!displayNormalUI && !showTooltipUI) &&
+                {(!displayNormalUI && !TRANSPARENCY_UI_CONFIG.sleepPageTooltipEnabled) &&
                     <PrivacySleepPage/>
                 }
 

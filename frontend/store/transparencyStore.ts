@@ -25,6 +25,10 @@ interface TransparencyState {
     loadTransparencyStatus: () => Promise<void>;
 }
 
+/**
+ * This store is used to maintain transparency events for each data collection type. 
+ * This allows the global UI to respond dynamically to changes in privacy violations in real time. 
+ */
 export const useTransparencyStore = create<TransparencyState>((set, get) => ({
     lightSensorTransparency: DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT,
     microphoneTransparency: DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT,

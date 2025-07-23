@@ -1,4 +1,4 @@
-import { AIExplanation, RegulatoryFramework, TransparencySettings } from '@/constants/types/Transparency';
+import { RegulatoryFramework } from '@/constants/types/Transparency';
 import { TransparencyEvent, AIPrompt } from '@/constants/types/Transparency';
 import { useProfileStore } from '@/store/userProfileStore';
 import privacyPolicyData from '../privacyPolicyData.json';
@@ -6,13 +6,9 @@ import regulations from '../privacyRegulations.json';
 import { HttpClient } from './HttpClient';
 
 /**
- * TODO - This service analyzes privacy risks by sending the AIPrompt to the backend. 
- * 
- * This service is a work in progress and more implementation details are being worked out. 
+ * This service analyzes privacy risks by sending the AIPrompt to the backend. 
  */
 export class TransparencyService {
-  // TODO - implement something to prevent too many calls to the backend (especially for the continous sensor data collection)
-  private events: TransparencyEvent[] = [];
   private httpClient: HttpClient;
   private getTokenFn: () => string | null; // Function to get the token, injected
 

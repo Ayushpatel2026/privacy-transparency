@@ -3,8 +3,6 @@
  * This allows the Sensor Service to be configured with various options
  * Many of these options will not be used in the initial prototype, but are included 
  * for completeness of a sleep tracking application and for potential future features.
- * 
- * This is subject to change as more implementation details are worked out. 
  */
 export interface SensorServiceConfig {
   useSimulation: boolean; // Use simulation data instead of real sensors

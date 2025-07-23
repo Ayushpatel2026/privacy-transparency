@@ -19,6 +19,7 @@ import { formatPrivacyViolations, getPrivacyRiskColor, getPrivacyRiskIcon, getPr
 import PrivacyTooltip from '@/components/transparency/PrivacyTooltip';
 import { DataDestination } from '@/constants/types/Transparency';
 import { PrivacySleepMode } from '@/components/transparency/PrivacySleepMode';
+import { TRANSPARENCY_UI_CONFIG } from '@/constants/config/TransparencyUIConfig';
 
 export default function SleepMode() {
     const router = useRouter();
@@ -34,9 +35,7 @@ export default function SleepMode() {
 
     // transparency state
     const { lightSensorTransparency, microphoneTransparency, accelerometerTransparency } = useTransparencyStore();
-
-    // transparency UI configuration for this page - TODO - turn this into a config file
-    const [ showToolTipUI, setShowTooltipUI ] = useState(false);
+    // this is only needed when rendering the privacy page UI, not for the tooltip UI
     const [ displayNormalUI, setDisplayNormalUI ] = useState(true);
 
     useEffect(() => {
@@ -116,7 +115,7 @@ export default function SleepMode() {
                 resizeMode="cover"
             >
                 <SafeAreaView style={styles.safeArea}>
-                    {!showToolTipUI &&
+                    {!TRANSPARENCY_UI_CONFIG.sleepModeTooltipEnabled &&
                         <View style={{position: 'absolute', top: 50, right: 30}}>
                             <PrivacyIcon
                                 handleIconPress={() => {setDisplayNormalUI(!displayNormalUI)}}
@@ -126,7 +125,7 @@ export default function SleepMode() {
                             />
                         </View>
                     }
-                    {showToolTipUI && 
+                    {TRANSPARENCY_UI_CONFIG.sleepModeTooltipEnabled && 
                         <View style={styles.tooltipContainer}>
                             {/* First row - two tooltips */}
                             <View style={styles.tooltipRow}>

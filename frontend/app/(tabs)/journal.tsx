@@ -23,6 +23,7 @@ import { PrivacyIcon } from "@/components/transparency/PrivacyIcon";
 import { getPrivacyRiskIconForPage } from "@/utils/transparency";
 import { NormalJournalPage } from "@/components/NormalJournalPage";
 import { PrivacyJournalPage } from "@/components/transparency/PrivacyJournalPage";
+import { TRANSPARENCY_UI_CONFIG } from "@/constants/config/TransparencyUIConfig";
 
 export default function Journal() {
     const [diaryEntry, setDiaryEntry] = useState("");
@@ -46,10 +47,8 @@ export default function Journal() {
     const [tempSleepNotes, setTempSleepNotes] = useState<SleepNote[]>([]); // Temporary state for modal's sleep notes
 
     // Transparency State
-    const { journalTransparency, setJournalTransparency, accelerometerTransparency, setAccelerometerTransparency } = useTransparencyStore();
-
-    // transparency UI configuration for this page - TODO - turn this into a config file
-    const [ showToolTipUI, setShowTooltipUI ] = useState(false);
+    const { journalTransparency, setJournalTransparency, accelerometerTransparency } = useTransparencyStore();
+    // this is only needed when rendering the privacy page UI, not for the tooltip UI
     const [ displayNormalUI, setDisplayNormalUI ] = useState(true);
 
     useEffect(() => {
@@ -193,7 +192,7 @@ export default function Journal() {
                     </TouchableOpacity>
                 </View>
                 {showCalendar && <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />}
-                {!showToolTipUI && 
+                {!TRANSPARENCY_UI_CONFIG.journalTooltipEnabled && 
                     <View style={{ position: 'absolute', top: 50, right: 30 }}>
                         <PrivacyIcon handleIconPress={() => setDisplayNormalUI(!displayNormalUI)}
                             isOpen={!displayNormalUI}
@@ -206,7 +205,7 @@ export default function Journal() {
 
             <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
                 {displayNormalUI && <NormalJournalPage
-                    showToolTipUI={showToolTipUI}
+                    showToolTipUI={TRANSPARENCY_UI_CONFIG.journalTooltipEnabled}
                     bedtime={bedtime}
                     alarm={alarm}
                     sleepGoal={sleepGoal}
