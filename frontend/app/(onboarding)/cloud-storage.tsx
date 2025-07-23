@@ -43,7 +43,7 @@ export default function CloudStorage() {
 							More about data storage and data access
 					</Text>
 				</TouchableOpacity>
-				<GeneralButton title='Continue' onPress={() => {router.push('/transparency')}}/>
+				<GeneralButton title='Continue' onPress={() => {router.push('/privacy-policy-agreement')}}/>
 			</View>
 		</View>
   )
@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 32,
     paddingBottom: 40,
-		flexDirection: 'column',
-		justifyContent: 'space-between',
+	flexDirection: 'column',
+	justifyContent: 'space-between',
   },
   sectionTitle: {
     color: 'white',

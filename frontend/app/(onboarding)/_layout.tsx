@@ -8,6 +8,7 @@ export default function OnboardingLayout() {
             <Stack.Screen name="light-sensor-consent" />
             <Stack.Screen name="journal-data" />
             <Stack.Screen name="cloud-storage" />
+            <Stack.Screen name="privacy-policy-agreement"/>
             <Stack.Screen name="transparency" />
             <Stack.Screen name="questions-explanation" />
             <Stack.Screen name="questions" />

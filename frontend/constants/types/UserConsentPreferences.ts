@@ -3,7 +3,7 @@ export type UserConsentPreferences = {
 	lightSensorEnabled: boolean,
 	microphoneEnabled: boolean,
   cloudStorageEnabled: boolean,
-  policyVersionAgreed: string | null, // version string or null if not agreed
+  agreedToPrivacyPolicy: boolean, // true if the user has agreed to the privacy policy
 	lastConsentTimestamp: string | null, // ISO format datetime or null if not set
 
 	// These preferences are not set by the user in the first iteration of the prototype
@@ -21,7 +21,7 @@ export const DEFAULT_USER_CONSENT_PREFERENCES: UserConsentPreferences = {
 	lightSensorEnabled: false,
 	microphoneEnabled: false,
 	cloudStorageEnabled: false,
-	policyVersionAgreed: null,
+	agreedToPrivacyPolicy: false,
 	lastConsentTimestamp: null,
 
 	analyticsEnabled: false,
