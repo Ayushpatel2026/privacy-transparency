@@ -2,69 +2,9 @@ import { Router, Request, Response, RequestHandler } from 'express';
 import verifyToken from '../../middleware/auth';
 import { RegulatoryFramework, TransparencyEvent, UserConsentPreferences } from '../../constants/types/Transparency';
 import { GeminiLLMService } from '../../llm/GeminiLLMService';
+import { createPrivacyAnalysisPrompt } from '../../ai-testing/prompts';
 
 const router = Router();
-
-function createPrivacyAnalysisPrompt(
-  transparencyEvent: TransparencyEvent,
-  privacyPolicy: string,
-  userConsentPreferences: UserConsentPreferences,
-  regulationFrameworks: RegulatoryFramework[],
-  pipedaRegulations?: string
-): string {
-  return `You are a privacy compliance expert analyzing a sleep tracking application's data handling practices. 
-
-The following transparency event contains information about the purpose of data collection, data storage location, encryption methods and transmission methods. 
-
-**TRANSPARENCY EVENT**:
-${JSON.stringify(transparencyEvent, null, 2)}
-
-The following is the privacy policy of the sleep tracker application:
-
-**PRIVACY POLICY**:
-${privacyPolicy}
-
-The following are the user's consent preferences - what the user has agreed to regarding data collection and processing:
-**USER CONSENT PREFERENCES**:
-${JSON.stringify(userConsentPreferences, null, 2)}
-
-**REGULATORY FRAMEWORKS TO CONSIDER**:
-${regulationFrameworks.join(', ')}
-
-${pipedaRegulations ? `**SPECIFIC PIPEDA REGULATIONS**:\n${pipedaRegulations}\n` : ''}
-
-**ANALYSIS INSTRUCTIONS**:
-1. Evaluate if the data collection aligns with the stated purpose
-2. Verify if the transparency event information complies with the privacy policy and user consent preferences. 
-3. Assess compliance with the specified regulatory frameworks and provided regulations only. DO NOT use any other regulations.
-4. Identify potential privacy risks and their severity according to the below critera: 
-
-**RISK ASSESSMENT CRITERIA**:
-- **HIGH RISK**: Clear violation of regulations, privacy policy, or user consent; unauthorized data collection; insecure storage/transmission
-- **MEDIUM RISK**: Technically compliant but suboptimal practices; vague purposes; excessive data collection; third-party sharing concerns
-- **LOW RISK**: Fully compliant with minimal privacy concerns; clear purpose; proper consent; secure handling
-
-**REQUIRED OUTPUT FORMAT** (respond with valid JSON only, keep explanations under 30 words each):
-{
-  "privacyRisk": "HIGH" | "MEDIUM" | "LOW",
-  "regulatoryCompliance": {
-    "framework": "PIPEDA",
-    "compliant": true | false,
-    "issues": "description of compliance issues",
-    "relevantSections": ["section reference 1", "section reference 2"]
-  },
-  "aiExplanation": {
-    "why": "brief explanation of why this data is collected and what benefits it provides to the user",
-    "storage": "where the data is stored and how it is protected",
-    "access": "who has access to the data",
-    "privacyRisks": "summary of privacy risks associated with this data",
-    "regulatoryContext": "Relevant regulatory considerations associated with this data collection",
-    "privacyPolicyLink": "Return the id of the most relevant privacy policy section",
-    "regulationLink": "Return the id of the most relevant PIPEDA principle"
-  }
-}
-Provide your analysis in clear, consise, user-friendly language that a non-technical person can understand. Replace complex legal and technical jargon with simple explanations that the average person can grasp.`;
-}
 
 router.post('/', verifyToken as RequestHandler, async (req : Request, res : Response) => {
   try {
@@ -84,7 +24,8 @@ router.post('/', verifyToken as RequestHandler, async (req : Request, res : Resp
       privacyPolicy,
       userConsentPreferences,
       regulationFrameworks,
-      pipedaRegulations
+      pipedaRegulations,
+      "Provide your analysis in clear, concise, user-friendly language that a non-technical person can understand. Replace complex legal and technical jargon with simple explanations that the average person can grasp.",
     );
 
     // Call the LLM service to analyze privacy risks

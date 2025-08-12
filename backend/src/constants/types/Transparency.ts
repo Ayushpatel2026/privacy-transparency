@@ -20,10 +20,7 @@ export interface TransparencyEvent {
   endpoint?: string;
   protocol?: 'HTTP' | 'HTTPS' | 'WSS';
   
-  // Additional context
-  userConsent?: boolean; // this is applicable for sensor data collection, for user input, it is always true
   backgroundMode?: boolean; // was this data collected while the app was in the background
-  purpose?: string; // why is this data being collected
 
   // AI generated explanation of the event
   privacyRisk?: PrivacyRisk; // indicates the level of privacy risk associated with the event
@@ -34,10 +31,10 @@ export interface TransparencyEvent {
 // this is what is sent to the backend
 export interface AIPrompt {
   transparencyEvent: TransparencyEvent;
-  privacyPolicy: string; // TODO - how to send the privacy policy (or parts of it) to the backend
+  privacyPolicy: string; 
   userConsentPreferences: UserConsentPreferences;
   regulationFrameworks: RegulatoryFramework[]; // list of regulatory frameworks to check against
-  pipedaRegulations?: string; // specific PIPEDA regulations to check against - TODO - determine how this will be sent
+  pipedaRegulations?: string; // specific PIPEDA regulations to check against
 
   // Future extension for determining risk levels based on user's risk tolerance
   userRiskTolerance?: any;
@@ -105,10 +102,9 @@ export interface AIExplanation {
   why: string; // explain in simple terms why this data is being collected and what benefits the user gets
   storage: string; // where is the data stored and how is it protected
   access: string; // who has access to the data 
-  privacyRisks: string; // what are the privacy risks associated with this data
-  regulatoryContext: string; // explain the risk in relation to the regulatory framework
-  privacyPolicyLink: string; // link to the most relevant privacy policy section that explains this data collection
-  regulationLink: string; // link to the most relevant principle of PIPEDA that applies to this data collection 
+  privacyExplanation: string; // comprehensive explanation covering: (1) privacy risks associated with this data collection, (2) what PIPEDA regulations say about these risks, (3) whether collection complies with regulations, (4) what users should know about regulatory protections
+  privacyPolicyLink: string[]; // link to the most relevant privacy policy sections that explains this data collection
+  regulationLink: string[]; // link to the most relevant principles of PIPEDA that applies to this data collection 
 }
 
 // this config is used to determine what transparency features are enabled in the app
@@ -137,7 +133,6 @@ export const DEFAULT_TRANSPARENCY_SETTINGS: TransparencySettings = {
 export const DEFAULT_JOURNAL_TRANSPARENCY_EVENT: TransparencyEvent = {
   dataType: DataType.USER_JOURNAL,
   source: DataSource.USER_INPUT,
-  purpose: "To analyze how your daily mood, habits, sleep goals affects your sleep quality.",
 
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
@@ -148,19 +143,17 @@ export const DEFAULT_JOURNAL_TRANSPARENCY_EVENT: TransparencyEvent = {
   },
   aiExplanation: {
     why: 'To analyze how your daily mood, habits, sleep goals affects your sleep quality.',
-    privacyRisks: '',
+    privacyExplanation: '',
     storage: '',
     access: '',
-    regulatoryContext: '',
-    privacyPolicyLink: '',
-    regulationLink: ''
+    privacyPolicyLink: [],
+    regulationLink: []
   }
 }
 
 export const DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT: TransparencyEvent = {
   dataType: DataType.SENSOR_LIGHT,
   source: DataSource.LIGHT_SENSOR,
-  purpose: 'To understand how the light conditions in your sleep environment may affect your sleep quality',
   
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
@@ -171,19 +164,17 @@ export const DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT: TransparencyEvent = {
   },
   aiExplanation: {
     why: 'To understand how the light conditions in your sleep environment may affect your sleep quality',
-    privacyRisks: '',
+    privacyExplanation: '',
     storage: '',
     access: '',
-    regulatoryContext: '',
-    privacyPolicyLink: '',
-    regulationLink: ''
+    privacyPolicyLink: [],
+    regulationLink: []
   }
 }
 
 export const DEFAULT_MICROPHONE_TRANSPARENCY_EVENT: TransparencyEvent = {
   dataType: DataType.SENSOR_AUDIO,
   source: DataSource.MICROPHONE,
-  purpose: 'To analyze sleep disturbances such as snoring and talking, as well as understanding the noise level in your sleep environment',
 
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
@@ -194,19 +185,17 @@ export const DEFAULT_MICROPHONE_TRANSPARENCY_EVENT: TransparencyEvent = {
   },
   aiExplanation: {
     why: 'To analyze sleep disturbances such as snoring and talking, as well as understanding the noise level in your sleep environment',
-    privacyRisks: '',
+    privacyExplanation: '',
     storage: '',
     access: '',
-    regulatoryContext: '',
-    privacyPolicyLink: '',
-    regulationLink: ''
+    privacyPolicyLink: [],
+    regulationLink: []
   }
 }
 
 export const DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT: TransparencyEvent = {
   dataType: DataType.SENSOR_MOTION,
   source: DataSource.ACCELEROMETER,
-  purpose: 'To analyze how your movements during sleep and throughout the day impact sleep quality',
 
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
@@ -217,19 +206,17 @@ export const DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT: TransparencyEvent = {
   },
   aiExplanation: {
     why: 'To analyze how your movements during sleep and throughout the day impact sleep quality',
-    privacyRisks: '',
+    privacyExplanation: '',
     storage: '',
     access: '',
-    regulatoryContext: '',
-    privacyPolicyLink: '',
-    regulationLink: ''
+    privacyPolicyLink: [],
+    regulationLink: []
   }
 }
 
 export const DEFAULT_STATISTICS_TRANSPARENCY_EVENT: TransparencyEvent = {
   dataType: DataType.SLEEP_STATISTICS,
   source: DataSource.DERIVED_DATA,
-  purpose: 'Provide summaries and actionable insights to help improve your sleep quality',
 
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
@@ -240,19 +227,17 @@ export const DEFAULT_STATISTICS_TRANSPARENCY_EVENT: TransparencyEvent = {
   },
   aiExplanation: {
     why: 'Provide summaries and actionable insights to help improve your sleep quality',
-    privacyRisks: 'No privacy risks',
+    privacyExplanation: 'No privacy risks',
     storage: 'This data is stored securely in your preferred storage location with encryption.',
     access: 'No third parties have access to this data. Only you can view it through the app.',
-    regulatoryContext: 'None',
-    privacyPolicyLink: 'derivedData',
-    regulationLink: 'access'
+    privacyPolicyLink: ['derivedData'],
+    regulationLink: ['access']
   }
 }
 
 export const DEFAULT_GENERAL_SLEEP_TRANSPARENCY_EVENT: TransparencyEvent = {
   dataType: DataType.GENERAL_SLEEP,
   source: DataSource.USER_INPUT,
-  purpose: 'To understand your current sleep quality and how we can improve it',
 
   privacyRisk: PrivacyRisk.LOW,
   regulatoryCompliance: {
@@ -263,12 +248,11 @@ export const DEFAULT_GENERAL_SLEEP_TRANSPARENCY_EVENT: TransparencyEvent = {
   },
   aiExplanation: {
     why: 'To understand your current sleep quality and how we can improve it',
-    privacyRisks: '',
+    privacyExplanation: '',
     storage: '',
     access: '',
-    regulatoryContext: '',
-    privacyPolicyLink: '',
-    regulationLink: ''
+    privacyPolicyLink: [],
+    regulationLink: []
   }
 }
 
@@ -278,10 +262,9 @@ export type UserConsentPreferences = {
 	microphoneEnabled: boolean,
   cloudStorageEnabled: boolean,
   agreedToPrivacyPolicy: boolean, // true if the user has agreed to the privacy policy
-	lastConsentTimestamp: string | null, // ISO format datetime or null if not set
 
 	// These preferences are not set by the user in the first iteration of the prototype
-	// but are included for completeness and future extensibility
+	// but are included for completeness and future extensibility, also for testing the LLM with different consent states
   analyticsEnabled: boolean,  
   marketingCommunications: boolean, 
   
@@ -296,7 +279,6 @@ export const DEFAULT_USER_CONSENT_PREFERENCES: UserConsentPreferences = {
 	microphoneEnabled: false,
 	cloudStorageEnabled: false,
 	agreedToPrivacyPolicy: false,
-	lastConsentTimestamp: null,
 
 	analyticsEnabled: false,
 	marketingCommunications: false,

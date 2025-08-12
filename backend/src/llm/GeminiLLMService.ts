@@ -23,9 +23,9 @@ export class GeminiLLMService implements LLMService {
       model: 'gemini-2.5-flash',
       // we can play around with this to tune the model's behavior and get the best response for our use case
       generationConfig: {
-        temperature: 0.3, // Lower temperature for more consistent analysis
-        topK: 40, // limit to only the top K most likely next words at each step
-        topP: 0.95, // considers words that make up the top 95% of probability mass
+        temperature: 0.3, // increasing temperature increases randomness, less predictable
+        topK: 40, // limit to only the top K most likely next words at each step, increase this to make output more variable and diverse
+        topP: 0.95, // considers words that make up the top 95% of probability mass, decrease this to make output more focused and deterministic
         maxOutputTokens: 16384,
       },
     });
@@ -51,8 +51,6 @@ export class GeminiLLMService implements LLMService {
         regulatoryCompliance: analysis.regulatoryCompliance,
         aiExplanation: analysis.aiExplanation
       };
-
-			console.log("Updated event: ", updatedEvent);
 
       return updatedEvent;
 
@@ -95,7 +93,7 @@ export class GeminiLLMService implements LLMService {
 
       // Ensure privacy risk is valid
       if (!Object.values(PrivacyRisk).includes(parsed.privacyRisk)) {
-        parsed.privacyRisk = PrivacyRisk.MEDIUM; // Default to medium if invalid
+        parsed.privacyRisk = PrivacyRisk.LOW; // Default to low if invalid
       }
 
       // Ensure regulatory compliance has required fields
@@ -107,14 +105,18 @@ export class GeminiLLMService implements LLMService {
       parsed.regulatoryCompliance.issues = parsed.regulatoryCompliance.issues || [];
       parsed.regulatoryCompliance.relevantSections = parsed.regulatoryCompliance.relevantSections || [];
 
-      // sometimes the AI returns the whole json link with '.' instead of just the id
-      if (parsed.aiExplanation.privacyPolicyLink.includes('.')) {
-        parsed.aiExplanation.privacyPolicyLink = parsed.aiExplanation.privacyPolicyLink.split('.').pop() || '';
-      }
+      // iterate the links and ensure they are just the ids because sometimes the AI returns the whole json link with '.' instead of just the id
+      parsed.aiExplanation.privacyPolicyLink.forEach((link: string, index: number) => {
+        if (parsed.aiExplanation.privacyPolicyLink[index].includes('.')){
+          parsed.aiExplanation.privacyPolicyLink[index] = link.split('.').pop() || '';
+        }
+      });
 
-      if (parsed.aiExplanation.regulationLink.includes('.')) {
-        parsed.aiExplanation.regulationLink = parsed.aiExplanation.regulationLink.split('.').pop() || '';
-      }
+      parsed.aiExplanation.regulationLink.forEach((link: string, index: number) => {
+        if (parsed.aiExplanation.regulationLink[index].includes('.')) {
+          parsed.aiExplanation.regulationLink[index] = link.split('.').pop() || '';
+        }
+      });
 
       return {
         privacyRisk: parsed.privacyRisk,
@@ -146,10 +148,9 @@ export class GeminiLLMService implements LLMService {
         why: 'Automated privacy analysis is temporarily unavailable. Please review this data handling manually.',
         storage: 'Not currently available',
         access: 'Not currently available',
-        privacyRisks: 'Unable to assess privacy risks automatically',
-        regulatoryContext: 'Compliance status could not be determined',
-        privacyPolicyLink: '',
-        regulationLink: ''
+        privacyExplanation: 'Automated analysis could not be completed',
+        privacyPolicyLink: [],
+        regulationLink: []
       }
     };
   }

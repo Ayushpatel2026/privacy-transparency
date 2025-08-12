@@ -88,5 +88,5 @@ export const formatPrivacyViolations = (transparency: TransparencyEvent) => {
     if (!transparency.regulatoryCompliance?.issues || transparency.regulatoryCompliance.issues.length === 0) {
         return "No privacy violations detected";
     }
-    return `${transparency.aiExplanation?.privacyRisks} ${transparency.aiExplanation?.regulatoryContext}`;
+    return `${transparency.aiExplanation?.privacyExplanation}`;
 };

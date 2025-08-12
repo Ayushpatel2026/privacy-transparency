@@ -4,10 +4,9 @@ export type UserConsentPreferences = {
 	microphoneEnabled: boolean,
   cloudStorageEnabled: boolean,
   agreedToPrivacyPolicy: boolean, // true if the user has agreed to the privacy policy
-	lastConsentTimestamp: string | null, // ISO format datetime or null if not set
 
 	// These preferences are not set by the user in the first iteration of the prototype
-	// but are included for completeness and future extensibility
+	// but are included for completeness and future extensibility, also for testing the LLM with different consent states
   analyticsEnabled: boolean,  
   marketingCommunications: boolean, 
   
@@ -22,7 +21,6 @@ export const DEFAULT_USER_CONSENT_PREFERENCES: UserConsentPreferences = {
 	microphoneEnabled: false,
 	cloudStorageEnabled: false,
 	agreedToPrivacyPolicy: false,
-	lastConsentTimestamp: null,
 
 	analyticsEnabled: false,
 	marketingCommunications: false,

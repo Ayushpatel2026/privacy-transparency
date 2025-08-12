@@ -6,31 +6,31 @@
 				"principle": "Accountability",
 				"id": "accountability",
 				"article": "4.1",
-				"description": "An organization is responsible for personal information under its control, including any personal information transferred to a third party, and shall designate an individual or individuals who are accountable for the organization's compliance with the following principles."
+				"description": "An organization is responsible for personal information under its control and shall designate an individual or individuals who are accountable for the organization’s compliance with the following principles."
 			},
 			{
 				"principle": "Identifying Purposes",
 				"id": "identifyingPurposes",
 				"article": "4.2",
-				"description": "The purposes for which personal information is collected must be explained to customers by the organization at or before the time the information is collected, and consent must be obtained again if the purposes change."
+				"description": "The purposes for which personal information is collected shall be identified by the organization at or before the time the information is collected."
 			},
 			{
 				"principle": "Consent",
 				"id": "consent",
 				"article": "4.3",
-				"description": "Organizations are generally required to obtain meaningful consent for the collection, use and disclosure of personal information. People must understand what they are consenting to. It is only considered valid if it is reasonable to expect that your customers will understand the nature, purpose and consequences of the collection, use or disclosure of their personal information."
+				"description": "The knowledge and consent of the individual are required for the collection, use, or disclosure of personal information, except where inappropriate."
 			},
 			{
 				"principle": "Limiting Collection",
 				"id": "limitingCollection",
 				"article": "4.4",
-				"description": "The collection of personal information shall be limited to that which is necessary for the purposes identified by the organization."
+				"description": "The collection of personal information shall be limited to that which is necessary for the purposes identified by the organization. Information shall be collected by fair and lawful means."
 			},
 			{
 				"principle": "Limiting Use, Disclosure, and Retention",
 				"id": "limitingUseDisclosureRetention",
 				"article": "4.5",
-				"description": "Personal information shall not be used or disclosed for purposes other than those for which it was collected, except with the consent of the individual or as required by law. Personal information shall be retained only as long as necessary for the fulfillment of those purposes."
+				"description": "Personal information shall not be used or disclosed for purposes other than those for which it was collected, except with the consent of the individual or as required by law. Personal information shall be retained only as long as necessary for the fulfilment of those purposes."
 			},
 			{
 				"principle": "Accuracy",

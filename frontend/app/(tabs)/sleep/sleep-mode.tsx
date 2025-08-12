@@ -138,8 +138,8 @@ export default function SleepMode() {
                                     storage={accelerometerTransparency.aiExplanation!.storage}
                                     access={accelerometerTransparency.aiExplanation!.access}
                                     optOutLink={'/(tabs)/profile/consent-preferences'}
-                                    privacyPolicySectionLink={accelerometerTransparency.aiExplanation!.privacyPolicyLink}
-                                    regulationLink={accelerometerTransparency.aiExplanation!.regulationLink}
+                                    privacyPolicySectionLink={accelerometerTransparency.aiExplanation!.privacyPolicyLink[0]}
+                                    regulationLink={accelerometerTransparency.aiExplanation!.regulationLink[0]}
                                     dataType={`sensor-accelerometer-${accelerometerTransparency.storageLocation === DataDestination.GOOGLE_CLOUD ? 'cloud' : 'local'}`}
                                 />
                                 <PrivacyTooltip
@@ -151,8 +151,8 @@ export default function SleepMode() {
                                     storage={lightSensorTransparency.aiExplanation!.storage}
                                     access={lightSensorTransparency.aiExplanation!.access}
                                     optOutLink={'/(tabs)/profile/consent-preferences'}
-                                    privacyPolicySectionLink={lightSensorTransparency.aiExplanation!.privacyPolicyLink}
-                                    regulationLink={lightSensorTransparency.aiExplanation!.regulationLink}
+                                    privacyPolicySectionLink={lightSensorTransparency.aiExplanation!.privacyPolicyLink[0]}
+                                    regulationLink={lightSensorTransparency.aiExplanation!.regulationLink[0]}
                                     dataType={`sensor-light-${lightSensorTransparency.storageLocation === DataDestination.GOOGLE_CLOUD ? 'cloud' : 'local'}`}
                                 />
                             </View>
@@ -168,8 +168,8 @@ export default function SleepMode() {
                                     storage={microphoneTransparency.aiExplanation!.storage}
                                     access={microphoneTransparency.aiExplanation!.access}
                                     optOutLink={'/(tabs)/profile/consent-preferences'}
-                                    privacyPolicySectionLink={microphoneTransparency.aiExplanation!.privacyPolicyLink}
-                                    regulationLink={microphoneTransparency.aiExplanation!.regulationLink}
+                                    privacyPolicySectionLink={microphoneTransparency.aiExplanation!.privacyPolicyLink[0]}
+                                    regulationLink={microphoneTransparency.aiExplanation!.regulationLink[0]}
                                     dataType={`sensor-microphone-${microphoneTransparency.storageLocation === DataDestination.GOOGLE_CLOUD ? 'cloud' : 'local'}`}
                                 />
                             </View>

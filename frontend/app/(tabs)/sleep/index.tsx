@@ -63,7 +63,6 @@ export default function Sleep() {
             const dateToSave = new Date().toISOString().split('T')[0];
             // set up a new transparency event
             const transparencyEvent : TransparencyEvent = DEFAULT_JOURNAL_TRANSPARENCY_EVENT;
-            transparencyEvent.purpose = "Your bedtime and alarm time are used to help you maintain a healthy sleep schedule.";
             setJournalTransparency(transparencyEvent);
             
             const result = await journalDataRepository.editJournal({
@@ -100,7 +99,6 @@ export default function Sleep() {
 
             // set up a new transparency event
             const transparencyEvent : TransparencyEvent = DEFAULT_JOURNAL_TRANSPARENCY_EVENT;
-            transparencyEvent.purpose = "Your bedtime and alarm time are used to help you maintain a healthy sleep schedule.";
             setJournalTransparency(transparencyEvent);
 
             const result = await journalDataRepository.editJournal({
@@ -193,8 +191,8 @@ export default function Sleep() {
                             purpose={journalTransparency.aiExplanation!.why}
                             storage={journalTransparency.aiExplanation!.storage}
                             access={journalTransparency.aiExplanation!.access}
-                            privacyPolicySectionLink={journalTransparency.aiExplanation?.privacyPolicyLink}
-                            regulationLink={journalTransparency.aiExplanation?.regulationLink}
+                            privacyPolicySectionLink={journalTransparency.aiExplanation?.privacyPolicyLink[0]}
+                            regulationLink={journalTransparency.aiExplanation?.regulationLink[0]}
                             dataType="Journal"
                         />
                     ) : (

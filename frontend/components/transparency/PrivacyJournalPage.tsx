@@ -43,10 +43,10 @@ export const PrivacyJournalPage = () => {
                         </>
                     )}
                 </View>
-                <TouchableOpacity style={styles.linkButton} onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: journalTransparency.aiExplanation?.privacyPolicyLink}})}>
+                <TouchableOpacity style={styles.linkButton} onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: journalTransparency.aiExplanation?.privacyPolicyLink[0]}})}>
                     <Text style={styles.linkText}>Privacy Policy Section</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.linkButton} onPress={() => handleLinkPress(journalTransparency.aiExplanation?.regulationLink || '')}>
+                <TouchableOpacity style={styles.linkButton} onPress={() => handleLinkPress(journalTransparency.aiExplanation?.regulationLink[0] || '')}>
                     <Text style={styles.linkText}>PIPEDA Regulation</Text>
                 </TouchableOpacity>
             </View>
@@ -96,7 +96,7 @@ export const PrivacyJournalPage = () => {
                 <TouchableOpacity style={styles.linkButton} onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: accelerometerTransparency.aiExplanation?.privacyPolicyLink}})}>
                     <Text style={styles.linkText}>Privacy Policy Section</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.linkButton} onPress={() => handleLinkPress(accelerometerTransparency.aiExplanation?.regulationLink || '')}>
+                <TouchableOpacity style={styles.linkButton} onPress={() => handleLinkPress(accelerometerTransparency.aiExplanation?.regulationLink[0] || '')}>
                     <Text style={styles.linkText}>PIPEDA Regulation</Text>
                 </TouchableOpacity>
                 <TouchableOpacity

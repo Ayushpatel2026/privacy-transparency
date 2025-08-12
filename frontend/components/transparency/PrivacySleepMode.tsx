@@ -40,10 +40,10 @@ export const PrivacySleepMode = () => {
         return (
             <View style={styles.linksContainer}>
                 <View style={styles.linkRow}>
-                    <TouchableOpacity style={styles.linkButton} onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: sensor.data.aiExplanation?.privacyPolicyLink}})}>
+                    <TouchableOpacity style={styles.linkButton} onPress={() => router.push({pathname: "/privacy-policy", params: {sectionId: sensor.data.aiExplanation?.privacyPolicyLink[0]}})}>
                         <Text style={styles.linkText}>Privacy Policy Section</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.linkButton} onPress={() => handleLinkPress(sensor.data.aiExplanation?.regulationLink || '')}>
+                    <TouchableOpacity style={styles.linkButton} onPress={() => handleLinkPress(sensor.data.aiExplanation?.regulationLink[0] || '')}>
                         <Text style={styles.linkText}>PIPEDA Regulation</Text>
                     </TouchableOpacity>
                 </View>

@@ -66,8 +66,8 @@ export const NormalJournalPage = ({
                         purpose={journalTransparency.aiExplanation!.why}
                         storage={journalTransparency.aiExplanation!.storage}
                         access={journalTransparency.aiExplanation!.access}
-                        privacyPolicySectionLink={journalTransparency.aiExplanation?.privacyPolicyLink}
-                        regulationLink={journalTransparency.aiExplanation?.regulationLink}
+                        privacyPolicySectionLink={journalTransparency.aiExplanation?.privacyPolicyLink[0]}
+                        regulationLink={journalTransparency.aiExplanation?.regulationLink[0]}
                         dataType="Journal"
                     />
                 }
@@ -123,8 +123,8 @@ export const NormalJournalPage = ({
                         storage={accelerometerTransparency.aiExplanation!.storage}
                         access={accelerometerTransparency.aiExplanation!.access}
                         optOutLink={'/(tabs)/profile/consent-preferences'}
-                        privacyPolicySectionLink={accelerometerTransparency.aiExplanation?.privacyPolicyLink}
-                        regulationLink={accelerometerTransparency.aiExplanation?.regulationLink}
+                        privacyPolicySectionLink={accelerometerTransparency.aiExplanation?.privacyPolicyLink[0]}
+                        regulationLink={accelerometerTransparency.aiExplanation?.regulationLink[0]}
                         dataType={"Activity Tracker"}
                     />
                 }
