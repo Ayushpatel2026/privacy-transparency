@@ -1,8 +1,7 @@
 import { Router, Request, Response, RequestHandler } from 'express';
 import verifyToken from '../../middleware/auth';
-import { RegulatoryFramework, TransparencyEvent, UserConsentPreferences } from '../../constants/types/Transparency';
 import { GeminiLLMService } from '../../llm/GeminiLLMService';
-import { createPrivacyAnalysisPrompt } from '../../ai-testing/prompts';
+import { createPrivacyAnalysisPrompt } from '../../llm/prompts';
 
 const router = Router();
 
@@ -24,8 +23,7 @@ router.post('/', verifyToken as RequestHandler, async (req : Request, res : Resp
       privacyPolicy,
       userConsentPreferences,
       regulationFrameworks,
-      pipedaRegulations,
-      "Provide your analysis in clear, concise, user-friendly language that a non-technical person can understand. Replace complex legal and technical jargon with simple explanations that the average person can grasp.",
+      pipedaRegulations
     );
 
     // Call the LLM service to analyze privacy risks
