@@ -52,7 +52,6 @@ export const PrivacyTooltip = ({
 
 	const handleIconPress = () => {
 		if (iconRef.current) {
-			console.log("Icon pressed, measuring position");
 			iconRef.current.measure((x : number, y : number, width : number, height : number, pageX : number, pageY : number) => {
 				if (pageY > screenHeight / 2) {
 					setTooltipPlacement('top');
@@ -166,6 +165,10 @@ export const PrivacyTooltip = ({
       contentStyle={[styles.tooltipContainer, { backgroundColor: color, width: screenWidth * 0.8 }]}
       arrowStyle={styles.tooltipArrow}
       placement={tooltipPlacement}
+      // This fixes the Android duplicate icon issue
+      childrenWrapperStyle={{ 
+        opacity: showTooltip ? 0 : 1 // Hide the duplicate when tooltip is open
+      }}
     >
       {dataType.includes('sensor') ? (
         <SensorPrivacyIcon
