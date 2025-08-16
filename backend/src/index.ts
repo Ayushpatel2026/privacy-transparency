@@ -6,6 +6,7 @@ import journalRoutes from './routes/phi/journal';
 import generalSleepRoutes from './routes/phi/generalSleep';
 import sensorRoutes from './routes/phi/sensor-data';
 import llmRoutes from './routes/transparency/ai';
+import job from './lib/cron';
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.use('/api/phi/journal', journalRoutes);
 app.use('/api/phi/generalSleep', generalSleepRoutes);
 app.use('/api/phi/sensor-data', sensorRoutes);
 app.use('/api/transparency/ai', llmRoutes);
+
+job.start(); // Start the cron job to ping the API URL every 14 minutes (Render free tier spins down if no activity for 15 minutes)
 
 // test endpoint
 app.get('/api/test', async (req : Request, res : Response) => {
