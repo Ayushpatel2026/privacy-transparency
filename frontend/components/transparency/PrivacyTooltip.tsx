@@ -67,7 +67,7 @@ export const PrivacyTooltip = ({
 
   const renderTooltipContent = () => (
     <ScrollView 
-      style={[styles.tooltipContent, { height: 400 }]}
+      style={[styles.tooltipContent, { maxHeight: 500 }]}
       contentContainerStyle={styles.scrollContentContainer}
       showsVerticalScrollIndicator={true}
       persistentScrollbar={true}
@@ -200,11 +200,10 @@ export const PrivacyTooltip = ({
 const styles = StyleSheet.create({
   tooltipContainer: {
     padding: 0,
-    height: 400, 
+    maxHeight: 500, 
   },
   tooltipContent: {
     borderRadius: 8,
-    flex: 1,
   },
   scrollContentContainer: {
     flexGrow: 1,
@@ -257,7 +256,7 @@ const styles = StyleSheet.create({
   },
   linkText: {
     fontSize: 12,
-    color: Colors.hyperlinkBlue,
+    color: Colors.tooltipLinkBlue,
     textDecorationLine: 'underline',
     flexWrap: 'wrap',
   },
