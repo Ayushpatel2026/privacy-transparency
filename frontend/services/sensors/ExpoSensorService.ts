@@ -59,7 +59,6 @@ export class ExpoSensorService extends SensorService {
 
       // start the transparency event
       const microphoneTransparencyEvent = DEFAULT_MICROPHONE_TRANSPARENCY_EVENT;
-      microphoneTransparencyEvent.userConsent = useProfileStore.getState().userConsentPreferences.microphoneEnabled;
       microphoneTransparencyEvent.backgroundMode = true;
       microphoneTransparencyEvent.samplingRate = this.config.samplingRates.audio;
       useTransparencyStore.getState().setMicrophoneTransparency(
@@ -104,7 +103,6 @@ export class ExpoSensorService extends SensorService {
 
       // start the transparency event
       const lightSensorTransparencyEvent = DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT;
-      lightSensorTransparencyEvent.userConsent = useProfileStore.getState().userConsentPreferences.lightSensorEnabled;
       lightSensorTransparencyEvent.backgroundMode = true;
       lightSensorTransparencyEvent.samplingRate = this.config.samplingRates.light;
       useTransparencyStore.getState().setLightSensorTransparency(
@@ -158,7 +156,6 @@ export class ExpoSensorService extends SensorService {
 
       // start the transparency event
       const accelerometerTransparencyEvent = DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT;
-      accelerometerTransparencyEvent.userConsent = useProfileStore.getState().userConsentPreferences.accelerometerEnabled;
       accelerometerTransparencyEvent.backgroundMode = true;
       accelerometerTransparencyEvent.samplingRate = this.config.samplingRates.accelerometer;
       useTransparencyStore.getState().setAccelerometerTransparency(
@@ -278,7 +275,6 @@ export class ExpoSensorService extends SensorService {
   // HELPER METHOD TO CHECK EQUALITY OF TRANSPARENCY EVENTS
   private tranparencyEventEquality(event1: TransparencyEvent, event2: TransparencyEvent): boolean {
     return (
-      event1.userConsent === event2.userConsent &&
       event1.backgroundMode === event2.backgroundMode &&
       event1.encryptionMethod === event2.encryptionMethod &&
       event1.protocol === event2.protocol &&

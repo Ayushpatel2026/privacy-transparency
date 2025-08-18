@@ -27,9 +27,9 @@ export const DEFAULT_SENSOR_SERVICE_CONFIG: SensorServiceConfig = {
   lightEnabled: false,
   accelerometerEnabled: false,
   samplingRates: {
-    audio: 30, // every 30 seconds
-    light: 30, 
-    accelerometer: 30, 
+    audio: 15, // every 15 seconds
+    light: 15, 
+    accelerometer: 15, 
   },
   audioProcessing: {
     enableSnoreDetection: true,

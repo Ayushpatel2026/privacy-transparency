@@ -1,8 +1,5 @@
-import * as TaskManager from 'expo-task-manager';
 import { SensorRepository } from './sensors/SensorRepository';
 import { SensorServiceConfig } from './sensors/sensorConfig';
-
-const ACCELEROMETER_BACKGROUND_TASK = 'ACCELEROMETER_BACKGROUND_TASK';
 
 /**
  * TODO - Right now this does not work in the background
@@ -36,8 +33,20 @@ export class SensorBackgroundTaskManager {
     public async updateConfig(newConfig: Partial<SensorServiceConfig>) {
         console.log("Updating sensor service config with:", newConfig);
         this.sensorRepository.updateConfig(newConfig);
-        await this.sensorRepository.stopAllSensors();
-        this.sensorRepository.setSimulationMode();
-        await this.sensorRepository.startAllSensors();
+        if ("useSimulation" in newConfig) {
+            this.sensorRepository.setSimulationMode();
+        }
+        if ("accelerometerEnabled" in newConfig){
+            await this.sensorRepository.stopAccelerometerMonitoring();
+            await this.sensorRepository.startAccelerometerMonitoring();
+        }
+        if ("audioEnabled" in newConfig) {
+            await this.sensorRepository.stopAudioMonitoring();
+            await this.sensorRepository.startAudioMonitoring();
+        }
+        if ("lightEnabled" in newConfig) {
+            await this.sensorRepository.stopLightMonitoring();
+            await this.sensorRepository.startLightMonitoring();
+        }
     }
 }

@@ -19,7 +19,7 @@ import { PrivacyIcon } from "@/components/transparency/PrivacyIcon";
 import { formatPrivacyViolations, getPrivacyRiskColor, getPrivacyRiskIcon, getPrivacyRiskLabel } from "@/utils/transparency";
 import { DEFAULT_JOURNAL_TRANSPARENCY_EVENT, PrivacyRisk, TransparencyEvent } from "@/constants/types/Transparency";
 import { PrivacySleepPage } from "@/components/transparency/PrivacySleepPage";
-import { TRANSPARENCY_UI_CONFIG } from "@/constants/config/TransparencyUIConfig";
+import { TRANSPARENCY_UI_CONFIG } from "@/constants/config/transparencyConfig";
 
 export default function Sleep() {
     const [loading, setIsLoading] = useState(true);
@@ -83,7 +83,6 @@ export default function Sleep() {
 
             if (result) {
                 setBedtime(result.bedtime);
-                Alert.alert("Success", "Bedtime saved successfully!");
             } else {
                 Alert.alert("Error", "Failed to save bedtime");
             }
@@ -120,7 +119,6 @@ export default function Sleep() {
 
             if (result) {
                 setAlarm(result.alarmTime);
-                Alert.alert("Success", "Alarm time saved successfully!");
             } else {
                 Alert.alert("Error", "Failed to save alarm time");
             }

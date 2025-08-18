@@ -22,11 +22,12 @@ import { SimulationSensorService } from './sensors/SimulationSensorService';
 import { SensorRepository } from './sensors/SensorRepository';
 import { EncryptionService } from './EncryptionService';
 import { TransparencyService } from './TransparencyService';
+import { transparencyDemoConfig, IN_DEMO_MODE } from '@/constants/config/transparencyConfig';
 
 // Instantiate the base HTTP client
-const apiBaseUrl = process.env.EXPO_PUBLIC_API_URL as string;
+const apiBaseUrl = IN_DEMO_MODE ? (transparencyDemoConfig.encryptedInTransit ? process.env.EXPO_PUBLIC_API_ENCRYPTED_URL as string : process.env.EXPO_PUBLIC_API_UNENCRYPTED_URL as string) : process.env.EXPO_PUBLIC_API_ENCRYPTED_URL as string;
 if (!apiBaseUrl) {
-    console.error('EXPO_PUBLIC_API_URL is not defined in your .env file!');
+    console.error('EXPO_PUBLIC_API_ENCRYPTED_URL is not defined in your .env file!');
 }
 export const httpClient : HttpClient = new CloudStorageService(apiBaseUrl);
 const dbManager = LocalDatabaseManager.getInstance();

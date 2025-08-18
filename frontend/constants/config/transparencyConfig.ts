@@ -13,3 +13,14 @@ export const TRANSPARENCY_UI_CONFIG: TransparencyUIConfig = {
   sleepPageTooltipEnabled: true,
   sleepModeTooltipEnabled: true,
 };
+
+export const IN_DEMO_MODE = true;
+
+// This is is used for demo purposes, allowing us to override actual consent settings for demos
+export const transparencyDemoConfig = {
+  collectAudio: true,
+  collectLight: true,
+  collectAccelerometer: true,
+  encryptedAtRest: false,
+  encryptedInTransit: true
+}

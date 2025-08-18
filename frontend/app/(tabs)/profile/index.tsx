@@ -9,6 +9,9 @@ export default function Profile() {
   const { user, logout } = useAuthStore();
 	const router = useRouter();
 
+  if (!user){
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>

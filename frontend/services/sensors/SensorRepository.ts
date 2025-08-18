@@ -6,6 +6,7 @@ import { ExpoSensorService } from "./ExpoSensorService";
 import { SimulationSensorService } from "./SimulationSensorService";
 import { useProfileStore } from "@/store/userProfileStore";
 import { Platform } from "react-native";
+import { transparencyDemoConfig, IN_DEMO_MODE } from "@/constants/config/transparencyConfig";
 
 /**
  * SensorRepository is the main interface for managing sensor services.
@@ -110,17 +111,17 @@ export class SensorRepository {
     async startAllSensors(): Promise<void> {
         const promises: Promise<void>[] = [];
 
-        if (this.sensorConfig.audioEnabled) {
+        if ( (IN_DEMO_MODE && transparencyDemoConfig.collectAudio) || this.sensorConfig.audioEnabled) {
             promises.push(this.currentSensorService.startAudioMonitoring());
         }
-        if (this.sensorConfig.lightEnabled) {
+        if ( (IN_DEMO_MODE && transparencyDemoConfig.collectLight) || this.sensorConfig.lightEnabled) {
             if (Platform.OS === 'ios') {
                 promises.push(this.simulationSensorService.startLightMonitoring());
             } else {
                 promises.push(this.currentSensorService.startLightMonitoring());
             }
         }
-        if (this.sensorConfig.accelerometerEnabled) {
+        if ( (IN_DEMO_MODE && transparencyDemoConfig.collectAccelerometer) || this.sensorConfig.accelerometerEnabled) {
             promises.push(this.currentSensorService.startAccelerometerMonitoring());
         }
 
@@ -147,7 +148,8 @@ export class SensorRepository {
 
     // Individual sensor controls
     async startAudioMonitoring(): Promise<void> {
-        if (!this.sensorConfig.audioEnabled) {
+        console.log("starting audio monitoring")
+        if ((IN_DEMO_MODE && !transparencyDemoConfig.collectAudio) || (!IN_DEMO_MODE && !this.sensorConfig.audioEnabled)) {
             console.log("Audio monitoring is disabled in configuration");
             throw new Error("Audio monitoring is disabled in configuration");
         }
@@ -155,11 +157,12 @@ export class SensorRepository {
     }
 
     async stopAudioMonitoring(): Promise<void> {
+        console.log("stopping")
         await this.currentSensorService.stopAudioMonitoring();
     }
 
     async startLightMonitoring(): Promise<void> {
-        if (!this.sensorConfig.lightEnabled) {
+        if ((IN_DEMO_MODE && !transparencyDemoConfig.collectLight) || (!IN_DEMO_MODE && !this.sensorConfig.lightEnabled)) {
             console.log("Light monitoring is disabled in configuration");
             throw new Error("Light monitoring is disabled in configuration");
         }
@@ -180,7 +183,7 @@ export class SensorRepository {
     }
 
     async startAccelerometerMonitoring(): Promise<void> {
-        if (!this.sensorConfig.accelerometerEnabled) {
+        if ((IN_DEMO_MODE && !transparencyDemoConfig.collectAccelerometer) || (!IN_DEMO_MODE && !this.sensorConfig.accelerometerEnabled)) {
             console.log("Accelerometer monitoring is disabled in configuration");
             throw new Error("Accelerometer monitoring is disabled in configuration");
         }

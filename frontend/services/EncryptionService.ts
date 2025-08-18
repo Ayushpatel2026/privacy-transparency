@@ -6,6 +6,7 @@ import { User } from '@/constants/types/User';
 import { JournalData, SleepNote } from '@/constants/types/JournalData';
 import { useTransparencyStore } from '@/store/transparencyStore';
 import { EncryptionMethod } from '@/constants/types/Transparency';
+import { IN_DEMO_MODE, transparencyDemoConfig } from '@/constants/config/transparencyConfig';
 
 /**
  * The EncryptionService handles encryption and decryption of sensitive data using AES.
@@ -152,7 +153,7 @@ export class EncryptionService {
       ) as SleepNote[]);
       useTransparencyStore.getState().setJournalTransparency({
         ...journalTransparencyEvent,
-        encryptionMethod: EncryptionMethod.AES_256
+        encryptionMethod: !IN_DEMO_MODE ? EncryptionMethod.AES_256 : (transparencyDemoConfig.encryptedAtRest ? EncryptionMethod.AES_256 : EncryptionMethod.NONE)
       });
     } catch (error) {
       console.error('Failed to encrypt JournalData:', error);
@@ -245,7 +246,7 @@ export class EncryptionService {
       }
       useTransparencyStore.getState().setGeneralSleepTransparency({
         ...generalSleepTransparencyEvent,
-        encryptionMethod: EncryptionMethod.AES_256
+        encryptionMethod: !IN_DEMO_MODE ? EncryptionMethod.AES_256 : (transparencyDemoConfig.encryptedAtRest ? EncryptionMethod.AES_256 : EncryptionMethod.NONE)
       });
     } catch (error) {
       console.error('Failed to encrypt GeneralSleepData:', error);
@@ -302,7 +303,7 @@ export class EncryptionService {
         } as AudioSensorData;
         useTransparencyStore.getState().setMicrophoneTransparency({
           ...microphoneTransparencyEvent,
-          encryptionMethod: EncryptionMethod.AES_256
+          encryptionMethod: !IN_DEMO_MODE ? EncryptionMethod.AES_256 : (transparencyDemoConfig.encryptedAtRest ? EncryptionMethod.AES_256 : EncryptionMethod.NONE)
         });
       } else if (sensorData.sensorType === 'light') {
         const lightData = sensorData as LightSensorData;
@@ -313,7 +314,7 @@ export class EncryptionService {
         } as LightSensorData;
         useTransparencyStore.getState().setLightSensorTransparency({
           ...lightTransparencyEvent,
-          encryptionMethod: EncryptionMethod.AES_256
+          encryptionMethod: !IN_DEMO_MODE ? EncryptionMethod.AES_256 : (transparencyDemoConfig.encryptedAtRest ? EncryptionMethod.AES_256 : EncryptionMethod.NONE)
         });
       } else if (sensorData.sensorType === 'accelerometer') {
         const accelData = sensorData as AccelerometerSensorData;
@@ -327,7 +328,7 @@ export class EncryptionService {
         } as AccelerometerSensorData;
         useTransparencyStore.getState().setAccelerometerTransparency({
           ...accelerometerTransparencyEvent,
-          encryptionMethod: EncryptionMethod.AES_256
+          encryptionMethod: !IN_DEMO_MODE ? EncryptionMethod.AES_256 : (transparencyDemoConfig.encryptedAtRest ? EncryptionMethod.AES_256 : EncryptionMethod.NONE)
         });
       } else {
         // If sensorType is not recognized or doesn't require encryption, return original

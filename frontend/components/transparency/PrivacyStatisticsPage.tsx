@@ -65,7 +65,7 @@ export const PrivacyStatisticsPage = () => {
             </TouchableOpacity>
 
             {/* Privacy Policy Link */}
-            <TouchableOpacity style={styles.privacyPolicyButton}>
+            <TouchableOpacity style={styles.privacyPolicyButton} onPress={() => router.push('/privacy-policy')}>
                 <Text style={styles.privacyPolicyText}>View Full Privacy Policy</Text>
             </TouchableOpacity>
         </View>

@@ -19,7 +19,7 @@ import { formatPrivacyViolations, getPrivacyRiskColor, getPrivacyRiskIcon, getPr
 import PrivacyTooltip from '@/components/transparency/PrivacyTooltip';
 import { DataDestination } from '@/constants/types/Transparency';
 import { PrivacySleepMode } from '@/components/transparency/PrivacySleepMode';
-import { TRANSPARENCY_UI_CONFIG } from '@/constants/config/TransparencyUIConfig';
+import { TRANSPARENCY_UI_CONFIG } from '@/constants/config/transparencyConfig';
 
 export default function SleepMode() {
     const router = useRouter();
@@ -90,10 +90,16 @@ export default function SleepMode() {
     };
 
     const handleWakeUp = async () => {
-        await sensorBackgroundTaskManager.updateConfig({
-            audioEnabled: false, // Turn off microphone
-            lightEnabled: false, // Turn off light sensor
-        });
+        try {
+            await sensorBackgroundTaskManager.updateConfig({
+                audioEnabled: false,
+                lightEnabled: false,
+            });
+            console.log("Sensor config updated successfully");
+        } catch (error) {
+            console.log("Sensor config update failed:", error);
+            // Continue with navigation even if sensor update fails
+        }
 
         // This replaces 'sleep-mode.tsx' with 'index.tsx' in the sleep tab's stack.
         // This is crucial to ensure that when the user returns to the sleep tab later,

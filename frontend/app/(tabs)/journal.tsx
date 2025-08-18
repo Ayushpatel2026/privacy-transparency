@@ -23,7 +23,7 @@ import { PrivacyIcon } from "@/components/transparency/PrivacyIcon";
 import { getPrivacyRiskIconForPage } from "@/utils/transparency";
 import { NormalJournalPage } from "@/components/NormalJournalPage";
 import { PrivacyJournalPage } from "@/components/transparency/PrivacyJournalPage";
-import { TRANSPARENCY_UI_CONFIG } from "@/constants/config/TransparencyUIConfig";
+import { TRANSPARENCY_UI_CONFIG } from "@/constants/config/transparencyConfig";
 
 export default function Journal() {
     const [diaryEntry, setDiaryEntry] = useState("");

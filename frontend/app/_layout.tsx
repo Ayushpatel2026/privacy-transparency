@@ -38,9 +38,8 @@ export default function RootLayout() {
         sensorBackgroundTaskManager.updateConfig({
           accelerometerEnabled: userConsentPreferences?.accelerometerEnabled ?? false,
         });
+        // Register only the accelerometer as it is on at all times, but light and audio are only on during sleep mode
         sensorBackgroundTaskManager.registerAccelerometer();
-        sensorBackgroundTaskManager.registerLightSensor();
-        sensorBackgroundTaskManager.registerAudioSensor();
       } catch (error) {
         console.error("Initialization failed:", error);
       } finally {
