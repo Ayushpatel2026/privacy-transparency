@@ -7,7 +7,7 @@ import privacyPolicyData from '../privacyPolicyData.json';
 import privacyRegulations from '../privacyRegulations.json';
 import { createPrivacyAnalysisPrompt } from '../src/llm/prompts';
 import { evalReadability } from './readability/evalReadability';
-import { NLIEvaluator } from './accuracy/nliEvaluator';
+import { NLIEvaluator } from './consistency/nliEvaluator';
 import * as fs from 'fs';
 import * as path from 'path';
 
