@@ -1,8 +1,65 @@
 # AI-Driven Privacy Transparency for Mobile Health Applications
 
+## Table of Contents
+
+1. [Overview](#overview)
+2. [General Repository Structure](#general-repository-structure)
+3. [Background](#background)
+4. [Problem Statement](#problem-statement)
+5. [Objectives](#objectives)
+6. [Prototype Development](#prototype-development)
+7. [Evaluating the Prototype](#evaluating-the-prototype)
+8. [Results](#results)
+9. [Future Work](#future-work)
+10. [Usage](#usage)
+
 ## Overview
 
 This project addresses the critical disconnect between mobile health app users and privacy policies by developing an AI-powered system that provides real-time, easy-to-understand privacy explanations during app usage. The system detects privacy violations and translates complex legal language into accessible explanations that appear directly in the app interface.
+
+## Research Poster
+
+This work was conducted as part of an undergraduate research project for the McMaster Center for Software Certification (McSCert) and was presented at the 2025 McMaster Undergraduate Research Fair. Here is the accompanying research poster. [View PDF](./Research_Poster.pdf)
+
+## General Repository Structure
+
+[More information](./backend/README.md) about the backend
+
+[More information](./docs/frontend.md) about the frontend
+
+```
+├── backend/
+│   ├── ai-testing/                          # Experimental scripts and results
+│   │   ├── trials.md                        # more details about the trials and observations
+|   |   ├── consistency/                     # functions to measure logical consistency
+│   |   ├── readability/                     # functions to measure readability
+│   │   ├── test-results/                    # CSV files and graphs for all 12 trials
+│   │   ├── sample-text-testing/             # scripts to test sample text as initial exploration
+│   │   ├── evalAIExplanation.ts             # main script used to run the experiments
+│   │   ├── analyze_data.py                  # python script to aggregate raw data, and create visualizations
+│   │   ├── test-events.ts                   # contains the scenarios used for the experiments
+│   └── src/                # Express.js API server
+│       ├── config/                          # contains the firebase config files
+│       ├── constants/                       # includes types
+|       ├── repositories/                    # contains repository abstractions and firestore implementations
+|       ├── routes/                          # api routes for storing PHI and generating AI explanations
+|       ├── llm/                             # LLM abstraction and prompts
+├── frontend/               # React Native mobile application
+│   ├── app/
+│   ├── components/                          # Reusable modals, transparency icons and other components
+|   ├── assets/                              # includes fonts and images
+│   ├── constants/                           # types, colors and config files
+│   ├── services/                            # API integration, sensor, encryption and transparency services
+│   |── store/                               # Zustand state management for auth, user profile and transparency events
+│   ├── privacyPolicyData.json               # Privacy policy data for AI processing
+│   └── privacyRegulations.json              # PIPEDA regulations data
+├── docs/                   # Project documentation
+│   ├── system_architecture.svg              # System architecture diagram
+│   ├── frontend.md                          # documentation about the privacy UI and design decisions related to frontend
+|   ├── API.md                               # backend API docs
+│   └── misc/                                # Additional documentation assets
+└── Research_Poster.pdf                      # Academic research poster
+```
 
 ## Background
 
@@ -51,9 +108,7 @@ The second major component focuses on embedding privacy user interface and user 
 - **Dynamic feedback loop**: The user interface updates dynamically as soon as data collection occurs, creating an immediate connection between user actions and privacy consequences
 - **Contextual integration**: Privacy information is presented within the context of the specific app functionality that triggers data collection, making it more relevant and understandable
 
-## Methodology
-
-### Prototype Development
+## Prototype Development
 
 A proof-of-concept sleep tracking application was developed to demonstrate the real-world applicability of the AI-driven privacy transparency system. The sleep tracking domain was strategically chosen because it naturally involves multiple types of data collection scenarios that are common in health applications.
 
@@ -105,7 +160,7 @@ Both UI systems utilize a sophisticated visual feedback mechanism that provides 
 
 ### Technical Details
 
-More details can be found in the [docs directory](./docs/privacyUI.md)
+More details can be found in the [docs directory](./docs/frontend.md)
 
 This is the overall system architecture:
 
@@ -253,7 +308,7 @@ Based on preliminary testing using the ConTRoL dataset, we hypothesized:
 - **NLI Limitations:** Legal texts vs explanations may yield more neutral scores due to indirect logical relationships
 - **Scope:** Focused on English-language explanations within Canadian regulatory context (PIPEDA)
 
-### Results
+## Results
 
 #### Overall Results from All Test Cases
 
@@ -323,51 +378,6 @@ The experimental framework revealed several limitations in current evaluation ap
 - **Rule-based consistency checking**: Exploration of rule-based methods for determining logical consistency between explanations and reference texts may provide more reliable assessment than purely machine learning-based approaches
 
 The work contributes valuable insights to the emerging field of AI-powered regulatory transparency tools while demonstrating that significant work is needed to realize the full potential of such systems. The intersection of artificial intelligence, privacy regulation, and human-computer interaction presents rich opportunities for future research that could ultimately enhance privacy awareness and protection for mobile app users.
-
-## Research Poster
-
-This work was conducted as part of an undergraduate research project for the McMaster Center for Software Certification (McSCert) and was presented at the 2025 McMaster Undergraduate Research Fair. Here is the accompanying research poster. [View PDF](./Research_Poster.pdf)
-
-## General Repository Structure
-
-[More information](./backend/README.md) about the backend
-
-[More information](./frontend/README.md) about the frontend
-
-```
-├── backend/
-│   ├── ai-testing/                          # Experimental scripts and results
-│   │   ├── trials.md                        # more details about the trials and observations
-|   |   ├── consistency/                     # functions to measure logical consistency
-│   |   ├── readability/                     # functions to measure readability
-│   │   ├── test-results/                    # CSV files and graphs for all 12 trials
-│   │   ├── sample-text-testing/             # scripts to test sample text as initial exploration
-│   │   ├── evalAIExplanation.ts             # main script used to run the experiments
-│   │   ├── analyze_data.py                  # python script to aggregate raw data, and create visualizations
-│   │   ├── test-events.ts                   # contains the scenarios used for the experiments
-│   └── src/                # Express.js API server
-│       ├── config/                          # contains the firebase config files
-│       ├── constants/                       # includes types
-|       ├── repositories/                    # contains repository abstractions and firestore implementations
-|       ├── routes/                          # api routes for storing PHI and generating AI explanations
-|       ├── llm/                             # LLM abstraction and prompts
-├── frontend/               # React Native mobile application
-│   ├── app/
-│   ├── components/                          # Reusable modals, transparency icons and other components
-|   ├── assets/                              # includes fonts and images
-│   ├── constants/                           # types, colors and config files
-│   ├── services/                            # API integration, sensor, encryption and transparency services
-│   |── store/                               # Zustand state management for auth, user profile and transparency events
-│   ├── privacyPolicyData.json               # Privacy policy data for AI processing
-│   └── privacyRegulations.json              # PIPEDA regulations data
-├── docs/                   # Project documentation
-│   ├── system_architecture.svg              # System architecture diagram
-│   ├── privacyUI.md                         # Detailed documentation about the privacy UI and design decisions
-|   ├── API.md                               # backend API docs
-|   ├── prototype.md                         # Design considerations and limitations of the prototype
-│   └── misc/                                # Additional documentation assets
-└── Research_Poster.pdf                      # Academic research poster
-```
 
 ## Usage
 
