@@ -107,7 +107,9 @@ Both UI systems utilize a sophisticated visual feedback mechanism that provides 
 
 More details can be found in the [docs directory](./docs/privacyUI.md)
 
-This is the overall system architecture: [link](./docs/system_architecture.svg)
+This is the overall system architecture:
+
+![link](./docs/system_architecture.svg)
 
 - The transparency module on the client side is responsible for gathering all the context about the data collection event that is occuring and sending it to the transparency module on the backend, where the LLM API is called to generate the explanations and determine privacy violations.
 - The sensor module is an abstraction that allows for easy switching between real sensors and sensor simulators.
@@ -270,27 +272,27 @@ Based on preliminary testing using the ConTRoL dataset, we hypothesized:
 
 _Figure 1_
 
-![Response Length vs FK](test-results/trial11/length_vs_FK.png)
+![Response Length vs FK](backend/ai-testing/test-results/trial11/length_vs_FK.png)
 
 - **Response length vs Word frequency:** 0.365 (Weak positive correlation)
   - This is in line with H3
 
 _Figure 2_
 
-![Response Length vs Word Frequency](test-results/trial11/length_vs_wordfreq.png)
+![Response Length vs Word Frequency](backend/ai-testing/test-results/trial11/length_vs_wordfreq.png)
 
 - **Response length vs NLI score:** 0.515 (Moderate positive correlation)
   - This is exactly as we hypothesized (H2)
 
 _Figure 3_
 
-![Response Length vs NLI score](test-results/trial11/length_vs_NLI.png)
+![Response Length vs NLI score](backend/ai-testing/test-results/trial11/length_vs_NLI.png)
 
 ### Detailed Analysis
 
 _Figure 4_
 
-![Tradeoffs by Length](test-results/trial11/tradeoffs_by_length.png)
+![Tradeoffs by Length](backend/ai-testing/test-results/trial11/tradeoffs_by_length.png)
 
 According to the graph above, the correlation coefficient for NLI vs Flesch-Kincaid is close to 0 for all response lengths.
 
@@ -326,7 +328,11 @@ The work contributes valuable insights to the emerging field of AI-powered regul
 
 This work was conducted as part of an undergraduate research project for the McMaster Center for Software Certification (McSCert) and was presented at the 2025 McMaster Undergraduate Research Fair. Here is the accompanying research poster. [View PDF](./Research_Poster.pdf)
 
-## Repository Structure
+## General Repository Structure
+
+[More information](./backend/README.md) about the backend
+
+[More information](./frontend/README.md) about the frontend
 
 ```
 ├── backend/
@@ -340,36 +346,42 @@ This work was conducted as part of an undergraduate research project for the McM
 │   │   ├── analyze_data.py                  # python script to aggregate raw data, and create visualizations
 │   │   ├── test-events.ts                   # contains the scenarios used for the experiments
 │   └── src/                # Express.js API server
-│       ├── config/    # API endpoint controllers
-│       ├── constants/       # Business logic and AI integration
-|       ├── llm/
-│       └── lib/         # Data models and database schemas
+│       ├── config/                          # contains the firebase config files
+│       ├── constants/                       # includes types
+|       ├── repositories/                    # contains repository abstractions and firestore implementations
+|       ├── routes/                          # api routes for storing PHI and generating AI explanations
+|       ├── llm/                             # LLM abstraction and prompts
 ├── frontend/               # React Native mobile application
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── screens/        # Application screens
-│   │   ├── services/       # API integration and data services
-│   │   └── stores/         # Zustand state management
-│   ├── privacyPolicyData.json    # Privacy policy data for AI processing
-│   └── privacyRegulations.json   # PIPEDA regulations data
+│   ├── app/
+│   ├── components/                          # Reusable modals, transparency icons and other components
+|   ├── assets/                              # includes fonts and images
+│   ├── constants/                           # types, colors and config files
+│   ├── services/                            # API integration, sensor, encryption and transparency services
+│   |── store/                               # Zustand state management for auth, user profile and transparency events
+│   ├── privacyPolicyData.json               # Privacy policy data for AI processing
+│   └── privacyRegulations.json              # PIPEDA regulations data
 ├── docs/                   # Project documentation
-│   ├── system_architecture.svg   # System architecture diagram
-│   ├── privacyUI.md       # Detailed UI documentation
-│   └── misc/              # Additional documentation assets
-└── Research_Poster.pdf    # Academic research poster
+│   ├── system_architecture.svg              # System architecture diagram
+│   ├── privacyUI.md                         # Detailed documentation about the privacy UI and design decisions
+|   ├── API.md                               # backend API docs
+|   ├── prototype.md                         # Design considerations and limitations of the prototype
+│   └── misc/                                # Additional documentation assets
+└── Research_Poster.pdf                      # Academic research poster
 ```
 
-## Getting Started
+## Usage
 
-### Prerequisites
+### Protototype
 
-- Node.js (v16 or higher)
+#### Prequisites
+
+- Node.js
 - React Native development environment
 - Expo CLI
 - Google Cloud account (for Gemini API access)
 - Firebase account (for Firestore database)
 
-### Installation and Setup
+#### Installation and Setup
 
 #### Backend Setup
 
@@ -384,14 +396,22 @@ This work was conducted as part of an undergraduate research project for the McM
 
    ```
    GEMINI_API_KEY=your_gemini_api_key
-   FIREBASE_CONFIG=your_firebase_config
-   JWT_SECRET=your_jwt_secret
+   FIREBASE_SERVICE_ACCOUNT_KEY='{ "type": "...", ... , "private_key": "..." }' # Paste the entire JSON string on one line
+   JWT_SECRET_KEY=your_jwt_secret_key
    ```
 
+   - **Explanation of Variables:**
+
+     - `GEMINI_API_KEY`: If you choose to use GEMINI - Obtain this from the Google Cloud Console. Otherwise you can use any LLM provider by extending the `LLMService` interface and obtaining the appropriate API key.
+     - `FIREBASE_SERVICE_ACCOUNT_KEY`: The JSON service account key from your Firebase project. This key is necessary for the backend to interact with Firebase services (like Firestore). **Important:** Ensure you paste the entire JSON content of the key file into the `.env` file **on a single line**.
+
 3. Start the development server:
+
    ```bash
    npm run dev
    ```
+
+   The backend server will typically start on `http://localhost:7000` (or a similar port). Check the console output for the exact URL.
 
 #### Frontend Setup
 
@@ -402,27 +422,82 @@ This work was conducted as part of an undergraduate research project for the McM
    npm install
    ```
 
-2. Configure the API endpoint in the app configuration to point to your backend server
+2. Configure environment variables by creating a `.env` file with the following:
 
-3. Start the Expo development server:
-   ```bash
-   npx expo start
+   ```
+      EXPO_PUBLIC_API_UNENCRYPTED_URL=http://localhost:7000/api # If running locally
+      # or
+      EXPO_PUBLIC_API_ENCRYPTED_URL=URL_TO_DEPLOYED_APP # If using deployed backend
    ```
 
-### Running Experiments
+- **Explanation of Variables:** These two variables are required to demonstrate the encrypted in transit vs unencrypted in transit part of the data collection process.
+
+3. Running the app:
+
+There are two ways to run the frontend.
+
+- **Using Expo Go**:
+
+  - Expo Go is a sandbox environment for developing and testing React Native applications built with the Expo framework.
+  - You must download the Expo Go app to your mobile device.
+
+    ```bash
+    npx expo start
+    ```
+
+    Scan the barcode in the console with your phone camera and this app will automatically open in the Expo Go app.
+
+- **Using Android Emulator**:
+
+  - **Prebuild the App:** This step prepares the project for building:
+
+    ```bash
+    npx expo prebuild
+    ```
+
+  - **Run the App on an Emulator:** Ensure you have an Android emulator installed and running. Then, run:
+
+    ```bash
+    npx expo run:android
+    ```
+
+While Expo Go is much quicker and easier to use than the Android emulator, it requires that the project use the latest Expo SDK, which is not going to be possible. Therefore, it is recommended to use the Android emulator to run the application.
+
+### Running AI Experiments
 
 The experimental framework can be executed to replicate the readability and consistency analysis:
 
-1. Navigate to the AI testing directory:
+1. Install dependencies:
 
    ```bash
-   cd backend/ai-testing
+   cd backend
+   npm install
    ```
 
-2. Configure your Gemini API credentials and run the analysis scripts:
+2. Navigate to the AI testing directory:
 
    ```bash
-   node analysis/consistency-readability-experiment.js
+   cd ai-testing
    ```
 
-3. View detailed results and statistical analysis in the generated output files
+3. Configure your Gemini API credentials in the .env file:
+
+   ```bash
+     GEMINI_API_KEY=your_gemini_api_key
+   ```
+
+4. Run the evaluation script:
+
+   ```bash
+   npx tsx evalAIExplation.ts
+   ```
+
+A raw data csv file will be created in the `test-results` directory
+
+5. Run the python script to generate correlations and visualizations:
+
+   ```bash
+   python analyze_data.py [path_to_raw_data]
+   ```
+
+csv files of aggregated statistics and png files of visualizations will be created in the same directory as the raw data file
