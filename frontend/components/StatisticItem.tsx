@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   statisticLabel: {
-    color: '#fff',
+    color: 'white',
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 15,

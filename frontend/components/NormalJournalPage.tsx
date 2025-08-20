@@ -3,7 +3,7 @@ import PrivacyTooltip from "./transparency/PrivacyTooltip";
 import { formatPrivacyViolations, getPrivacyRiskColor, getPrivacyRiskIcon, getPrivacyRiskLabel } from "@/utils/transparency";
 import { Ionicons } from "@expo/vector-icons";
 import { useTransparencyStore } from "@/store/transparencyStore";
-import { DataDestination, PrivacyRisk } from "@/constants/types/Transparency";
+import { PrivacyRisk } from "@/constants/types/Transparency";
 import { Colors } from "@/constants/Colors";
 import { SleepNote } from "@/constants/types/JournalData";
 
@@ -38,16 +38,16 @@ export const NormalJournalPage = ({
                 <View style={styles.sleepGoalContent}>
                     <View style={styles.sleepTimeAndAlarm}>
                         <View>
-                            <Text style={styles.timeLabel}><Ionicons name="moon-outline" size={16} color="#FFFFFF" /> Bedtime</Text>
+                            <Text style={styles.timeLabel}><Ionicons name="moon-outline" size={16} color="white" /> Bedtime</Text>
                             <Text style={styles.timeValue}>{bedtime}</Text>
                         </View>
                         <View style={styles.alarmRow}>
-                            <Text style={styles.alarmLabel}><Ionicons name="alarm-outline" size={16} color="#FFFFFF" /> Alarm</Text>
+                            <Text style={styles.alarmLabel}><Ionicons name="alarm-outline" size={16} color="white" /> Alarm</Text>
                             <Text style={styles.alarmTime}>{alarm}</Text>
                         </View>
                     </View>
                     <View style={styles.goalItem}>
-                        <Text style={styles.goalLabel}><Ionicons name="compass-outline" size={16} color="#FFFFFF" /> Goal</Text>
+                        <Text style={styles.goalLabel}><Ionicons name="compass-outline" size={16} color="white" /> Goal</Text>
                         <Text style={styles.goalValue}>{sleepGoal}</Text>
                     </View>
                 </View>
@@ -104,7 +104,7 @@ export const NormalJournalPage = ({
                         {diaryEntry || "Write something to record your day... "}
                     </Text>
                     <TouchableOpacity onPress={handleEditJournalEntry} style={styles.editButton}>
-                        <Ionicons name="pencil-outline" size={24} color="#FFFFFF" />
+                        <Ionicons name="pencil-outline" size={24} color="white" />
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     sectionTitle: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 20,
         fontWeight: '600',
         marginBottom: 15,
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     subSectionTitle: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 18,
         fontWeight: '600',
     },
@@ -203,13 +203,13 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     sleepNoteBullet: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 18,
         marginRight: 8,
         lineHeight: 20,
     },
     sleepNoteText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         flex: 1,
     },
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 20,
         flex: 6,
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         opacity: 0.8,
         minHeight: 60,
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
         gap: 15,
     },
     timeLabel: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 14,
         opacity: 0.7,
         marginBottom: 5,
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     timeValue: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 18,
         fontWeight: '600',
     },
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     goalLabel: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 14,
         opacity: 0.7,
         marginBottom: 5,
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     goalValue: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 18,
         fontWeight: '600',
     },
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
     alarmLabel: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 14,
         opacity: 0.7,
         flexDirection: 'row',
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     alarmTime: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         fontWeight: '500',
     },
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     activityLabel: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         fontWeight: '500',
     },
@@ -325,12 +325,12 @@ const styles = StyleSheet.create({
         borderColor: Colors.generalBlue,
     },
     progressNumber: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 20,
         fontWeight: '600',
     },
     progressUnit: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 12,
         opacity: 0.7,
     },

@@ -9,6 +9,11 @@ import { generalSleepDataRepository } from "@/services/index";
 import { GeneralSleepData } from "@/constants/types/GeneralSleepData";
 import { useAuthStore } from "@/store/authStore";
 
+/**
+ * Currently contains just one question about sleep duration.
+ * 
+ * More questions can be added using some sort of carousel UI. 
+ */
 export default function Questions() {
 
 	const router = useRouter();
@@ -24,7 +29,6 @@ export default function Questions() {
     setSelectedOption(value);
   };
 
-	// TODO - this data would be saved in the cloud or local storage
 	const saveSelectedOption = async () => {
     // it is not neccessary for the user to select an option before continuing, but if they do not select one, we will not save anything
 		if (!selectedOption){
@@ -38,10 +42,8 @@ export default function Questions() {
       tirednessFrequency: '',
       daytimeSleepiness: '',
     }
-    console.log('Saving sleep data:', sleepData);
     try{
-      const response = await generalSleepDataRepository.createSleepData(sleepData as GeneralSleepData)
-      console.log('Sleep data saved successfully:', response);
+      await generalSleepDataRepository.createSleepData(sleepData as GeneralSleepData);
     } catch (error) {
       console.error('Error saving sleep data:', error);
       return;
@@ -88,7 +90,7 @@ export default function Questions() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: 'black',
     paddingHorizontal: 24, 
     paddingBottom: 20, 
     justifyContent: 'space-between',

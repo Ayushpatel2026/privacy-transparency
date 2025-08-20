@@ -48,10 +48,14 @@ export default function JournalData() {
   )
 };
 
+// =================================================================
+// STYLES
+// =================================================================
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: 'black',
   },
   topHalf: {
     flex: 3,

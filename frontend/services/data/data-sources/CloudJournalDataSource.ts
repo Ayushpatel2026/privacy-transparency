@@ -3,7 +3,7 @@ import { HttpClient } from '@/services/HttpClient';
 import { JournalDataSource } from './JournalDataSource';
 
 /**
- * TODO - Cloud Implementation of JournalDataSource
+ * Cloud Implementation of JournalDataSource
  */
 export class CloudJournalDataSource implements JournalDataSource {
     private httpClient: HttpClient;

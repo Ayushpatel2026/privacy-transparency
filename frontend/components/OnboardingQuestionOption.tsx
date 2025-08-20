@@ -23,7 +23,7 @@ const OnboardingQuestionOption = ({ label, isSelected, onPress }: OnboardingQues
         <Ionicons
           name="checkmark-circle"
           size={24}
-          color="#FFFFFF" 
+          color="white" 
           style={styles.checkmarkIcon}
         />
       )}

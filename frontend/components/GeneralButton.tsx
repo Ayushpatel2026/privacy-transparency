@@ -26,7 +26,7 @@ const GeneralButton = ({
       activeOpacity={0.8}
     >
       {isLoading ? (
-        <ActivityIndicator color="#FFFFFF" size="small" />
+        <ActivityIndicator color="white" size="small" />
       ) : (
         <Text style={styles.buttonText}>{title}</Text>
       )}

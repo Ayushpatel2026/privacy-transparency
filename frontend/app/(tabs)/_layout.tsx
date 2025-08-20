@@ -15,7 +15,7 @@ const TabLayout = () => {
         headerShown: false,
         tabBarStyle: {
           ...styles.tabBarStyle,
-          // check if the current page is in the list then hide the tab bar
+          // check if the current page is in the sleep-mode page, if yes, hide the tab bar
           display: page === 'sleep-mode' ? 'none' : 'flex',
         },
         tabBarActiveTintColor: Colors.generalBlue, // Blue color for active tab

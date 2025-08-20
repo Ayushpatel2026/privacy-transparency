@@ -36,7 +36,7 @@ export const DailyStatisticsPage = () => {
             <View style={styles.stagesGrid}>
                 <View style={styles.stageItem}>
                     <View style={[styles.stageIcon, { backgroundColor: '#4a4a4a' }]}>
-                        <Ionicons name="moon" size={16} color="#fff" />
+                        <Ionicons name="moon" size={16} color="white" />
                     </View>
                     <Text style={styles.stageLabel}>Deep Sleep</Text>
                     <Text style={styles.stagePercentage}>21%</Text>
@@ -45,7 +45,7 @@ export const DailyStatisticsPage = () => {
                 
                 <View style={styles.stageItem}>
                     <View style={[styles.stageIcon, { backgroundColor: '#6a9eff' }]}>
-                        <Ionicons name="moon-outline" size={16} color="#fff" />
+                        <Ionicons name="moon-outline" size={16} color="white" />
                     </View>
                     <Text style={styles.stageLabel}>Light Sleep</Text>
                     <Text style={styles.stagePercentage}>56%</Text>
@@ -54,7 +54,7 @@ export const DailyStatisticsPage = () => {
                 
                 <View style={styles.stageItem}>
                     <View style={[styles.stageIcon, { backgroundColor: '#8a6aff' }]}>
-                        <Ionicons name="eye" size={16} color="#fff" />
+                        <Ionicons name="eye" size={16} color="white" />
                     </View>
                     <Text style={styles.stageLabel}>REM</Text>
                     <Text style={styles.stagePercentage}>17%</Text>
@@ -63,7 +63,7 @@ export const DailyStatisticsPage = () => {
                 
                 <View style={styles.stageItem}>
                     <View style={[styles.stageIcon, { backgroundColor: '#ffa64a' }]}>
-                        <Ionicons name="eye-outline" size={16} color="#fff" />
+                        <Ionicons name="eye-outline" size={16} color="white" />
                     </View>
                     <Text style={styles.stageLabel}>Awake</Text>
                     <Text style={styles.stagePercentage}>6%</Text>
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	sectionTitle: {
-		color: '#FFFFFF',
+		color: 'white',
 		fontSize: 20,
 		fontWeight: '600',
 		marginBottom: 15,
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
 		marginBottom: 2,
 	},
 	qualityValue: {
-		color: '#fff',
+		color: 'white',
 		fontSize: 16,
 		fontWeight: '600',
 		marginBottom: 2,
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
 		marginBottom: 4,
 	},
 	stagePercentage: {
-		color: '#fff',
+		color: 'white',
 		fontSize: 16,
 		fontWeight: '600',
 		marginBottom: 2,
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 	},
 	insightValue: {
-		color: '#fff',
+		color: 'white',
 		fontSize: 14,
 		fontWeight: '600',
 		textAlign: 'center',
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
 		fontWeight: '500',
 	},
 	activeClipTabText: {
-		color: '#fff',
+		color: 'white',
 	},
 	clipsListContainer: {
 		gap: 12,
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
 		gap: 12,
 	},
 	clipTime: {
-		color: '#fff',
+		color: 'white',
 		fontSize: 14,
 		fontWeight: '500',
 		minWidth: 60,

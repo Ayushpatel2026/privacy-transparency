@@ -257,21 +257,3 @@ export const DEFAULT_GENERAL_SLEEP_TRANSPARENCY_EVENT: TransparencyEvent = {
     regulationLink: []
   }
 }
-
-
-// If real time notifications are implemented, the below interfaces may be used
-
-export interface TransparencyNotification {
-  id: string;
-  title: string;
-  message: string;
-  severity: 'low' | 'medium' | 'high';
-  timestamp: Date;
-  eventId: string;
-  actions?: NotificationAction[];
-}
-
-export interface NotificationAction {
-  label: string;
-  action: () => void;
-}

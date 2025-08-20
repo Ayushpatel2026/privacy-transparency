@@ -187,7 +187,7 @@ export default function Journal() {
                     >
                         <Text style={styles.todayText}>Today</Text>
                         <Text style={styles.dateText}>
-                            {formatDate(selectedDate)} <Ionicons name={showCalendar ? "chevron-up" : "chevron-down"} size={18} color="#FFFFFF" />
+                            {formatDate(selectedDate)} <Ionicons name={showCalendar ? "chevron-up" : "chevron-down"} size={18} color="white" />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -247,7 +247,7 @@ export default function Journal() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: 'black',
     },
     scrollView: {
         flex: 1,
@@ -262,13 +262,13 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
     todayText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 32,
         fontWeight: '600',
         marginBottom: 5,
     },
     dateText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 18,
         opacity: 0.8,
         flexDirection: 'row',

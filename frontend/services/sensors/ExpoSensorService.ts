@@ -5,7 +5,6 @@ import { SensorService } from './SensorService';
 import { AccelerometerSensorData, AudioSensorData, LightSensorData } from '@/constants/types/SensorData';
 import { useTransparencyStore } from '@/store/transparencyStore';
 import { DEFAULT_ACCELEROMETER_TRANSPARENCY_EVENT, DEFAULT_LIGHT_SENSOR_TRANSPARENCY_EVENT, DEFAULT_MICROPHONE_TRANSPARENCY_EVENT, TransparencyEvent } from '@/constants/types/Transparency';
-import { useProfileStore } from '@/store/userProfileStore';
 import { transparencyService } from '@/services';
 
 /**
@@ -151,7 +150,6 @@ export class ExpoSensorService extends SensorService {
   
   async startAccelerometerMonitoring(): Promise<void> {
     try {
-      console.log("Starting accelerometer monitoring with sampling rate:", this.config.samplingRates.accelerometer);
       Accelerometer.setUpdateInterval(this.config.samplingRates.accelerometer * 1000);
 
       // start the transparency event

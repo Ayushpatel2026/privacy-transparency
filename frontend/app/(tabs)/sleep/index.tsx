@@ -4,7 +4,6 @@ import {
     Text,
     StyleSheet,
     StatusBar,
-    Platform,
     Alert,
     SafeAreaView
 } from "react-native";
@@ -263,7 +262,7 @@ const styles = StyleSheet.create({
         marginBottom: 10, 
     },
     headerText: {
-        color: '#ffffff',
+        color: 'white',
         fontSize: 30,
         fontWeight: 'bold',
         textAlign: 'center',

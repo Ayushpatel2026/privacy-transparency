@@ -2,6 +2,10 @@ import { Colors } from "@/constants/Colors";
 import { PrivacyRisk, TransparencyEvent } from "@/constants/types/Transparency";
 import { Linking, Alert } from "react-native";
 
+/**
+ * This file provides utility functions for the transparency service that are used throughout the app. 
+ */
+
 export const pipedaBaseUrl = "https://www.priv.gc.ca/en/privacy-topics/privacy-laws-in-canada/the-personal-information-protection-and-electronic-documents-act-pipeda/p_principle/principles"
 export const handleLinkPress = async (regulationLink : string) => {
     try {

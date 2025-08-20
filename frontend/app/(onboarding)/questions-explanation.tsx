@@ -3,6 +3,9 @@ import {useRouter} from "expo-router";
 import GeneralButton from "@/components/GeneralButton";
 import OnboardingHeader from "@/components/OnboardingHeader";
 
+/**
+ * This screen explains the purpose of the upcoming questions about sleep quality, and where the data will be stored.
+ */
 export default function QuestionsExplanation() {
 
   const router = useRouter();
@@ -29,7 +32,7 @@ export default function QuestionsExplanation() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#000',
+		backgroundColor: 'black',
 	},
 	contentContainer: {
 		flex: 1,

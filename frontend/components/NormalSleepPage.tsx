@@ -32,7 +32,7 @@ export const NormalSleepPage = ({
                 <Text style={styles.inputLabel}>Bedtime</Text>
                 <Text style={styles.inputValue}>{bedtime}</Text>
                 <TouchableOpacity onPress={handleEditBedtime}>
-                    <Ionicons name="pencil-outline" size={20} color={'#ffffff'} />
+                    <Ionicons name="pencil-outline" size={20} color={'white'} />
                 </TouchableOpacity>
             </View>
 
@@ -41,7 +41,7 @@ export const NormalSleepPage = ({
                 <Text style={styles.inputLabel}>Alarm</Text>
                 <Text style={styles.inputValue}>{alarm}</Text>
                 <TouchableOpacity onPress={handleEditAlarm}>
-                    <Ionicons name="pencil-outline" size={20} color={'#ffffff'} />
+                    <Ionicons name="pencil-outline" size={20} color={'white'} />
                 </TouchableOpacity>
             </View>
 
@@ -86,13 +86,13 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     inputLabel: {
-        color: '#ffffff',
+        color: 'white',
         fontSize: 18,
         fontWeight: '500',
         flex: 1,
     },
     inputValue: {
-        color: '#ffffff',
+        color: 'white',
         fontSize: 18,
         opacity: 0.8,
         marginRight: 10,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
         elevation: 10,
     },
     sleepNowButtonText: {
-        color: '#ffffff',
+        color: 'white',
         fontSize: 20,
         fontWeight: 'bold',
     },

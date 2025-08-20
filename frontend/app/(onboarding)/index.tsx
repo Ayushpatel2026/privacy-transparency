@@ -87,10 +87,14 @@ export default function MicrophoneConsent() {
   )
 };
 
+// ==============================================================================
+// STYLES
+// ==============================================================================
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: 'black',
   },
   topHalf: {
     flex: 3,

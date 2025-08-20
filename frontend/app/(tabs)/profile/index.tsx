@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: 'white',
     marginBottom: 5,
   },
   menuContainer: {
@@ -99,6 +99,6 @@ const styles = StyleSheet.create({
   logoutButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: 'white',
   },
 });

@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
         maxHeight: '70%',
     },
     modalTitle: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 20,
         fontWeight: '600',
         marginBottom: 20,
@@ -236,14 +236,14 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         paddingVertical: 10,
         paddingHorizontal: 15,
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 24,
         fontWeight: 'bold',
         width: 70, // Fixed width for hours/minutes
         textAlign: 'center',
     },
     separator: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 24,
         fontWeight: 'bold',
         marginHorizontal: 5,
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.generalBlue, 
     },
     ampmButtonText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
     },
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.generalBlue,
     },
     modalButtonText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         fontWeight: '600',
     },

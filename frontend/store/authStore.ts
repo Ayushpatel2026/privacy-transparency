@@ -66,11 +66,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 	},
 	login: async (email: string, password: string) => {
 		set({ isLoading: true });
-		try{
-			console.log('Logging in with:', { email, password });
+		try {
 			const data : any = await httpClient.post('/auth/login', { email, password });
-			console.log('Login response:', data);
-			console.log('Storing user data:', data.user);
 			await AsyncStorage.setItem('user', JSON.stringify(data.user));
 
 			// Store sensitive token securely using expo-secure-store

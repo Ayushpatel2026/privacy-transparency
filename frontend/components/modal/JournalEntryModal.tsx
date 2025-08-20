@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         maxHeight: '70%',
     },
     modalTitle: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 20,
         fontWeight: '600',
         marginBottom: 20,
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.generalBlue,
     },
     modalButtonText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         fontWeight: '600',
     },
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.1)',
         borderRadius: 12,
         padding: 15,
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         minHeight: 150,
         textAlignVertical: 'top',

@@ -81,7 +81,6 @@ export class JournalDataRepository {
                 ...journal,
                 date: date, // Ensure date is set correctly
             };
-            console.log("Editing journal with data:", dataToCreate);
             const encryptedData = await this.encryptionService.encryptJournalData(dataToCreate);
             const response = await activeDataSource.editJournal(date, encryptedData, userId);
             if (!response) {

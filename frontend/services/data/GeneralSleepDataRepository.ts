@@ -59,7 +59,6 @@ export class GeneralSleepDataRepository {
     async createSleepData(sleepData: GeneralSleepData): Promise<GeneralSleepData> {
         const { userId } = this.getAuthenticatedUserData();
         const activeDataSource = this.getActiveDataSource();
-        console.log("Creating sleep data with userId:", userId, "and sleepData:", sleepData);
         try {
             // Append userId to the data payload as backend expects it in body
             const dataToCreate: GeneralSleepData = {

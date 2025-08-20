@@ -22,7 +22,7 @@
       "package": "com.mcscert.sleeptracker",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "white"
       },
       "permissions": [
         "FOREGROUND_SERVICE",
@@ -43,7 +43,7 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "white"
         }
       ],
       "expo-secure-store",

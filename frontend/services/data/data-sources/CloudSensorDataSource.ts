@@ -74,7 +74,6 @@ export class CloudSensorDataSource implements SensorDataSource {
     }
 
     async deleteSensorReading(userId: string, id: string): Promise<boolean> {
-        console.log(`Deleting sensor reading ${id} from cloud for user ${userId}.`);
         const token = this.getAuthToken();
         try {
             await this.httpClient.delete<{}>(`/phi/sensor-data/${id}`, token);

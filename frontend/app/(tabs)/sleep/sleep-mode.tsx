@@ -23,7 +23,7 @@ import { TRANSPARENCY_UI_CONFIG } from '@/constants/config/transparencyConfig';
 
 export default function SleepMode() {
     const router = useRouter();
-    const { isSleepModeActive, setIsSleepModeActive, userConsentPreferences } = useProfileStore();
+    const { userConsentPreferences } = useProfileStore();
 
     const [currentTime, setCurrentTime] = useState<string>('');
     const [alarmTime, setAlarmTime] = useState<string>('');
@@ -58,7 +58,6 @@ export default function SleepMode() {
         };
         fetchAlarm();
         const enterSleepMode = async () => {
-            setIsSleepModeActive(true);
             await sensorBackgroundTaskManager.updateConfig({
                 audioEnabled: userConsentPreferences.microphoneEnabled,
                 lightEnabled: userConsentPreferences.lightSensorEnabled,
@@ -261,7 +260,7 @@ const styles = StyleSheet.create({
         marginBottom: 150, // Push it up a bit
     },
     currentTimeText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 60,
         fontWeight: 'bold',
         textShadowColor: 'rgba(0, 0, 0, 0.5)',
@@ -280,13 +279,13 @@ const styles = StyleSheet.create({
         marginBottom: 20, // Space above the wake up button
     },
     alarmLabel: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         fontWeight: '500',
         opacity: 0.8,
     },
     alarmTime: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
     },
@@ -300,7 +299,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden', // Required for progress bar
     },
     wakeUpButtonText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 20,
         fontWeight: 'bold',
         zIndex: 1, // Ensure text is above progress bar

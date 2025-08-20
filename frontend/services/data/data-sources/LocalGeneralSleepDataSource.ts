@@ -16,7 +16,6 @@ export class LocalGeneralSleepDataSource implements GeneralSleepDataSource{
         }
     }
     async createSleepData(sleepData: GeneralSleepData): Promise<GeneralSleepData> {
-        console.log("Creating sleep data in local storage with data:", sleepData);
         const userId = sleepData.userId;
         if (!userId) {
             throw new Error("User ID is required to create sleep data.");

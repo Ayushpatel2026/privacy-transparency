@@ -11,6 +11,11 @@ import { PrivacyRisk } from "@/constants/types/Transparency";
 import { DailyStatisticsPage } from "@/components/DailyStatisticsPage";
 import { PrivacyStatisticsPage } from "@/components/transparency/PrivacyStatisticsPage";
 
+/**
+ * Since no statistics are actually calculated in the prototype, this screen does not need to do any data collection/data retrieval. 
+ * The UI is just static with a bunch of placeholder images. 
+ */
+
 export default function Statistics() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [activeTab, setActiveTab] = useState<'daily' | 'stats'>('daily');
@@ -114,7 +119,7 @@ export default function Statistics() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#000000',
+		backgroundColor: 'black',
 	},
 	calendarBackgroundImage: {
 		borderRadius: 16,
@@ -164,6 +169,6 @@ const styles = StyleSheet.create({
 		fontWeight: '500',
 	},
 	activeTabText: {
-		color: '#fff',
+		color: 'white',
 	},
 });

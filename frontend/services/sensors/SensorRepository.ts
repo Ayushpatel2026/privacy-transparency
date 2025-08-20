@@ -148,7 +148,6 @@ export class SensorRepository {
 
     // Individual sensor controls
     async startAudioMonitoring(): Promise<void> {
-        console.log("starting audio monitoring")
         if ((IN_DEMO_MODE && !transparencyDemoConfig.collectAudio) || (!IN_DEMO_MODE && !this.sensorConfig.audioEnabled)) {
             console.log("Audio monitoring is disabled in configuration");
             throw new Error("Audio monitoring is disabled in configuration");
@@ -157,7 +156,6 @@ export class SensorRepository {
     }
 
     async stopAudioMonitoring(): Promise<void> {
-        console.log("stopping")
         await this.currentSensorService.stopAudioMonitoring();
     }
 

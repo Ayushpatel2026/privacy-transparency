@@ -51,7 +51,7 @@ export const SleepNotesModal = ({
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalTitle}>Sleep notes</Text>
                         <TouchableOpacity onPress={handleCancelSleepNotes}>
-                            <Ionicons name="close-circle-outline" size={28} color="#FFFFFF" />
+                            <Ionicons name="close-circle-outline" size={28} color="white" />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.sleepNotesOptionsContainer}>
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         maxHeight: '70%',
     },
     modalTitle: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 20,
         fontWeight: '600',
         marginBottom: 20,
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.generalBlue,
     },
     modalButtonText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         fontWeight: '600',
     },
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.generalBlue, 
     },
     sleepNoteOptionText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         fontWeight: '500',
     },

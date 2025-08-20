@@ -83,7 +83,6 @@ export class LocalDatabaseManager {
             this.db = await SQLite.openDatabaseAsync(this.dbName);
             console.log("Database opened successfully.");
             await this.createTables();
-            console.log("Tables ensured.");
         } catch (error) {
             console.error("Error opening or creating database:", error);
             this.db = null;
@@ -180,9 +179,8 @@ export class LocalDatabaseManager {
         try {
             await this.db.execAsync(DELETE_JOURNAL_TABLE);
             await this.db.execAsync(DELETE_SENSOR_DATA_TABLE);
-            console.log("All tables created or already exist.");
         } catch (error) {
-            console.error("Error creating tables:", error);
+            console.error("Error deleting tables:", error);
             throw error;
         }
     }

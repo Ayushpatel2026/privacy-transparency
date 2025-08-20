@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from "react-native";
 import {useRouter} from "expo-router";
 import GeneralButton from "@/components/GeneralButton";
 import OnboardingHeader from "@/components/OnboardingHeader";
@@ -54,10 +54,14 @@ export default function LightSensorConsent() {
   )
 };
 
+// =========================================================================
+// STYLES
+// =========================================================================
+  
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: 'black',
   },
   topHalf: {
     flex: 3,

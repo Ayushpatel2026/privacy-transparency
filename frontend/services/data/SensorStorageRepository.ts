@@ -6,7 +6,6 @@ import { LocalSensorDataSource } from './data-sources/LocalSensorDataSource';
 import { SensorDataSource } from './data-sources/SensorDataSource';
 import { EncryptionService } from '../EncryptionService';
 import { useTransparencyStore } from '@/store/transparencyStore';
-import { use } from 'react';
 import { DataDestination } from '@/constants/types/Transparency';
 
 /**

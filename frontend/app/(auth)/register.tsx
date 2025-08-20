@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, SafeAreaView, Alert } from 'react-native';
 import { useAuthStore } from '@/store/authStore';
 import AuthInput from '@/components/AuthInput';
 import GeneralButton from '@/components/GeneralButton';
@@ -24,10 +24,10 @@ export default function Register() {
     const result = await register(firstName, lastName, email, password);
     if (result.success) {
       console.log('Registration successful');
-      // Navigate to home screen
     } else {
       console.error('Registration failed:', result.message);
       // Show error message to user
+      Alert.alert('Registration failed', result.message);
     }
   };
 
@@ -102,7 +102,7 @@ export default function Register() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: 'black',
   },
   content: {
     flex: 1,
@@ -112,12 +112,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: 'white',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: 'white',
     marginBottom: 40,
   },
   form: {
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loginText: {
-    color: '#FFFFFF',
+    color: 'white',
     fontSize: 16,
   },
   loginLink: {

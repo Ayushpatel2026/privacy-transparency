@@ -17,10 +17,6 @@ export default function PrivacyPolicyConsent() {
     userConsentPreferences.agreedToPrivacyPolicy || false
   );
 
-  /**
-   * Handles the press event for the privacy policy checkbox.
-   * Toggles the `privacyPolicyAgreed` state.
-   */
   const togglePrivacyPolicyAgreement = () => {
     setPrivacyPolicyAgreed(!privacyPolicyAgreed);
   };
@@ -30,19 +26,13 @@ export default function PrivacyPolicyConsent() {
    * Updates the user's consent preferences in the store and navigates to the next screen.
    */
   const handleContinue = () => {
-    // Update the privacy policy agreement in the global store
     setUserConsentPreferences({
       ...userConsentPreferences,
       agreedToPrivacyPolicy: privacyPolicyAgreed,
     });
-    // Navigate to the next screen after consent, e.g., '/onboarding-complete'
-    router.push('/transparency'); // Replace with your actual next route
+    router.push('/transparency'); 
   };
 
-  /**
-   * Handles the press event for the "Read our Privacy Policy" link.
-   * Navigates to the full privacy policy page.
-   */
   const handlePrivacyPolicyLink = () => {
     router.push('/privacy-policy');
   };
@@ -94,7 +84,7 @@ export default function PrivacyPolicyConsent() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000', 
+    backgroundColor: 'black', 
   },
   contentContainer: {
     flex: 1,

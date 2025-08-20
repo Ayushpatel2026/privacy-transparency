@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     fontSize: 16,
-    color: '#FFFFFF',
+    color: 'white',
     width: '100%',
   },
   eyeIcon: {

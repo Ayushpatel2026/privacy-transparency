@@ -62,9 +62,7 @@ export class LocalJournalDataSource implements JournalDataSource {
             // First, check if the journal exists and belongs to the user
             const existingJournal = await this.getJournalByDate(userId, date);
             const journalTransparencyEvent = useTransparencyStore.getState().journalTransparency;
-            console.log(`Existing journal for date ${date}:`, existingJournal);
             if (!existingJournal){
-                console.log(`Journal for date ${date} does not exist. Creating a new journal.`);
                 const journalId = Crypto.randomUUID();
                 const createdAt = new Date().toISOString();
 
@@ -162,7 +160,6 @@ export class LocalJournalDataSource implements JournalDataSource {
             params.push(date, userId);
 
             const result = await this.dbManager.executeSql(sql, params);
-            console.log(`Updated journal for date ${date} with result:`, result);
             // Check if any rows were affected
             if (result.rowsAffected === 0) {
                 return null;

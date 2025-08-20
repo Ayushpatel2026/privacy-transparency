@@ -37,7 +37,6 @@ export class CloudGeneralSleepDataSource implements GeneralSleepDataSource {
     }
 
     async createSleepData(sleepData: GeneralSleepData): Promise<GeneralSleepData> {
-        console.log("Creating sleepData in cloud with data:", sleepData);
         const token = this.getAuthToken();
         try {
             // Backend's POST /phi/generalSleep expects the full object in the body

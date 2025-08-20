@@ -49,10 +49,14 @@ export default function CloudStorage() {
   )
 };
 
+// =================================================================
+// STYLES
+// =================================================================
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: 'black',
   },
   contentContainer: {
     flex: 1,

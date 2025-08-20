@@ -125,21 +125,21 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(255, 255, 255, 0.1)',
     },
     sectionTitle: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 17,
         fontWeight: '600',
         marginBottom: 6,
         paddingHorizontal: 8,
     },
     headerTitle: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         fontWeight: '600',
         paddingHorizontal: 8,
         marginBottom: 4,
     },
     headerText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 13,
         lineHeight: 17,
         marginBottom: 8,
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
     },
     subSectionText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 13,
         lineHeight: 17,
         marginBottom: 6,

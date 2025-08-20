@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Text, StyleSheet, Switch } from "react-native";
+import { View, Text, StyleSheet, Switch } from "react-native";
 
 interface ToggleProps {
   value: boolean;
@@ -15,7 +15,7 @@ const PermissionsToggle = ({ value, onValueChange, label }: ToggleProps) => {
         onValueChange={onValueChange}
         value={value}
         trackColor={{ false: "#ccc", true: "#4CAF50" }} 
-        thumbColor={value ? "#fff" : "#fff"}
+        thumbColor={value ? "white" : "white"}
         ios_backgroundColor="#ccc"
       />
     </View>
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   toggleLabel: {
     fontSize: 16,
-    color: "#FFFFFF", 
+    color: "white", 
     flex: 2,
     marginRight: 10, 
   },

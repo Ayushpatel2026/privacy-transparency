@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     weekDayText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 14,
         fontWeight: '500',
         opacity: 0.7,
@@ -83,10 +83,10 @@ const styles = StyleSheet.create({
         borderRadius: 18,
     },
     selectedDay: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'white',
     },
     dayText: {
-        color: '#FFFFFF',
+        color: 'white',
         fontSize: 16,
         fontWeight: '500',
     },
