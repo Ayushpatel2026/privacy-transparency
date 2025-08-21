@@ -1,7 +1,17 @@
 import { RegulatoryFramework, TransparencyEvent, UserConsentPreferences } from "../constants/types/Transparency";
 
+// this is the default instruction
 const instruction = "Provide your analysis in clear, concise, user-friendly language that a non-technical person can understand. Replace complex legal and technical jargon with simple explanations that the average middle schooler can grasp.";
 
+
+/**
+ * The prompt involves first telling the LLM that it is a privacy compliance expert. 
+ * 
+ * Then it is given the transparencyEvent, privacy policy, user consent preferences, regulatory frameworks to consider, and specific PIPEDA regulations to consider in its analysis.
+ * Next, there are general analysis instructions, risk assessment criteria, and specific instructions for the LLM to follow.
+ * 
+ * The default length is 30 words.
+ */
 export function createPrivacyAnalysisPrompt(
   transparencyEvent: TransparencyEvent,
   privacyPolicy: string,

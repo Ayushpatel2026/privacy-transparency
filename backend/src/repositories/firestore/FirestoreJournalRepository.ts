@@ -1,5 +1,5 @@
 import { JournalRepository } from '../JournalRepository';
-import { JournalData, SleepNote } from '../../constants/types/Journal'; 
+import { JournalData } from '../../constants/types/Journal'; 
 import { db } from '../../config/firebaseConfig';
 import { DocumentData, DocumentSnapshot } from 'firebase-admin/firestore';
 
@@ -35,7 +35,7 @@ export class FirestoreJournalRepository implements JournalRepository {
 
             const journalData = this.mapDocToJournalData(docSnapshot);
 
-            // Important: Ensure the journal belongs to the requesting user
+            // Ensure the journal belongs to the requesting user
             if (journalData.userId !== userId) {
                 console.warn(`Attempt to access journal ${journalId} by unauthorized user ${userId}.`);
                 throw new Error(`Unauthorized access to journal entry ${journalId}.`);

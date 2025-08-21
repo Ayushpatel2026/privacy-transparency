@@ -5,7 +5,7 @@
     The sample texts were taken from the following Github: https://github.com/csitfun/ConTRoL-dataset 
 */
 
-import { pipeline, ZeroShotClassificationPipeline } from '@huggingface/transformers';
+import { pipeline } from '@huggingface/transformers';
 import { calculateFleschKincaid } from "../readability/flesch-kincaid";
 import { analyzeWordFrequency } from "../readability/word-freq";
 import * as fs from 'fs';

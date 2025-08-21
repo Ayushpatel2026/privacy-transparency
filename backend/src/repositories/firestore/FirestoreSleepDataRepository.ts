@@ -3,6 +3,10 @@ import { GeneralSleepData } from '../../constants/types/GeneralSleepData';
 import { db } from '../../config/firebaseConfig';
 import { DocumentData, DocumentSnapshot } from 'firebase-admin/firestore';
 
+/**
+ * Firestore implementation of the SleepDataRepository.
+ * Handles CRUD operations for sleep data entries in Firestore.
+ */
 export class FirestoreSleepDataRepository implements SleepDataRepository {
     private collectionName = 'sleepData';
 
@@ -36,7 +40,7 @@ export class FirestoreSleepDataRepository implements SleepDataRepository {
                 const newSleepData: GeneralSleepData = {
                     ...sleepData,
                 }
-                console.log(`sleep data created for user: ${newSleepData.userId}`);
+                console.log(`Sleep data created for user: ${newSleepData.userId}`);
                 return newSleepData;
             }
             throw new Error('Failed to create sleep data.');
@@ -95,7 +99,7 @@ export class FirestoreSleepDataRepository implements SleepDataRepository {
 
             const doc = querySnapshot.docs[0];
             await doc.ref.delete();
-            console.log(`sleep data deleted for user: ${userId}`);
+            console.log(`Sleep data deleted for user: ${userId}`);
             return true;
         } catch (error: any) {
             console.error('Error deleting sleep data:', error);

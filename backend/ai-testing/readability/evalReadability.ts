@@ -11,6 +11,9 @@ export interface ReadabilityMetrics {
 
 /**
  * Comprehensive readability analysis combining all metrics
+ * 
+ * All 4 fields of the AIExplanation are used as 1 piece of text because the user will see all 4 fields at once and hence t
+ * the readability metric should reflect that. 
  */
 export function evalReadability(aiExplanation : AIExplanation) : ReadabilityMetrics {
   const fleschKincaid = calculateFleschKincaid(aiExplanation.why + " " + aiExplanation.storage + " " + aiExplanation.access + " " + aiExplanation.privacyExplanation);

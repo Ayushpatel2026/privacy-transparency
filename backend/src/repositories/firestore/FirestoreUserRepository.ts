@@ -1,8 +1,12 @@
 import { User } from '../../constants/types/User';
 import { UserRepository } from '../UserRepository';
 import { db } from '../../config/firebaseConfig'; 
-import { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore';
+import { DocumentData } from 'firebase-admin/firestore';
 
+/**
+ * Firestore implementation of the UserRepository.
+ * Handles CRUD operations for user entries in Firestore.
+ */
 export class FirestoreUserRepository implements UserRepository {
     async createUser(userData: User): Promise<User> {
         try {

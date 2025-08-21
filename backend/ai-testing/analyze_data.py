@@ -1,6 +1,6 @@
 """
-Privacy Experiment Data Aggregator
-Calculates comprehensive aggregate statistics from raw experiment data.
+Privacy Experiment Data Aggregator and Visualizer
+Calculates comprehensive aggregate statistics from raw experiment data, calculated correlations and creates graphs
 """
 
 import pandas as pd

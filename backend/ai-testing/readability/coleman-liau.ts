@@ -1,4 +1,6 @@
 /**
+ * Coleman-Liau was used in the initial trials, but as it was found to be inaccurate, it was removed from consideration.
+ *
  * Calculate Coleman-Liau Index
  * Formula: 0.0588 × L - 0.296 × S - 15.8
  * where L = average number of letters per 100 words

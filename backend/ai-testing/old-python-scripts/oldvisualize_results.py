@@ -277,8 +277,6 @@ def create_instruction_length_visualizations(df, output_dir, base_name):
     plt.savefig(os.path.join(output_dir, f'{base_name}_accuracy_readability_tradeoffs.png'), dpi=300, bbox_inches='tight')
     plt.close()
 
-# Removed instruction comparison visualizations as requested
-
 def create_event_analysis_visualizations(df, output_dir, base_name, by_instruction=True):
     """Create visualizations for event-based data."""
     
@@ -422,8 +420,6 @@ def create_event_analysis_visualizations(df, output_dir, base_name, by_instructi
     suffix = "event_instruction" if by_instruction else "event_combined"
     plt.savefig(os.path.join(output_dir, f'{base_name}_{suffix}_analysis.png'), dpi=300, bbox_inches='tight')
     plt.close()
-
-# Removed overall summary visualization as requested
 
 def process_all_csv_files(base_path):
     """Process all CSV files and create visualizations."""
