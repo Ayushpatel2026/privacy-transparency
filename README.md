@@ -23,7 +23,7 @@ This work was conducted as part of an undergraduate research project for the McM
 
 ## General Repository Structure
 
-[More information](./backend/README.md) about the backend
+[More information](./docs/backend-server.md) about the backend
 
 [More information](./docs/frontend.md) about the frontend
 
@@ -490,7 +490,7 @@ The experimental framework can be executed to replicate the readability and cons
    cd ai-testing
    ```
 
-3. Configure your Gemini API credentials in the .env file:
+3. Configure your Gemini API credentials in the .env file. This may not work and you will have to set up the environment variable using the command line:
 
    ```bash
      GEMINI_API_KEY=your_gemini_api_key
